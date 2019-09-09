@@ -1,4 +1,4 @@
-function [ rotacion, indiceSign ] = EulerDirecto( angulos, degrad )
+function [ respuesta ] = EulerDirecto( angulos, degrad )
 % Vector de entrada [phi, theta, psi]
 % Parametro opcional de entrada [MODO DEG o RAD] (por defecto RAD)
 	if ~exist('degrad', 'var')
@@ -27,4 +27,8 @@ function [ rotacion, indiceSign ] = EulerDirecto( angulos, degrad )
 
 	indiceSign = sign(atan2(matRotZPhi(2,1),matRotZPhi(1,1)));
 
+	respuesta = {
+		rotacion,
+		indiceSign
+	};
 end
