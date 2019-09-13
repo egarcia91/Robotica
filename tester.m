@@ -3,11 +3,13 @@ close all
 
 format long g
 
-Ntests = 2;
+Ntests = 16; %% va a ser este valor al cubo. OJOOO
 
+tol = 1e5; % Tolerancia tres digitos
 
 phi = theta = psi = linspace(0, pi, Ntests);
 
+degrad = 'RAD';
 tests = 0;
 passingtests = 0;
 
@@ -19,8 +21,8 @@ for i = 1:(Ntests)
 			tests++;
 
 			angulosIniciales = [phi(i), theta(j), psi(k)];
-			angulosFinales = EulerInverso(EulerDirecto(angulosIniciales));
-			if(isequal(angulosIniciales, angulosFinales))
+			angulosFinales = EulerInverso(EulerDirecto(angulosIniciales, degrad), degrad);
+			if(isequal(fix(angulosIniciales*tol)/tol, fix(angulosFinales*tol)/tol))
 				passingtests++;
 			else
 				donkeyCorner(end+1) = [angulosIniciales; angulosFinales];

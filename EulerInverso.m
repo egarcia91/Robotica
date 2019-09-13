@@ -5,9 +5,12 @@ function [ angulos ] = EulerInverso( params, degrad )
 		degrad = 'RAD';
 	end
 
+	%%Parametros basicos
+	%%
 	mat = zeros(3,3);
 	indice = 1;
 
+	%% tengo que dar libertad de que entren con una matrix o un objeto con matriz e indice
 	dim = size(params);
 
 	if(dim(1) == 3 && dim(2) == 3)
@@ -31,24 +34,24 @@ function [ angulos ] = EulerInverso( params, degrad )
 	else
 		disp('pasa bien los parametros');
 	end
+	%% se terminaron los parametros de entrada
 
-	cTheta = mat(3,3);
+	if(indice == 0)
+		angulos = [0, 0, 0];
+	else
 
-	theta = DespejeAngulo(cTheta, 'cos', degrad);
+		cTheta = mat(3,3);
+		sTheta = sqrt(mat(2,3)*mat(2,3)+mat(1,3)*mat(1,3))*indice;
+		theta = DespejeAngulo(sTheta, cTheta, degrad);
 
-	sTheta = sqrt(mat(2,3)*mat(2,3)+mat(1,3)*mat(1,3));
+		cPhi = 0;
+		sPsi = 0;
 
-	cPhi = 0;
-	sPsi = 0;
+		phi = DespejeAngulo(indice*mat(2,3),indice*mat(1,3), degrad);
+		psi = DespejeAngulo(indice*mat(3,2), indice*-mat(3,1), degrad);
 
-	if(sTheta != 0)
-		cPhi = mat(1,3)/sTheta;
-		sPsi = mat(3,2)/sTheta;
+		angulos = [phi, theta, psi];
+
 	end
-
-	phi = DespejeAngulo(cPhi, 'cos', degrad);
-	psi = DespejeAngulo(sPsi, 'sin', degrad);
-
-	angulos = [phi, theta, psi];
 
 end
