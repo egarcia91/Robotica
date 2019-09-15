@@ -7,9 +7,18 @@ Ntests = 16; %% va a ser este valor al cubo. OJOOO
 
 tol = 1e5; % Tolerancia tres digitos
 
-phi = theta = psi = linspace(0, pi, Ntests);
-
 degrad = 'RAD';
+
+limit = 0;
+
+if(degrad == 'RAD')
+	limit = pi;
+elseif(degrad == 'DEG')
+	limit = 180;
+end
+
+phi = theta = psi = linspace(0, limit, Ntests);  %%Si esta en RAD prueba con pi, sino en DEG pruebacon angulos
+
 tests = 0;
 passingtests = 0;
 
@@ -32,23 +41,19 @@ for i = 1:(Ntests)
 	end
 end
 
-tests
-passingtests
-donkeyCorner
-%
-%disp('Va la comparacion del Angulo Inicial y el Final');
-%disp(isequal(angulosIniciales,angulosFinales));
-%
-%matrizInicial = [
-%	1, 0, 0;
-%	0, 0, 1;
-%	0, -1, 0
-%];
-%
-%matrizFinal = EulerDirecto(EulerInverso(matrizInicial));
-%%disp(matrizFinal);
-%
-%disp('Va la comparacion de la matriz Inicial y el Final');
-%disp(isequal(matrizInicial, matrizFinal));
+printf('||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n');
+printf('||\t\t\tResultados!\t\t\t||\n');
+printf('||\tCantidad total de testeos realizados:\t\t||\n');
+printf('||\t\t\t\t\t %i\t\t||\n', tests);
+printf('||\tCantidad total de testeos pasados:\t\t||\n');
+printf('||\t\t\t\t\t %i\t\t||\n', passingtests);
+printf('||\tPorcentaje de acierto:\t\t\t\t||\n');
+printf('||\t\t\t\t\t %i%%\t\t||\n', round((passingtests/tests)*100));
+printf('||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n');
+printf('\n\n');
 
+showDC = input('Queres ver el Donkey Corner? [yes/no]','s');
 
+if(showDC == 'y' || showDC == 'yes')
+	disp(donkeyCorner);
+end
