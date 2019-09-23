@@ -26,7 +26,7 @@ function [ respuesta ] = EulerDirecto( angulos, degrad )
 	rotacion = matRotZPhi*matRotYTheta*matRotZPsi;
 
 	%indiceSign = sign(atan2(matRotZPhi(2,1),matRotZPhi(1,1)));
-	indiceSign = sign(sign(phi)+sign(psi)+sign(theta));
+	indiceSign = sign(theta);
 
 	respuesta = {
 		rotacion,
