@@ -1,0 +1,6 @@
+MODULE Module1
+	CONST robtarget Target_10:=[[400,170,130],[0,0,0,1],[0,0,0,0],[9E9,9E9,9E9,9E9,9E9,9E9]];
+	PROC Path_10()
+	    MoveL Target_10,v1000,z100,pinza\WObj:=wobj0;
+	ENDPROC
+ENDMODULE
