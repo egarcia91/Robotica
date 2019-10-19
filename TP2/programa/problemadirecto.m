@@ -23,7 +23,7 @@ function [ transformationMatrix ] = problemadirecto(theta, aLen, dLen, alfa )
 		89; %d1
 		0;
 		0;
-		93/2; %d4
+		46.5; %d4
 		93; %d5
 		82; %d6
 	];
@@ -71,7 +71,7 @@ function [ transformationMatrix ] = problemadirecto(theta, aLen, dLen, alfa )
 
 		iJoint = tablaParametrosDH(i, 1:end);
 
-		transformationMatrix *= RotacionZ(iJoint(1))*TraslacionZ(iJoint(2))*TraslacionX(iJoint(3))*RotacionX(iJoint(4));
+		transformationMatrix *= RotacionZ(iJoint(1))*TraslacionZ(iJoint(3))*TraslacionX(iJoint(2))*RotacionX(iJoint(4));
 
 	end
 

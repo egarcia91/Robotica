@@ -1,6 +1,6 @@
 function [ vector ] = orientacionTCP( columna )
 
-	tol = 1e-4;
+	tol = 1e-8;
 
 	vector = [
 		0; %x

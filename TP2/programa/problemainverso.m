@@ -23,7 +23,7 @@ function [ jointAngle ] = problemainverso( transformationMatrix, aLen, dLen, alf
 		89; %d1
 		0;
 		0;
-		93/2; %d4
+		46.5; %d4
 		93; %d5
 		82; %d6
 	];
@@ -51,6 +51,7 @@ function [ jointAngle ] = problemainverso( transformationMatrix, aLen, dLen, alf
 	rosinphi = linkOffset(6)*a(2)-p(2);
 	rocosphi = p(1)-linkOffset(6)*a(1);
 	phi = atan2(rosinphi, rocosphi);
+
 	denq1 = sqrt((rosinphi)^2+(rocosphi)^2-(linkOffset(4))^2);
 
 	q1uno = atan2(linkOffset(4), denq1) - phi;
@@ -66,12 +67,12 @@ function [ jointAngle ] = problemainverso( transformationMatrix, aLen, dLen, alf
 	q5uno = atan2(numq5,a(1)*sin(q1)-a(2)*cos(q1));
 	q5dos = atan2(-numq5,a(1)*sin(q1)-a(2)*cos(q1));
 
-	q5 = q5uno; %%Cual nos quedamos?TODO
+	q5 = q5dos; %%Cual nos quedamos?TODO
 	%%Ya tenemos dos opciones de q5!!!!!!
 
 	%%Calculo de q6
 	%%Ojo singularidad si SENO(q5) es cero!
-	q6 = atan2(-(o(1)*sin(q1)-o(2)*cos(q1))/sin(q5),(n(1)*sin(q1)-n(2)*cos(q1))/sin(q5))
+	q6 = atan2(-(o(1)*sin(q1)-o(2)*cos(q1))/sin(q5),(n(1)*sin(q1)-n(2)*cos(q1))/sin(q5));
 	%%Ya tenemos q6!!!!!!
 
 	%%Calculo de q2 + q3 + q4
@@ -94,21 +95,14 @@ function [ jointAngle ] = problemainverso( transformationMatrix, aLen, dLen, alf
 	%%Ya tenemos dos opciones de q2!!!!!!
 
 	%%Calculo de q2 + q3
-	q23 = atan2((p(3)-linkOffset(1)+linkOffset(5)*cos(q234)-linkLength(2)*sin(q2)+linkOffset(6)*sin(q5)*sin(q234))/linkLength(3),(p(1)*cos(q1)+p(2)*sin(q1)-linkOffset(5)*sin(q234)-linkLength(2)*cos(q2)+linkOffset(6)*sin(q5)*cos(q234))/linkLength(3));
+	numq23 = (p(3)-linkOffset(1)+linkOffset(5)*cos(q234)-linkLength(2)*sin(q2)+linkOffset(6)*sin(q5)*sin(q234))/linkLength(3);
+	denq23 = (p(1)*cos(q1)+p(2)*sin(q1)-linkOffset(5)*sin(q234)-linkLength(2)*cos(q2)+linkOffset(6)*sin(q5)*cos(q234))/linkLength(3);
+	q23 = atan2(numq23,denq23);
 	%%Ya tenemos q2 + q3!!!!!!
 
 	q3 = q23 - q2;
 
 	q4 = q234 - q23;
-
-	originalJointAngle = [
-		0; %q1uno o q1dos
-		-pi/2; %q2uno o q2dos
-		pi/2; %theta3
-		pi/2; %theta4
-		-pi/2; %q5
-		0; %q6
-	]
 
 	jointAngle = [
 		q1; %q1uno o q1dos
@@ -118,6 +112,5 @@ function [ jointAngle ] = problemainverso( transformationMatrix, aLen, dLen, alf
 		q5; %q5
 		q6; %q6
 	];
-
 
 end

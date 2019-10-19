@@ -7,9 +7,9 @@ function [ rotacion ] = RotacionZ( angulo )
 
 	rotacion = [
 		cosAng, -sinAng, 0, 0;
-		sinAng, cosAng, 0, 0;
-		0, 0, 1, 0;
-		0, 0, 0, 1;
+		sinAng,  cosAng, 0, 0;
+		     0,       0, 1, 0;
+		     0,       0, 0, 1;
 	];
 
 end
