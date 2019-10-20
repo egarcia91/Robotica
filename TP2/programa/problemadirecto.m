@@ -12,8 +12,8 @@ function [ transformationMatrix ] = problemadirecto(theta, aLen, dLen, alfa )
 	%Dimensiones UR5
 	linkLength = [
 		0;
-		425; %a2
-		392; %a3
+		-425; %a2
+		-392; %a3
 		0;
 		0;
 		0;
@@ -33,7 +33,7 @@ function [ transformationMatrix ] = problemadirecto(theta, aLen, dLen, alfa )
 		0; %theta1
 		-pi/2; %theta2
 		pi/2; %theta3
-		pi/2; %theta4
+		pi; %theta4
 		-pi/2; %theta5
 		0; %theta6
 	];
@@ -67,12 +67,21 @@ function [ transformationMatrix ] = problemadirecto(theta, aLen, dLen, alfa )
 
 	transformationMatrix = eye(4);
 
+	figure();
+	lastPos = transformationMatrix(1:end-1,end)';
+	graphicTerna(transformationMatrix,lastPos);
+
+
 	for i = 1:6
 
+		lastPos = transformationMatrix(1:end-1,end)';
 		iJoint = tablaParametrosDH(i, 1:end);
-
-		transformationMatrix *= RotacionZ(iJoint(1))*TraslacionZ(iJoint(3))*TraslacionX(iJoint(2))*RotacionX(iJoint(4));
+		itranformation = RotacionZ(iJoint(1))*TraslacionZ(iJoint(3))*TraslacionX(iJoint(2))*RotacionX(iJoint(4));
+		transformationMatrix = transformationMatrix*itranformation;
+		graphicTerna(transformationMatrix,lastPos);
 
 	end
+
+	hold off;
 
 end
