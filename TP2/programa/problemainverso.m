@@ -12,8 +12,8 @@ function [ jointAngle ] = problemainverso( transformationMatrix, aLen, dLen, alf
 	%Dimensiones UR5
 	linkLength = [
 		0;
-		425; %a2
-		392; %a3
+		-425; %a2
+		-392; %a3
 		0;
 		0;
 		0;
@@ -58,7 +58,7 @@ function [ jointAngle ] = problemainverso( transformationMatrix, aLen, dLen, alf
 
 	q1dos = atan2(linkOffset(4), -denq1) - phi;
 
-	q1 = q1uno; %%Cual nos quedamos?TODO
+	q1 = q1dos; %%Cual nos quedamos?TODO
 	%%Ya tenemos dos opciones de q1!!!!!!
 
 	%%Calculo de q5
@@ -91,7 +91,7 @@ function [ jointAngle ] = problemainverso( transformationMatrix, aLen, dLen, alf
 	q2uno = atan2(A^2+B^2+linkLength(2)^2-linkLength(3)^2, denq2) - atan2(A,B);
 	q2dos = atan2(A^2+B^2+linkLength(2)^2-linkLength(3)^2, -denq2) - atan2(A,B);
 
-	q2 = q2uno; %%Cual nos queda? TODO
+	q2 = q2dos; %%Cual nos queda? TODO
 	%%Ya tenemos dos opciones de q2!!!!!!
 
 	%%Calculo de q2 + q3
