@@ -1,4 +1,4 @@
-function [ jointAngle ] = problemainverso( transformationMatrix, aLen, dLen, alfa)
+function [ jointAngle ] = problemainverso( transformationMatrix, indice, aLen, dLen, alfa)
 	%Condiciones iniciales
 	linkTwist = [
 		pi/2; %alfa1
@@ -33,6 +33,14 @@ function [ jointAngle ] = problemainverso( transformationMatrix, aLen, dLen, alf
 		linkOffset = dLen;
 	end
 
+%	if ~exist('dLen', 'var')
+%		indice = [
+%			1,
+%			1,
+%			1
+%		];
+%	end
+
 	if exist('aLen', 'var')
 		linkLength = aLen;
 	end
@@ -53,26 +61,43 @@ function [ jointAngle ] = problemainverso( transformationMatrix, aLen, dLen, alf
 	phi = atan2(rosinphi, rocosphi);
 
 	denq1 = sqrt((rosinphi)^2+(rocosphi)^2-(linkOffset(4))^2);
+	%denq1 = 1;
 
-	q1uno = atan2(linkOffset(4), denq1); %%%%%%%%%%%%%%%%%%%%%CREO QUE NO SE RESTA EL PHI
+	q1uno = atan2(linkOffset(4), denq1) - phi;
 
-	q1dos = atan2(linkOffset(4), -denq1); %%%%%%%%%%%%%%%%%%%%%CREO QUE NO SE RESTA EL PHI
+	q1dos = atan2(linkOffset(4), -denq1) - phi;
 
-	q1 = q1dos; %%Cual nos quedamos?TODO
+	q1Temp = [ q1uno, q1dos ];
+
+	q1 = q1Temp(indice(1)); %%Cual nos quedamos?TODO
 	%%Ya tenemos dos opciones de q1!!!!!!
 
 	%%Calculo de q5
 	numq5 = sqrt((n(1)*sin(q1)-n(2)*cos(q1))^2+(o(1)*sin(q1)-o(2)*cos(q1))^2);
+	%numq5 = 1;
 
 	q5uno = atan2(numq5,a(1)*sin(q1)-a(2)*cos(q1));
 	q5dos = atan2(-numq5,a(1)*sin(q1)-a(2)*cos(q1));
 
-	q5 = q5dos; %%Cual nos quedamos?TODO
+	q5Temp = [q5uno, q5dos];
+
+	q5 = q5Temp(indice(3)); %%Cual nos quedamos?TODO
+%	q5 = q5dos; %%Cual nos quedamos?TODO
 	%%Ya tenemos dos opciones de q5!!!!!!
 
 	%%Calculo de q6
 	%%Ojo singularidad si SENO(q5) es cero!
-	q6 = atan2(-(o(1)*sin(q1)-o(2)*cos(q1))/sin(q5),(n(1)*sin(q1)-n(2)*cos(q1))/sin(q5));
+	if(abs(sin(q5)) < 1e-9)
+		disp('que hacemo');
+		q6 = 0;
+	else
+		y = -(o(1)*sin(q1)-o(2)*cos(q1))/sin(q5)
+		x1 = n(1)*sin(q1)
+		x2 = -n(2)*cos(q1)
+		x3 = sin(q5)
+
+		q6 = atan2(-(o(1)*sin(q1)-o(2)*cos(q1))/sin(q5),(n(1)*sin(q1)-n(2)*cos(q1))/sin(q5));
+	end
 	%%Ya tenemos q6!!!!!!
 
 	%%Calculo de q2 + q3 + q4
@@ -86,13 +111,20 @@ function [ jointAngle ] = problemainverso( transformationMatrix, aLen, dLen, alf
 	A = p(1)*cos(q1) + p(2)*sin(q1) - linkOffset(5)*sin(q234) + linkOffset(6)*sin(q5)*cos(q234);
 	B = p(3) - linkOffset(1) + linkOffset(5)*cos(q234) + linkOffset(6)*sin(q5)*sin(q234); %%%%%%%%%%%%CAMBIE EL COSENO POR SENO
 
-	denq2 = sqrt((4*(linkLength(2)^2)-1)*(A^2+B^2)-linkLength(2)^2+linkLength(3)^2); %%%%por las dudas puse un parentesis en ^2
+	%(4*(linkLength(2)^2)-1)*(A^2+B^2) %%%%por las dudas puse un parentesis en ^2
+	%-linkLength(2)^2%%%%por las dudas puse un parentesis en ^2
+	%linkLength(3)^2 %%%%por las dudas puse un parentesis en ^2
+	denq2 = sqrt((4*(linkLength(2)^2)-1)*(A^2+B^2)+linkLength(2)^2-linkLength(3)^2); %%%%por las dudas puse un parentesis en ^2
+	%denq2 = 1; %%%%por las dudas puse un parentesis en ^2
 	numq2=A^2+B^2+linkLength(2)^2-linkLength(3)^2;    %%%%%%%%%%ya que hay un denominador, emprolijo el código con un numerador
 	
 	q2uno = atan2(numq2, denq2) - atan2(A,B);
 	q2dos = atan2(numq2, -denq2) - atan2(A,B);
 
-	q2 = q2dos; %%Cual nos queda? TODO
+	q2Temp = [q2uno, q2dos];
+
+	q2 = q2Temp(indice(2)); %%Cual nos quedamos?TODO
+%	q2 = q2dos; %%Cual nos queda? TODO
 	%%Ya tenemos dos opciones de q2!!!!!!
 
 	%%Calculo de q2 + q3
