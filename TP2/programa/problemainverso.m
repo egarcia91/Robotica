@@ -87,23 +87,27 @@ function [ jointAngle ] = problemainverso( transformationMatrix, indice, aLen, d
 
 	%%Calculo de q6
 	%%Ojo singularidad si SENO(q5) es cero!
+
+	q6 = 0;
 	if(abs(sin(q5)) < 1e-9)
 		disp('que hacemo');
-		q6 = 0;
 	else
-		y = -(o(1)*sin(q1)-o(2)*cos(q1))/sin(q5)
-		x1 = n(1)*sin(q1)
-		x2 = -n(2)*cos(q1)
-		x3 = sin(q5)
+		%El menos esta mal en el paper del orttooooo
+		y = (o(1)*sin(q1)-o(2)*cos(q1))/sin(q5);
 
-		q6 = atan2(-(o(1)*sin(q1)-o(2)*cos(q1))/sin(q5),(n(1)*sin(q1)-n(2)*cos(q1))/sin(q5));
+		q6 = atan2(y,(n(1)*sin(q1)-n(2)*cos(q1))/sin(q5));
 	end
 	%%Ya tenemos q6!!!!!!
 
 	%%Calculo de q2 + q3 + q4
 	%%Ojo singularidad si SENO(q5) es cero!
 
-	q234 = atan2(-a(3)/sin(q5),-(a(1)*cos(q1)+a(2)*sin(q1))/sin(q5));
+	q234 = 0;
+	if(abs(sin(q5)) < 1e-9)
+		disp('que hacemo');
+	else
+		q234 = -atan2(-a(3)/sin(q5),-(a(1)*cos(q1)+a(2)*sin(q1))/sin(q5));
+	end
 
 	%%Ya tenemos q2 + q3 + q4!!!!!!
 
@@ -139,9 +143,12 @@ function [ jointAngle ] = problemainverso( transformationMatrix, indice, aLen, d
 
 	jointAngle = [
 		q1; %q1uno o q1dos
-		q2; %q2uno o q2dos
-		q3; %theta3
-		q4; %theta4
+		%q2; %q2uno o q2dos
+		0; %q2uno o q2dos
+		%q3; %theta3
+		0; %theta3
+		%q4; %theta4
+		0; %theta4
 		q5; %q5
 		q6; %q6
 	];

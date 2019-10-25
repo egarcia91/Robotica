@@ -66,7 +66,7 @@ alfa = [
 	0;
 ];
 
-m = problemadirecto(theta, a, d, alfa)
+m = problemadirecto(theta, a, d, alfa);
 
 for i = 1:3
 	for j=1:3
@@ -77,7 +77,7 @@ for i = 1:3
 end
 
 %m
-m = fix(m*100)/100
+m = fix(m*100)/100;
 
 for i=1:2
 	for j=1:2
