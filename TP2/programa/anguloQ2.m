@@ -23,4 +23,6 @@ function [ angulo ] = anguloQ2(q1, q5, q234, p, a, d, indice )
 
 	angulo = q2Temp(indice); %%Cual nos quedamos?TODO
 
+	angulo = intervaloAngulo( angulo );
+
 end
