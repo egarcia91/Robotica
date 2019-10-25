@@ -1,32 +1,6 @@
 function [ transformationMatrix, transformationSteps ] = problemadirecto(theta, aLen, dLen, alfa )
 	%Condiciones iniciales
-	linkTwist = [
-		pi/2; %alfa1
-		0;
-		0;
-		pi/2; %alfa4
-		-pi/2; %alfa5
-		0;
-	];
-
-	%Dimensiones UR5
-	linkLength = [
-		0;
-		-425; %a2
-		-392; %a3
-		0;
-		0;
-		0;
-	];
-
-	linkOffset = [
-		89; %d1
-		0;
-		0;
-		46.5; %d4
-		93; %d5
-		82; %d6
-	];
+	[ linkTwist, linkLength, linkOffset ] = condicionesIniciales();
 
 	%Para que el robot quede en posición de la Figura 1 del TP2 con ABB
 	jointAngle = [
