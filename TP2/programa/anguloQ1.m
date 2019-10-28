@@ -16,4 +16,5 @@ function [ angulo ] = anguloQ1(linkOffset, a, p, indice)
 
 	angulo = q1Temp(indice); %%Cual nos quedamos?TODO
 
+	angulo = intervaloAngulo( angulo );
 end

@@ -12,5 +12,6 @@ function [ angulo ] = anguloQ6( q1, q5, o, n )
 		angulo = atan2(y,(n(1)*sin(q1)-n(2)*cos(q1))/sin(q5));
 	end
 	%%Ya tenemos q6!!!!!!
+	angulo = intervaloAngulo( angulo );
 
 end

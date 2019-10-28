@@ -77,13 +77,17 @@ for i = 1:3
 end
 
 %m
-m = fix(m*100)/100;
+%m = fix(m*100)/100;
 
 for i=1:2
 	for j=1:2
 		for k=1:2
 			indice = [i,j,k];
-			problemainverso(m, indice, a, d, alfa)'
+			thetaNuevo = problemainverso(m, indice, a, d, alfa);
+			mnueva = problemadirecto(thetaNuevo, a, d, alfa);
+			%mnueva = fix(mnueva*100)/100;
+			isequal(m, mnueva);
+			norm(mnueva - m)
 		end
 	end
 end

@@ -10,4 +10,6 @@ function [ angulo ] = anguloQ5(q1, n, o, a, indice)
 	q5Temp = [q5uno, q5dos];
 
 	angulo = q5Temp(indice); %%Cual nos quedamos?TODOend
+
+	angulo = intervaloAngulo( angulo );
 end
