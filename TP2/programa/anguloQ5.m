@@ -4,12 +4,7 @@ function [ angulo ] = anguloQ5(q1, n, o, a, indice)
 	%numq5 = 1;
 	denominador =  a(1)*sin(q1) - a(2)*cos(q1);
 
-	q5uno = atan2( numerador, denominador);
-	q5dos = atan2( -numerador, denominador);
-
-	q5Temp = [q5uno, q5dos];
-
-	angulo = q5Temp(indice); %%Cual nos quedamos?TODOend
+	angulo = atan2( indice*numerador, denominador);
 
 	angulo = intervaloAngulo( angulo );
 end

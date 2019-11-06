@@ -16,13 +16,7 @@ function [ angulo ] = anguloQ2(q1, q5, q234, p, a, d, indice )
 	numerador = (sumaABCuadrado + a(2)*a(2) - a(3)*a(3)) / (2*a(2)*nu);
 	denominador = sqrt(1 - numerador*numerador);
 
-	q2uno = atan2(numerador, denominador) - psi;
-	q2dos = atan2(numerador, -denominador) - psi;
-
-	q2Temp = [ q2uno, q2dos ];
-
-	angulo = q2Temp(indice); %%Cual nos quedamos?TODO
+	angulo = atan2(numerador, -indice*denominador) - psi;
 
 	angulo = intervaloAngulo( angulo );
-
 end

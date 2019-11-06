@@ -1,4 +1,4 @@
-function [ transformationMatrix, transformationSteps ] = problemadirecto(theta, aLen, dLen, alfa )
+function [ transformationMatrix, indice ] = problemadirecto(theta, aLen, dLen, alfa )
 	%Condiciones iniciales
 	[ linkTwist, linkLength, linkOffset ] = condicionesIniciales();
 
@@ -30,39 +30,10 @@ function [ transformationMatrix, transformationSteps ] = problemadirecto(theta, 
 
 	tablaParametrosDH = [ jointAngle, linkLength, linkOffset, linkTwist ];
 
-%	tablaParametrosDH = [
-%		theta_1, 0, d1, alfa1;
-%		theta_2, a2, 0, alfa2;
-%		theta_3, a3, 0, alfa3;
-%		theta_4, 0, d4, alfa4;
-%		theta_5, 0, d5, alfa5;
-%		theta_6, 0, d6, alfa6;
-%	];
+	transformationMatrix = matrizTransformacion(tablaParametrosDH);
 
-	transformationMatrix = eye(4);
+	[ g1, g2, g3 ] = despejeVectorConfiguration(jointAngle, linkOffset, linkLength);
 
-	transformationSteps = { transformationMatrix };
-
-%	figure();
-%	lastPos = transformationMatrix(1:end-1,end)';
-%	graphicTerna(transformationMatrix,lastPos);
-
-
-	for i = 1:6
-
-%		lastPos = transformationMatrix(1:end-1,end)';
-		iJoint = tablaParametrosDH(i, 1:end);
-
-		itranformation = RotacionZ(iJoint(1))*TraslacionZ(iJoint(3))*TraslacionX(iJoint(2))*RotacionX(iJoint(4));
-
-		transformationSteps(end + 1) = itranformation;
-
-		transformationMatrix = transformationMatrix*itranformation;
-
-%		graphicTerna(transformationMatrix,lastPos);
-
-	end
-
-%	hold off;
+	indice = [ g1, g2, g3 ];
 
 end

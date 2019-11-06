@@ -55,7 +55,7 @@ theta = [
 	0;
 	pi/2;
 	0;
-];
+]
 
 alfa = [
 	pi/2;
@@ -66,7 +66,7 @@ alfa = [
 	0;
 ];
 
-m = problemadirecto(theta, a, d, alfa);
+[m, indice] = problemadirecto(theta, a, d, alfa);
 
 for i = 1:3
 	for j=1:3
@@ -79,18 +79,12 @@ end
 %m
 %m = fix(m*100)/100;
 
-for i=1:2
-	for j=1:2
-		for k=1:2
-			indice = [i,j,k];
-			thetaNuevo = problemainverso(m, indice, a, d, alfa);
-			mnueva = problemadirecto(thetaNuevo, a, d, alfa);
-			%mnueva = fix(mnueva*100)/100;
-			isequal(m, mnueva);
-			norm(mnueva - m)
-		end
-	end
-end
+thetaNuevo = problemainverso(m, indice, a, d, alfa)
+
+mnueva = problemadirecto(thetaNuevo, a, d, alfa);
+
+norm(mnueva - m)
+
 %display('Matriz transformada para theta0');
 %[ TransformadaA0, iter ] = problemadirecto(theta0)
 
