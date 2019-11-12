@@ -1,0 +1,14 @@
+o1,o2,o3,o4,o5,o6
+Colisiones:
+- o3=180
+- o4=90 y o5=180 
+
+Singularidad:
+o3=0 y o5=0 (no se mueve libremente en y)
+o2=-90, o3=0, 04=-90 y o5=0 (totalmente parado)
+(Me falta una singulariad)
+
+Ej buenos:
+0,-30,-30,0,0,0
+0,30,-90,-30,180
+0,-12,-90,-135,-90,60
