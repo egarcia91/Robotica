@@ -85,6 +85,7 @@ mnueva = problemadirecto(thetaNuevo, a, d, alfa);
 
 norm(mnueva - m)
 
+MostrarTablaFinal(theta, m, a, d, alfa, indice);
 %display('Matriz transformada para theta0');
 %[ TransformadaA0, iter ] = problemadirecto(theta0)
 
