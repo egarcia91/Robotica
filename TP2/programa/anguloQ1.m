@@ -7,9 +7,11 @@ function [ angulo ] = anguloQ1(linkOffset, a, p, indice)
 
 	denq1 = sqrt((rosinphi)^2+(rocosphi)^2-(linkOffset(4))^2);
 	%denq1 = 1;
-  	numerador = linkOffset(4);
-  	denominador = denq1;
-	angulo = atan2(numerador, indice*denominador) - phi;
-
+  numerador = linkOffset(4);
+  denominador = denq1;
+%	angulo = atan2(numerador, -indice*denominador) - phi;
+	primerTermino = atan2(numerador, indice*denominador);
+  angulo=primerTermino - phi;
+  
 	angulo = intervaloAngulo( angulo );
 end

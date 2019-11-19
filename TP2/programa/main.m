@@ -60,11 +60,15 @@ d = [
 listaThetas = [
 	[0; pi/2; pi/2; 0; pi/2; 0]';
 	[pi/4; pi/2; pi/2; 0; pi/2; 0]';
-	[pi/4; pi/4; pi/2; 0; pi/2; 0]';
-	[pi/4; pi/4; 6*pi/8; 0; pi/2; 0]';
-	[pi/4; pi/4; pi/2; pi/4; pi/2; 0]';
-	[pi/4; pi/4; pi/2; 0; pi/2; pi/4]'
-];
+	[pi/4; pi/4; pi/2; 0; pi/2; 0]'; %%%%
+	[pi/4; pi/4; pi/6; 0; pi/2; 0]';
+	[pi/4; pi/4; pi/6; pi/4; pi/2; 0]';
+  [pi/4; pi/4; pi/6; pi/4; pi/4; 0]';
+	[pi/4; pi/4; pi/6; 0; pi/2; pi/4]';
+  [2*pi/3; -pi/4; -pi/6; -pi/4; pi/4; pi/4]';
+  [0;	pi/2;	pi/2;	0;	pi/2;	0]';
+  [-pi/6;	-pi/2;	pi/2;	-pi/4;	pi/4;	pi/4]';
+]
 
 theta = [
 	pi/4;
@@ -85,7 +89,7 @@ alfa = [
 	0;
 ];
 
-for k = 1:6
+for k = 1:length(listaThetas)
 
 	[m, indice] = problemadirecto(listaThetas(k, :)', a, d, alfa);
 
@@ -101,12 +105,12 @@ for k = 1:6
 	%m = fix(m*100)/100;
 
 	thetaNuevo = problemainverso(m, indice, a, d, alfa);
-
+  thetaNuevo'
 	mnueva = problemadirecto(thetaNuevo, a, d, alfa);
-
+  
 	norm(mnueva - m);
 
-	MostrarTablaFinal(listaThetas(k, :)', m, a, d, alfa, indice);
+%	MostrarTablaFinal(listaThetas(k, :)', m, a, d, alfa, indice);
 end
 %display('Matriz transformada para theta0');
 %[ TransformadaA0, iter ] = problemadirecto(theta0)
