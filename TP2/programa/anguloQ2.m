@@ -1,5 +1,4 @@
-function [ angulo ] = anguloQ2(q1, q5, q234, p, a, d, indice )
-
+function [ angulo ] = anguloQ2( q1, q3, q5, q234, p, a, d)
 	%%Calculo de q2
 	angulo = 0;
 
@@ -7,16 +6,13 @@ function [ angulo ] = anguloQ2(q1, q5, q234, p, a, d, indice )
 
 	B = p(3) - d(1) + d(5)*cos(q234) + d(6)*sin(q5)*sin(q234);
 
-	psi = atan2(A, B);
+	divisor = a(2)*a(2) + a(3)*a(3) + 2*a(2)*a(3)*cos(q3);
 
-	sumaABCuadrado = A*A + B*B;
+	numerador = (B*a(2) + B*a(3)*cos(q3) - A*a(3)*sin(q3))/(divisor);
 
-	nu = sqrt(sumaABCuadrado);
+	denominador = (A*a(2) + A*a(3)*cos(q3) + B*a(3)*sin(q3))/(divisor);
 
-	numerador = (sumaABCuadrado + a(2)*a(2) - a(3)*a(3)) / (2*a(2)*nu);
-	denominador = sqrt(1 - numerador*numerador);
-
-	angulo = atan2(numerador, -indice*denominador) - psi;
+	angulo = atan2(numerador, denominador);
 
 	angulo = intervaloAngulo( angulo );
 end

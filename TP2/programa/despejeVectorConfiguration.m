@@ -8,7 +8,7 @@ if(sign(linkLength(3)*(cos(theta(2) + theta(3))-sin(theta(2) + theta(3)))+linkLe
 		g1 = -1;
 	end
 
-	if ( sign(theta(2)) >= 0 )%sign(cos(theta(2))) >= 0 )
+	if ( sign(sin(theta(3))) >= 0 )
 		g2 = 1;
 	else
 		g2 = -1;
