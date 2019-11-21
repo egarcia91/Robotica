@@ -1,4 +1,8 @@
-function [ matriz ] = matrizTransformacion(tablaParametrosDH)
+function [ matriz ] = matrizTransformacion(tablaParametrosDH, hasta)
+
+	if ~exist('hasta', 'var')
+		hasta = 6;
+	end
 
 	matriz = eye(4);
 
@@ -9,7 +13,7 @@ function [ matriz ] = matrizTransformacion(tablaParametrosDH)
 %	graphicTerna(transformationMatrix,lastPos);
 
 
-	for i = 1:6
+	for i = 1:hasta
 
 %		lastPos = transformationMatrix(1:end-1,end)';
 		iJoint = tablaParametrosDH(i, 1:end);

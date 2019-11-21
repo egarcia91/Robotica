@@ -63,11 +63,14 @@ listaThetas = [
 	[pi/4; pi/4; pi/2; 0; pi/2; 0]'; %%%%
 	[pi/4; pi/4; pi/6; 0; pi/2; 0]';
 	[pi/4; pi/4; pi/6; pi/4; pi/2; 0]';
-  [pi/4; pi/4; pi/6; pi/4; pi/4; 0]';
+	[pi/4; pi/4; pi/6; pi/4; pi/4; 0]';
 	[pi/4; pi/4; pi/6; 0; pi/2; pi/4]';
-  [2*pi/3; -pi/4; -pi/6; -pi/4; pi/4; pi/4]';
-  [0;	pi/2;	pi/2;	0;	pi/2;	0]';
-  [-pi/6;	-pi/2;	pi/2;	-pi/4;	pi/4;	pi/4]';
+	[2*pi/3;-pi/4;-pi/6; -pi/4; pi/4; pi/4]';
+	[0;pi/2;pi/2;0;pi/2;0]';
+	[-pi/6;	pi/2;pi/2;pi/4;pi/4;pi/4]';
+	[-pi/6;	pi/2;pi/2;pi/4;0;pi/4]';
+	[-pi/6;	pi/2;pi/2;pi/4;0;pi/4]';
+	deg2rad([-30, -120, -70, 30, 0, -90]);
 ]
 
 theta = [
@@ -105,9 +108,9 @@ for k = 1:length(listaThetas)
 	%m = fix(m*100)/100;
 
 	thetaNuevo = problemainverso(m, indice, a, d, alfa);
-  thetaNuevo'
+	thetaNuevo'
 	mnueva = problemadirecto(thetaNuevo, a, d, alfa);
-  
+
 	norm(mnueva - m);
 
 %	MostrarTablaFinal(listaThetas(k, :)', m, a, d, alfa, indice);
