@@ -71,6 +71,9 @@ listaThetas = [
 	[-pi/6;	pi/2;pi/2;pi/4;0;pi/4]';
 	[-pi/6;	pi/2;pi/2;pi/4;0;pi/4]';
 	deg2rad([-30, -120, -70, 30, 0, -90]);
+	deg2rad([0, 0, 0, 164, 0, 110]);
+	deg2rad([90, 0, 45, 45, 0, 90]);
+	deg2rad([180, 35, 45, 135, 0, 8]);
 ]
 
 theta = [
@@ -108,7 +111,8 @@ for k = 1:length(listaThetas)
 	%m = fix(m*100)/100;
 
 	thetaNuevo = problemainverso(m, indice, a, d, alfa);
-	thetaNuevo'
+
+	rad2deg(thetaNuevo')
 	mnueva = problemadirecto(thetaNuevo, a, d, alfa);
 
 	norm(mnueva - m);
