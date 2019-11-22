@@ -1,7 +1,8 @@
 function [ jointAngle ] = problemainverso( transformationMatrix, indice, aLen, dLen, alfa, q6Actual)
-	%Condiciones iniciales
+%Problema Inverso Universal Robot UR5
+
 	[ linkTwist, linkLength, linkOffset ] = condicionesIniciales();
-	%Para que el robot quede en posición de la Figura 1 del TP2 con ABB
+
 	if exist('dLen', 'var')
 		linkOffset = dLen;
 	end
@@ -27,12 +28,12 @@ function [ jointAngle ] = problemainverso( transformationMatrix, indice, aLen, d
 	[ q1, q2, q3, q4, q5, q6 ] = despejeAngulos( linkOffset, n, o, a, p, indice, linkLength, linkTwist );
 
 	jointAngle = [
-		q1; %q1uno o q1dos
-		q2; %q2uno o q2dos
-		q3; %theta3
-		q4; %theta4
-		q5; %q5
-		q6; %q6
+		q1;
+		q2;
+		q3;
+		q4;
+		q5;
+		q6;
 	];
 
 end

@@ -11,7 +11,8 @@ function [ q1, q2, q3, q4, q5, q6 ] = despejeAngulos( linkOffset, n, o, a, p, in
 
 	q2 = anguloQ2( q1, q3, q5, q234, p, linkLength, linkOffset );
 
-	q4 = anguloQ4( q2, q3, q234, q5);
+	q4 = anguloQ4( q2, q3, q234);
 
 	q6 = anguloQ6( q1, q2, q3, q4, q5, n, o, a, linkLength, linkOffset, linkTwist );
+
 end

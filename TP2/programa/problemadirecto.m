@@ -1,15 +1,16 @@
 function [ transformationMatrix, indice ] = problemadirecto(theta, aLen, dLen, alfa )
-	%Condiciones iniciales
+%Problema directo! Universal Robot UR5
+
 	[ linkTwist, linkLength, linkOffset ] = condicionesIniciales();
 
 	%Para que el robot quede en posición de la Figura 1 del TP2 con ABB
 	jointAngle = [
-		0; %theta1
-		-pi/2; %theta2
-		pi/2; %theta3
-		pi; %theta4
-		-pi/2; %theta5
-		0; %theta6
+		0;
+		-pi/2;
+		 pi/2;
+		pi;
+		-pi/2;
+		0;
 	];
 
 	if exist('theta', 'var')
