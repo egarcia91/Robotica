@@ -1,4 +1,5 @@
 function [ matriz ] = limpiarMatriz( matriz )
+%Convierte ceros negativos y los numeros chicos en cero
 
 	for i = 1:3
 		for j=1:3

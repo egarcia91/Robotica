@@ -2,65 +2,24 @@ clear all;
 close all;
 clc;
 
-%%%%%Condiciones iniciales
-%%%%theta0 = [
-%%%%	0;          %theta1
-%%%%	-pi/2;      %theta2
-%%%%	pi/2;       %theta3
-%%%%	pi;         %theta4
-%%%%	-pi/2;      %theta5
-%%%%	0;          %theta6
-%%%%];
-%%%%
-%%%%theta1 = [
-%%%%	0;
-%%%%	0;
-%%%%	0;
-%%%%	0;
-%%%%	90*pi/180; %conversion de 90grados a radianes
-%%%%	0
-%%%%];
-%%%%
-%%%%theta2 = [
-%%%%	30*pi/180;
-%%%%	30*pi/180;
-%%%%	30*pi/180;
-%%%%	30*pi/180;
-%%%%	30*pi/180;
-%%%%	30*pi/180;
-%%%%];
+#Condiciones físicas del UR5
+[ alfa, a, d ] = condicionesIniciales();
 
-a = [
-	0;
-	-0.5;
-	-0.4;
-	0;
-	0;
-	0;
-];
+graficar=1;%Condicion para graficar en el problema directo. 1=Grafica. 0=No grafica
 
-d = [
-	0.1;
-	0;
-	0;
-	0.1;
-	0.1;
-	0.08;
-];
+#Matrices Homogeneas e indices de los angulos propuestos en el Ejercicio 1
+[MatHomo0, MatHomo1, MatHomo2, indice0, indice1, indice2]=EjercicioUNO(alfa, a, d,graficar) %Quitar el ; para ver resultados
+graficar=0;
 
-%theta = [
-%	0;
-%	pi/2;
-%	pi/2;
-%	0;
-%	pi/2;
-%	0;
-%]
+#Resultados del problema inverso asociado al Ejercicio 1
+[theta0inv, theta1inv, theta2inv, norma0, norma1, norma2] = EjercicioDOSAsociadoUNO(alfa, a, d,MatHomo0, MatHomo1, MatHomo2, indice0, indice1, indice2)
+%Quitar el ; para ver resultados
 
+#Angulos testeados
 listaThetas = [
 	[0; pi/2; pi/2; 0; pi/2; 0]';
 	[pi/4; pi/2; pi/2; 0; pi/2; 0]';
-	[pi/4; pi/4; pi/2; 0; pi/2; 0]'; %%%%
+	[pi/4; pi/4; pi/2; 0; pi/2; 0]';
 	[pi/4; pi/4; pi/6; 0; pi/2; 0]';
 	[pi/4; pi/4; pi/6; pi/4; pi/2; 0]';
 	[pi/4; pi/4; pi/6; pi/4; pi/4; 0]';
@@ -69,62 +28,10 @@ listaThetas = [
 	[0;pi/2;pi/2;0;pi/2;0]';
 	[-pi/6;	pi/2;pi/2;pi/4;pi/4;pi/4]';
 	[-pi/6;	pi/2;pi/2;pi/4;0;pi/4]';
-	[-pi/6;	pi/2;pi/2;pi/4;0;pi/4]';
-	deg2rad([-30, -120, -70, 30, 0, -90]);
-	deg2rad([0, 0, 0, 164, 0, 110]);
-	deg2rad([90, 0, 45, 45, 0, 90]);
-	deg2rad([180, 35, 45, 135, 0, 8]);
-]
+  [ thetaRad] = gradosARadianes([-30, -120, -70, 30, 0, -90])%No me funcionaba el deg2rad :( 
+  [ thetaRad] = gradosARadianes([0, 0, 0, 164, 0, 110]);
+  [ thetaRad] = gradosARadianes([90, 0, 45, 45, 0, 90]);
+  [ thetaRad] = gradosARadianes([180, 35, 45, 135, 0, 8]);
+]%Quitar el ; para ver resultados
 
-theta = [
-	pi/4;
-	pi/4;
-	pi/2;
-	0;
-	pi/2;
-	pi/4;
-];
-
-
-alfa = [
-	pi/2;
-	0;
-	0;
-	pi/2;
-	-pi/2;
-	0;
-];
-
-for k = 1:length(listaThetas)
-
-	[m, indice] = problemadirecto(listaThetas(k, :)', a, d, alfa);
-
-	for i = 1:3
-		for j=1:3
-			if(abs(m(i,j)) < 1e-9)
-				m(i,j) = 0;
-			end
-		end
-	end
-
-	%m
-	%m = fix(m*100)/100;
-
-	thetaNuevo = problemainverso(m, indice, a, d, alfa);
-
-	rad2deg(thetaNuevo')
-	mnueva = problemadirecto(thetaNuevo, a, d, alfa);
-
-	norm(mnueva - m);
-
-%	MostrarTablaFinal(listaThetas(k, :)', m, a, d, alfa, indice);
-end
-%display('Matriz transformada para theta0');
-%[ TransformadaA0, iter ] = problemadirecto(theta0)
-
-%display('Matriz transformada para theta1');
-%[ TransformadaA1, iter ] = problemadirecto(theta1)
-
-%display('Matriz transformada para theta2');
-%[ TransformadaA2, iter ] = problemadirecto(theta2)
-
+[ listaThetasInversos] = testeo(listaThetas,a,d,alfa)%Quitar el ; para ver resultados

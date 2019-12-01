@@ -1,39 +1,15 @@
-function [ transformationMatrix, indice ] = problemadirecto(theta, aLen, dLen, alfa )
+function [ transformationMatrix, indice ] = problemadirecto(theta, a, d, alfa, graficar )
 %Problema directo! Universal Robot UR5
+	tablaParametrosDH = [ theta, a, d , alfa ];
 
-	[ linkTwist, linkLength, linkOffset ] = condicionesIniciales();
-
-	%Para que el robot quede en posición de la Figura 1 del TP2 con ABB
-	jointAngle = [
-		0;
-		-pi/2;
-		 pi/2;
-		pi;
-		-pi/2;
-		0;
-	];
-
-	if exist('theta', 'var')
-		jointAngle = theta;
-	end
-
-	if exist('dLen', 'var')
-		linkOffset = dLen;
-	end
-
-	if exist('aLen', 'var')
-		linkLength = aLen;
-	end
-
-	if exist('alfa', 'var')
-		linkTwist = alfa;
-	end
-
-	tablaParametrosDH = [ jointAngle, linkLength, linkOffset, linkTwist ];
-
-	transformationMatrix = matrizTransformacion(tablaParametrosDH);
-
-	[ g1, g2, g3 ] = despejeVectorConfiguration(jointAngle, linkOffset, linkLength);
+	[transformationMatrix,transformationSteps] = matrizTransformacion(tablaParametrosDH);
+  
+  if (graficar==1)
+    figure()
+    graficarTernasRobot(transformationSteps);
+  end
+  
+	[ g1, g2, g3 ] = despejeVectorConfiguration(theta, d, a);
 
 	indice = [ g1, g2, g3 ];
 
