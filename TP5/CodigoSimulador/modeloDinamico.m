@@ -10,16 +10,21 @@
 
 function dxdt = modeloDinamico(t,x,u)
 
-global N;
-global Jm;
-global Bm;
-global Km;
+	global N;
+	global Jm;
+	global Bm;
+	global Km;
 
-Torq=Km*N*u;
-n_ejes=length(Torq);
-[M,H,G] = calcMatrizDinamica(x);
+	Torq = Km*N*u;
+	n_ejes = length(Torq);
+	[ M, H, G ] = calcMatrizDinamica(x);
 
-thetap = x(n_ejes+1:end);
-theta2p = (M+Jm*N^2)\( Torq -Bm*N^2*thetap -H -G);
-dxdt = [thetap; theta2p];
+	thetap = x(n_ejes+1:end);
+	theta2p = (M+Jm*N^2)\( Torq -Bm*N^2*thetap -H -G);
+
+	dxdt = [
+		thetap;
+		theta2p
+	];
+
 end
