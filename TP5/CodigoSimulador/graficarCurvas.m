@@ -16,58 +16,15 @@ function [] = graficarCurvas(time, tita, titaD, titap, titapD, tita2p, tita2pD, 
 
 	xmax = max(time);
 
-	% Gráfico de torques vs. posición de ejes
-	plot(time,u);
-	title(strcat(ptitle, ' - Torques'));
-	ylabel('Torques [Nm]');
-	legend({'Eje 1','Eje 2'},'FontSize',7,'Location','northwest');
-	grid on;
-	xlim([0 xmax]);
-	xlabel('Tiempo [s]');
+	graficarTorques(time, tita, titaD, titap, titapD, tita2p, tita2pD, u, ptitle);
 
 	% Gráfico de posiciones, velocidades y aceleraciones, theta 2
 	for i=1:2
-		figure;
 
-		subplot(3,1,1);
-		plot(time,(180/pi)*([tita(i,:);titaD(i,:)]));
-		title([ptitle ' - Eje ' num2str(i)]);
-		ylabel('Pos [°]');
-		legend({'Theta','Theta ref'},'FontSize',7,'Location','northwest');
-		grid on;
-		xlim([0 xmax]);
+		graficarPosicionesVelocidadesAceleracion(i, time, tita, titaD, titap, titapD, tita2p, tita2pD, u, ptitle);
 
-		subplot(3,1,2);
-		plot(time,[titap(i,:);titapD(i,:)]);
-		ylabel('Vel [°/s]');
-		legend({'Vel','Vel ref'},'FontSize',7,'Location','northwest');
-		grid on;
-		xlim([0 xmax]);
-
-		subplot(3,1,3);
-		plot(time,[tita2p(i,:);tita2pD(i,:)]);
-		ylabel('Acel [°/s^2]'); 
-		legend({'Acel','Acel ref'},'FontSize',7,'Location','northwest');
-		grid on;
-		xlim([0 xmax]);
-		xlabel('Tiempo [s]');
 	end
 
-	figure;
-	subplot(2,1,1)
-	title(ptitle);
-	plot(time,(u.*titap)');
-	ylabel('Potencia [W]');
-	legend({'Eje 1','Eje 2'},'FontSize',7,'Location','northwest');
-	grid on;
-	xlim([0 xmax]);
-
-	subplot(2,1,2)
-	plot(time,cumsum((u.*titap)'));
-	ylabel('Energía [J]');
-	legend({'Eje 1','Eje 2'},'FontSize',7,'Location','northwest');
-	grid on;
-	xlim([0 xmax]);
-	xlabel('Tiempo [s]');
+	graficarPotenciaEnergia(time, tita, titaD, titap, titapD, tita2p, tita2pD, u, ptitle);
 
 end

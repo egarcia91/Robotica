@@ -18,15 +18,14 @@ thetaB = thetaA;
 theta = thetaA;
 thetap = zeros(size(theta));
 
-simulacion(tacc, Tm, Kp, Kd, theta, thetap, odeOptions, n_ejes );
-%%%%%%% Calculo las trayectorias
-%%%%%%%[ pos_ref,config_ref ] = pDirecto(acum_thetaD(:,2:end),DH);
-%%%%%%%[ pos,config ] = pDirecto(acum_theta(:,1:end-1),DH);
-%%%%%%
-%%%%%%% Grafica de resultados
-%%%%%%graficarCurvas(acum_tr, acum_theta, acum_thetaD, acum_thetap, acum_thetapD, acum_theta2p, acum_theta2pD, acum_u, "Pendulo doble");
-%%%%%%
-%%%%%%
+[ acum_tr, acum_theta, acum_thetaD, acum_thetap, acum_thetapD, acum_theta2p, acum_theta2pD, acum_u ] = simulacion(tacc, Tm, Kp, Kd, Km, theta, thetap, odeOptions, n_ejes, N, tr );
+% Calculo las trayectorias
+%[ pos_ref,config_ref ] = pDirecto(acum_thetaD(:,2:end),DH);
+%[ pos,config ] = pDirecto(acum_theta(:,1:end-1),DH);
+
+% Grafica de resultados
+graficarCurvas(acum_tr, acum_theta, acum_thetaD, acum_thetap, acum_thetapD, acum_theta2p, acum_theta2pD, acum_u, "Pendulo doble");
+
 %%%%%%%figure()
 %%%%%%%plot(pos(:,1),pos(:,2));
 %%%%%%%hold on
