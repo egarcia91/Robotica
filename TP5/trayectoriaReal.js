@@ -6,10 +6,17 @@
 	TrayectoriaReal.prototype = Object.create(HtmlWidget.prototype);
 	TrayectoriaReal.prototype.constructor = "TrayectoriaReal";
 
-	TrayectoriaReal.prototype.calcular = function(tacc, posi, posf, velmax, tiempo){
-		parteCuadratica
+	TrayectoriaReal.prototype.calcular = function(datos){
+//	TrayectoriaReal.prototype.calcular = function(posiciones, velocidadesMaxSegmentos, tiemposSegmentos, tacc){
+		console.log(datos);
 
-		parteLineal
+		var lenPos = posiciones.lenght;
+		var lenVel = velocidadesMaxSegmentos.length;
+		var lenTiem = tiemposSegmentos.length;
+
+		for(var i = 0; posicion = posiciones[i]; i++){
+			console.log(posicion);
+		}
 
 	};
 
@@ -17,15 +24,25 @@
 
 		b = velmax;
 
-		return b*t + c
+		return b*t + c;
 	};
 
-	TrayectoriaReal.prototype.parteCuadráticaInicial = function(posicionInicial, tiempoAceleracion, velocidadMaxima, t){
+	TrayectoriaReal.prototype.parteCuadraticaInicial = function(posicionInicial, tiempoAceleracion, velocidadMaxima, t){
 
 		c = posicionInicial;
 		a = velocidadMaxima/(2*tiempoAceleracion);
 
-		return a*t*t + c
+		return a*t*t + c;
+	};
+
+	TrayectoriaReal.prototype.parteCuadraticaIntermedio = function(posicionInicial, tiempoAceleracion, velocidadMaxima, t){
+
+		return a*t*t + b*t + c;
+	};
+
+	TrayectoriaReal.prototype.parteCuadraticaFinal = function(posicionInicial, tiempoAceleracion, velocidadMaxima, t){
+
+		return a*t*t + c;
 	};
 
 	window.TrayectoriaReal = TrayectoriaReal;

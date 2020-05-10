@@ -8,35 +8,66 @@
 		<table align='center'>
 			<tr>
 				<td colspan="2" align="center" style="border-style:solid;">
-					Parametros
+					<span>
+						Parametros
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td align="right">
+					<span>Tiempo aceleracion [ms]:</span>
+				</td>
+				<td align="center">
+					<input style="width:40%" type='text' class="datos" data-name="tiempoAceleracion" value='1'>
+				</td>
+			</tr>
+		</table>
+		<div class="segmento" style="border-style:solid;"></div>
+		<table align='center'>
+
+			<tr>
+				<td colspan="2" align="center">
+					<input style="width:85%" type='button' value='Calcular' data-evt="calculo">
+				</td>
+			</tr>
+		</table>
+
+	</textarea>
+
+	<textarea id="segmentos" style="display:none;visibility:hidden;">
+		<table align='center'>
+			<tr>
+				<td colspan="2" align="center" style="border-style:solid;">
+
+					<input style="width:15%;{if !hayAnt}visibility:hidden{/if}" type='button' value='anterior' data-evt="anterior" >
+
+					<span>
+						Segmento ${seg}
+					</span>
+
+					<input style="width:15%;{if !haySig}visibility:hidden{/if}" type='button' value='siguiente' data-evt="siguiente">
+					<input style="width:15%" type='button' value='agregar' data-evt="agregar">
+					<input style="width:15%" type='button' value='eliminar' data-evt="eliminar">
 				</td>
 			</tr>
 			<tr>
 				<td align="right" style="width:60%">
 					<span>
-						Posicion inicial:
+						Posicion inicial []:
 					</span>
 				</td>
 				<td align="center">
-					<input style="width:40%" type='text' class="datos" data-name="posicionInicial" value='-300'>
+					<input style="width:40%" type='text' class="datos" data-name="posIni" value='${datos.posIni}' {if bloqPosI}disabled{/if}>
 				</td>
 			</tr>
 			<tr>
 				<td align="right">
 					<span>
-						Posicion final:
+						Posicion final []:
 					</span>
 				</td>
 				<td align="center">
-					<input style="width:40%" type='text' class="datos" data-name="posicionFinal" value='300'>
-				</td>
-			</tr>
-			<tr>
-				<td align="right">
-					<span>Tiempo aceleracion:</span>
-				</td>
-				<td align="center">
-					<input style="width:40%" type='text' class="datos" data-name="tiempoAceleracion" value='1'>
+					<input style="width:40%" type='text' class="datos" data-name="posFin" value='${datos.posFin}'>
 				</td>
 			</tr>
 			<tr>
@@ -44,7 +75,7 @@
 					<span>Velocidad maxima:</span>
 				</td>
 				<td align="center">
-					<input style="width:40%" type='text' class="datos" data-name="velocidadMaxima" value='1'>
+					<input style="width:40%" type='text' class="datos" data-name="vel" value='${datos.vel}'>
 				</td>
 			</tr>
 			<tr>
@@ -52,12 +83,7 @@
 					<span>Tiempo:</span>
 				</td>
 				<td align="center">
-					<input style="width:40%" type='text' class="datos" data-name="tiempo" value='1'>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2" align="center">
-					<input style="width:85%" type='button' value='Calcular' data-evt="calculo">
+					<input style="width:40%" type='text' class="datos" data-name="t" value='${datos.t}'>
 				</td>
 			</tr>
 		</table>
@@ -101,6 +127,7 @@ body {
 <script src="resultado.js"></script>
 <script src="grafico.js"></script>
 <script src="trayectoriaReal.js"></script>
+<script src="segmento.js"></script>
 <script>
 /**
  * TrimPath Template. Release 1.0.38.
