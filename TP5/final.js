@@ -44,14 +44,11 @@ var datosReal = {
 
 (function(){
 	window.addEventListener('load', function(){
-//		loadData();
 		new Main(document.getElementById('main'),{});
 	});
 })();
 
 function loadData(){
-
-//	document.getElementById('Xini').addEventListener('change',function(){});
 
 	document.getElementById('calc').addEventListener('click',function(){
 		calculate();

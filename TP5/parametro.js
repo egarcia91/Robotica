@@ -15,7 +15,9 @@
 		this.segmentos.addEventListener('quierenCambiarParametro', this.onCambio.bind(this));
 
 
-		this.trayectoriaReal = new TrayectoriaReal(null,{});
+//		this.trayectoriaReal = new TrayectoriaReal(null,{});
+
+		this.trayectoriaIdeal = new TrayectoriaIdeal(null,{});
 
 		this.datosSegmentos = JSON.parse(JSON.stringify(this.defecto));
 	}
@@ -55,7 +57,8 @@
 	Parametro.prototype.calculate = function(){
 		this.getData();
 
-		this.trayectoriaReal.calcular(JSON.parse(JSON.stringify(this.datos)));
+//		this.trayectoriaReal.calcular(JSON.parse(JSON.stringify(this.datos)));
+		this.trayectoriaIdeal.calcular(JSON.parse(JSON.stringify(this.datos)));
 	};
 
 	Parametro.prototype.onCambio = function(indice, nombre, valor){
@@ -93,6 +96,7 @@
 		this.getElementsByClassName('datos', function(ele){
 			this.datos[ele.getAttribute('data-name')] = parseFloat(ele.value);
 		});
+		this.datos.posiciones = this.datosSegmentos;
 		//this.emit('calc',"nada");
 	};
 

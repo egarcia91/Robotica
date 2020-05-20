@@ -1,48 +1,30 @@
 (function(){
 	function TrayectoriaReal(div,config){
 		HtmlWidget.call(this,div,config);
+
+		this.tiempoAceleracion = 0;
+		this.tiempoTotalSegmentos = 0;
 	}
 
 	TrayectoriaReal.prototype = Object.create(HtmlWidget.prototype);
 	TrayectoriaReal.prototype.constructor = "TrayectoriaReal";
 
-	TrayectoriaReal.prototype.calcular = function(datos){
-//	TrayectoriaReal.prototype.calcular = function(posiciones, velocidadesMaxSegmentos, tiemposSegmentos, tacc){
-		console.log(datos);
+//	TrayectoriaReal.prototype.calcular = function(datos){
+//
+//		this.tiempoAceleracion = datos.tiempoAceleracion;
+//		this.tiempoTotalSegmentos = this.tiempoAceleracion;
+//
+//		for(var i = 0; posicion = datos.posiciones[i]; i++){
+//			this.tiempoTotalSegmentos += posicion.t;
+//			console.log(posicion);
+//			console.log('perro');
+//		}
+//
+//		console.log(this.tiempoTotalSegmentos);
+//
+//	};
 
-		var lenPos = posiciones.lenght;
-		var lenVel = velocidadesMaxSegmentos.length;
-		var lenTiem = tiemposSegmentos.length;
-
-		for(var i = 0; posicion = posiciones[i]; i++){
-			console.log(posicion);
-		}
-
-	};
-
-	TrayectoriaReal.prototype.parteLineal = function(velmax, t){
-
-		b = velmax;
-
-		return b*t + c;
-	};
-
-	TrayectoriaReal.prototype.parteCuadraticaInicial = function(posicionInicial, tiempoAceleracion, velocidadMaxima, t){
-
-		c = posicionInicial;
-		a = velocidadMaxima/(2*tiempoAceleracion);
-
-		return a*t*t + c;
-	};
-
-	TrayectoriaReal.prototype.parteCuadraticaIntermedio = function(posicionInicial, tiempoAceleracion, velocidadMaxima, t){
-
-		return a*t*t + b*t + c;
-	};
-
-	TrayectoriaReal.prototype.parteCuadraticaFinal = function(posicionInicial, tiempoAceleracion, velocidadMaxima, t){
-
-		return a*t*t + c;
+	TrayectoriaReal.prototype.eval = function(tiempo){
 	};
 
 	window.TrayectoriaReal = TrayectoriaReal;
