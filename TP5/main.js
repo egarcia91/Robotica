@@ -6,7 +6,7 @@
 
 		var divParametros = this.getElementsByClassName('parametros')[0];
 		this.parametro = new Parametro(divParametros,{});
-		this.parametro.addEventListener('calc',this.onCalc.bind(this));
+		this.parametro.addEventListener('calcule',this.onCalc.bind(this));
 
 //		var divResultados = this.getElementsByClassName('resultados')[0];
 //		this.resultado = new Resultado(divResultados,{});
@@ -24,8 +24,11 @@
 		this.d.innerHTML = template;
 	};
 
-	Main.prototype.onCalc = function(datos){
-		console.log(datos);
+	Main.prototype.onCalc = function(){
+
+		console.log("Hola");
+		this.grafico.pushData(this.parametro.getTrayectoria());
+		this.grafico.show(true);
 	};
 
 	window.Main = Main;

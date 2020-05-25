@@ -1,30 +1,103 @@
 (function(){
 	function TrayectoriaReal(div,config){
-		HtmlWidget.call(this,div,config);
+		Trayectoria.call(this,div,config);
 
-		this.tiempoAceleracion = 0;
-		this.tiempoTotalSegmentos = 0;
+		this.funciones = [];
 	}
 
-	TrayectoriaReal.prototype = Object.create(HtmlWidget.prototype);
+	TrayectoriaReal.prototype = Object.create(Trayectoria.prototype);
 	TrayectoriaReal.prototype.constructor = "TrayectoriaReal";
 
-//	TrayectoriaReal.prototype.calcular = function(datos){
-//
-//		this.tiempoAceleracion = datos.tiempoAceleracion;
-//		this.tiempoTotalSegmentos = this.tiempoAceleracion;
-//
-//		for(var i = 0; posicion = datos.posiciones[i]; i++){
-//			this.tiempoTotalSegmentos += posicion.t;
-//			console.log(posicion);
-//			console.log('perro');
-//		}
-//
-//		console.log(this.tiempoTotalSegmentos);
-//
-//	};
+	TrayectoriaReal.prototype.primerTiempoMedio = function(tiempo, c){
 
-	TrayectoriaReal.prototype.eval = function(tiempo){
+		var indice = 0;
+
+		if(c){
+			indice = c.indice;
+			//tiempo = c.tiempoRelativo;
+		}
+
+		return this.funciones[indice].inicio.eval({t : tiempo});
+	};
+
+	TrayectoriaReal.prototype.ultimoTiempoMedio = function(tiempo, c){
+
+		var indice = this.cantidadSegmentos - 1;
+
+		if(c){
+			indice = c.indice;
+//			tiempo = c.tiempoRelativo;
+		} else {
+//			console.log("tiempo : "+tiempo);
+		}
+
+		return this.funciones[indice].fin.eval({t : tiempo});
+	};
+
+	TrayectoriaReal.prototype.tiempoFueraAceleracion = function(tiempo, c){
+		return this.funciones[c.indice].medio.eval({t : (c.tiempoRelativo - (this.tiempoAceleracion/2))});
+	};
+
+	TrayectoriaReal.prototype.tiempoAcumulado = function(indice){
+
+		var tiempoAcumulado = 0;
+
+//		if(indice){
+//			tiempoAcumulado += this.tiempoAceleracion/2;
+//		}
+
+		for(var i = 0, ele; ele = this.posiciones[i]; i++){
+			if(i == indice){
+				break;
+			}
+			tiempoAcumulado += ele.t
+
+		}
+		return tiempoAcumulado
+	};
+
+	TrayectoriaReal.prototype.generarFuncionCuadraticaFin = function(p, indice, tiempoAcumulado){
+//		var pos = funcionLineal.eval({t : (p.t - this.tiempoAceleracion)});
+		var sigPosicion = this.posiciones[indice+1];
+		var velSiguiente = 0;
+		if(sigPosicion){
+			velSiguiente = sigPosicion.vel;
+		}
+
+		var pos = 0;
+		var funcionCuadraticaFin = math.parse(this.cuadratica((velSiguiente-p.vel)/(this.tiempoAceleracion*2),p.vel,pos, (tiempoAcumulado + this.tiempoAceleracion)), {t : 0});
+		return funcionCuadraticaFin;
+	};
+
+	TrayectoriaReal.prototype.generarFuncionCuadraticaIni = function(p, indice, tiempoAcumulado){
+		if(indice){
+			return this.funciones[indice-1].fin;
+		}
+		var funcionCuadraticaIni = math.parse(this.cuadratica((p.vel)/(this.tiempoAceleracion*2), 0, p.posIni, tiempoAcumulado), {t : 0});
+
+		return funcionCuadraticaIni;
+	};
+
+	TrayectoriaReal.prototype.generarFuncion = function(p, indice){
+
+		var tiempoAcumulado = this.tiempoAcumulado(indice);
+		console.log(tiempoAcumulado);
+
+		var funcionCuadraticaIni = this.generarFuncionCuadraticaIni(p, indice, tiempoAcumulado);
+
+//		var funcionLineal = math.parse(this.lineal(p.vel, funcionCuadraticaIni.eval({t: this.tiempoAceleracion}), (tiempoAcumulado + this.tiempoAceleracion)), {t : 0});
+		var funcionLineal = math.parse(this.lineal(0,0), {t : 0});
+
+
+//		var funcionCuadraticaFin = math.parse(this.cuadratica((-p.vel)/(this.tiempoAceleracion*2), p.vel, pos, (tiempoAcumulado + p.t - (this.tiempoAceleracion/2)) ), {t : 0});
+		var funcionCuadraticaFin = this.generarFuncionCuadraticaFin(p, indice, tiempoAcumulado);
+//		var funcionCuadraticaFin = math.parse(this.cuadratica((-p.vel)/(this.tiempoAceleracion*2),p.vel,pos, (tiempoAcumulado + this.tiempoAceleracion)), {t : 0});
+
+		this.funciones[indice] = {
+			inicio : funcionCuadraticaIni,
+			medio : funcionLineal,
+			fin : funcionCuadraticaFin
+		};
 	};
 
 	window.TrayectoriaReal = TrayectoriaReal;

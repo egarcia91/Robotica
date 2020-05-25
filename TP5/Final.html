@@ -89,7 +89,7 @@
 		</table>
 	</textarea>
 	<textarea id="grafico" style="display:none;visibility:hidden;">
-		<div id="trayectoria" style="width:60%;height:80%;margin-left:30%">
+		<div class="trayectoria" style="width:60%;height:80%;margin-left:30%">
 		</div>
 	</textarea>
 	<textarea id="resultados" style="display:none;visibility:hidden;">
@@ -121,7 +121,6 @@ body {
 }
 </style>
 <script src="HtmlWidget.js"></script>
-<script src="final.js"></script>
 <script src="main.js"></script>
 <script src="parametro.js"></script>
 <script src="resultado.js"></script>
@@ -130,6 +129,22 @@ body {
 <script src="trayectoriaReal.js"></script>
 <script src="trayectoriaIdeal.js"></script>
 <script src="segmento.js"></script>
+<script>
+(function(){
+	window.addEventListener('load', function(){
+		new Main(document.getElementById('main'),{});
+	});
+})();
+
+function linspace(a,b,n) {
+	if(typeof n === "undefined") n = Math.max(Math.round(b-a)+1,1);
+	if(n<2) { return n===1?[a]:[]; }
+	var i,ret = Array(n);
+	n--;
+	for(i=n;i>=0;i--) { ret[i] = (i*b+(n-i)*a)/n; }
+	return ret;
+};
+</script>
 <script>
 /**
  * TrimPath Template. Release 1.0.38.

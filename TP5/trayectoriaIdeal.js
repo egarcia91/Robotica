@@ -1,62 +1,37 @@
 (function(){
 	function TrayectoriaIdeal(div,config){
 		Trayectoria.call(this,div,config);
-		this.tiempoAceleracion = 0;
+
+		this.funciones = [];
 	}
 
 	TrayectoriaIdeal.prototype = Object.create(Trayectoria.prototype);
 	TrayectoriaIdeal.prototype.constructor = "TrayectoriaIdeal";
 
-//	TrayectoriaIdeal.prototype.calcular = function(datos){
-//		this.tiempoAceleracion = datos.tiempoAceleracion;
-//		console.log('gato');
-//		console.log(this.tolerancia);
-//
-//		var lenPos = datos.posiciones.lenght;
-////		var lenVel = velocidadesMaxSegmentos.length;
-////		var lenTiem = tiemposSegmentos.length;
-//
-//		for(var i = 0; posicion = datos.posiciones[i]; i++){
-//			console.log(posicion);
-//		}
-//
-//	};
-
-	TrayectoriaIdeal.prototype.esTiempoSegmento = function(tiempo){
-		if(math.abs(tiempo - tiempoSegmento) < this.tolerancia){
-			console.log("estoy en donde termino")
-			return true;
+	TrayectoriaIdeal.prototype.primerTiempoMedio = function(tiempo, c){
+		if(c){
+			return this.funciones[c.indice].eval({t : c.tiempoRelativo});
 		}
+		return this["constante"](this.posiciones[0].posIni);
 	};
 
-	TrayectoriaIdeal.prototype.posicion = function(tiempo){
-		var medioTiempoAceleracion = this.tiempoAceleracion/2;
-
-		if(math.abs(tiempo - medioTiempoAceleracion) < this.tolerancia){
-			console.log("estoy en donde empiezo")
-			return 0;
+	TrayectoriaIdeal.prototype.ultimoTiempoMedio = function(tiempo, c){
+		if(c){
+			return this.funciones[c.indice].eval({t : c.tiempoRelativo});
 		}
+		return this["constante"](this.posiciones[this.cantidadSegmentos - 1].posFin);
+	};
 
-		if(this.esTiempoSegmento(tiempo)){
-			return 0;
-		}
+	TrayectoriaIdeal.prototype.tiempoFueraAceleracion = function(tiempo, c){
+		return this.funciones[c.indice].eval({t : c.tiempoRelativo});
+	};
 
-		if( tiempo < medioTiempoAceleracion ){
-			console.log("estoy en primer parte plana")
-			return 0;
-		}
+	TrayectoriaIdeal.prototype.generarFuncion = function(p, indice){
+		var pendiente = (p.posFin - p.posIni)/p.t;
+		var ordenada = p.posIni;
+		var funcion = math.parse(this.lineal(pendiente, ordenada), {t : 0});
 
-		if( tiempo > medioTiempoAceleracion && tiempo < tiempoSegmento){
-			console.log("estoy en parte lineal")
-			return 0;
-		}
-
-		if( tiempo > tiempoSegmento && tiempo < tiempoFinal){
-			console.log("estoy en ultima parte plana")
-			return 0;
-		}
-
-		return 0;
+		this.funciones[indice] = funcion;
 	};
 
 	window.TrayectoriaIdeal = TrayectoriaIdeal;

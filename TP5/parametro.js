@@ -15,7 +15,7 @@
 		this.segmentos.addEventListener('quierenCambiarParametro', this.onCambio.bind(this));
 
 
-//		this.trayectoriaReal = new TrayectoriaReal(null,{});
+		this.trayectoriaReal = new TrayectoriaReal(null,{});
 
 		this.trayectoriaIdeal = new TrayectoriaIdeal(null,{});
 
@@ -28,14 +28,14 @@
 	Parametro.prototype.defecto = [{
 		posIni : -300,
 		posFin : 300,
-		vel : 1,
+		vel : 100,
 		t : 1
 	}];
 
 	Parametro.prototype.nuevo = {
 		posIni : 0,
 		posFin : 0,
-		vel : 1,
+		vel : 100,
 		t : 0
 	};
 
@@ -54,11 +54,26 @@
 		return true;
 	};
 
+	Parametro.prototype.getTrayectoria = function(){
+		var tiempo = this.trayectoriaIdeal.getTiempoFinal();
+		var tiempos = linspace(0, tiempo, 1001);
+		var lista = [];
+
+		for(var i = 0, t; (t = tiempos[i]) != undefined; i++){
+			var valoresIdeal = this.trayectoriaIdeal.posicion(t);
+			var valoresReal = this.trayectoriaReal.posicion(t);
+			lista.push([t,valoresIdeal,valoresReal]);
+		}
+
+		return lista;
+	};
+
 	Parametro.prototype.calculate = function(){
 		this.getData();
 
-//		this.trayectoriaReal.calcular(JSON.parse(JSON.stringify(this.datos)));
 		this.trayectoriaIdeal.calcular(JSON.parse(JSON.stringify(this.datos)));
+		this.trayectoriaReal.calcular(JSON.parse(JSON.stringify(this.datos)));
+		this.emit('calcule');
 	};
 
 	Parametro.prototype.onCambio = function(indice, nombre, valor){
@@ -97,7 +112,6 @@
 			this.datos[ele.getAttribute('data-name')] = parseFloat(ele.value);
 		});
 		this.datos.posiciones = this.datosSegmentos;
-		//this.emit('calc',"nada");
 	};
 
 	Parametro.prototype.basicDraw = function(){

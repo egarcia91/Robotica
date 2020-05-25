@@ -8,13 +8,18 @@
 	Grafico.prototype = Object.create(HtmlWidget.prototype);
 	Grafico.prototype.constructor = "Grafico";
 
-	Grafico.prototype.configCopy = {
+	Grafico.prototype.configPlot = {
 		type : 'line',
 		data : {
 			labels : [],
 			datasets : []
 		},
 		options : {
+			elements : {
+				point : {
+					radius : 0
+				}
+			},
 			legend : {
 				display : false
 			},
@@ -38,19 +43,51 @@
 		}
 	};
 
+	Grafico.prototype.datosIdeal = {
+		backgroundColor : "green",
+		borderColor : "green",
+		data : [],
+		fill : false
+	};
+
+	Grafico.prototype.datosReal = {
+		backgroundColor : "red",
+		borderColor : "red",
+		data : [],
+		fill : false
+	};
+
 	Grafico.prototype.clear = function(){
 	};
 
-	Grafico.prototype.show = function(){
-//	var divPlot = document.getElementById("trayectoria");
-//	width = divPlot.clientWidth;
-//	heigth = divPlot.clientHeight;
-//	divPlot.innerHTML = "<canvas name=\"tiempo\" width=\""+width+"\" height=\""+heigth+"\" id=\"tray\"></canvas>";
-//	var plot = document.getElementById("tray").getContext("2d");
-//
-//	if(bool){
-//		var myChart = new Chart(plot, configPlot);
-//	}
+	Grafico.prototype.pushData = function(lista){
+		this.configPlot.data.labels = [];
+		this.datosIdeal.data = [];
+		this.datosReal.data = [];
+		this.configPlot.data.datasets = [];
+
+		for(var i = 0, ele; ele = lista[i]; i++){
+			this.configPlot.data.labels.push(ele[0]);
+			this.datosIdeal.data.push(ele[1]);
+			this.datosReal.data.push(ele[2]);
+		}
+		this.configPlot.data.datasets.push(this.datosIdeal);
+		this.configPlot.data.datasets.push(this.datosReal);
+	};
+
+	Grafico.prototype.show = function(bool){
+
+		console.log(bool);
+		var divPlot = this.getElementsByClassName("trayectoria")[0];
+		var width = divPlot.clientWidth;
+		var heigth = divPlot.clientHeight;
+
+		divPlot.innerHTML = "<canvas name=\"tiempo\" width=\""+width+"\" height=\""+heigth+"\" class=\"tray\"></canvas>";
+
+		var plot = this.getElementsByClassName("tray")[0].getContext("2d");
+		if(bool){
+			var myChart = new Chart(plot, this.configPlot);
+		}
 
 	};
 
