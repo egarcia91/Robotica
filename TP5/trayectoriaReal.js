@@ -14,7 +14,6 @@
 
 		if(c){
 			indice = c.indice;
-			//tiempo = c.tiempoRelativo;
 		}
 
 		return this.funciones[indice].inicio.eval({t : tiempo});
@@ -26,25 +25,18 @@
 
 		if(c){
 			indice = c.indice;
-//			tiempo = c.tiempoRelativo;
-		} else {
-//			console.log("tiempo : "+tiempo);
 		}
 
 		return this.funciones[indice].fin.eval({t : tiempo});
 	};
 
 	TrayectoriaReal.prototype.tiempoFueraAceleracion = function(tiempo, c){
-		return this.funciones[c.indice].medio.eval({t : (c.tiempoRelativo - (this.tiempoAceleracion/2))});
+		return this.funciones[c.indice].medio.eval({t : tiempo});
 	};
 
 	TrayectoriaReal.prototype.tiempoAcumulado = function(indice){
 
 		var tiempoAcumulado = 0;
-
-//		if(indice){
-//			tiempoAcumulado += this.tiempoAceleracion/2;
-//		}
 
 		for(var i = 0, ele; ele = this.posiciones[i]; i++){
 			if(i == indice){
@@ -56,16 +48,14 @@
 		return tiempoAcumulado
 	};
 
-	TrayectoriaReal.prototype.generarFuncionCuadraticaFin = function(p, indice, tiempoAcumulado){
-//		var pos = funcionLineal.eval({t : (p.t - this.tiempoAceleracion)});
+	TrayectoriaReal.prototype.generarFuncionCuadraticaFin = function(p, indice, pos, tiempoAcumulado){
 		var sigPosicion = this.posiciones[indice+1];
 		var velSiguiente = 0;
 		if(sigPosicion){
 			velSiguiente = sigPosicion.vel;
 		}
 
-		var pos = 0;
-		var funcionCuadraticaFin = math.parse(this.cuadratica((velSiguiente-p.vel)/(this.tiempoAceleracion*2),p.vel,pos, (tiempoAcumulado + this.tiempoAceleracion)), {t : 0});
+		var funcionCuadraticaFin = math.parse(this.cuadratica((velSiguiente-p.vel)/(this.tiempoAceleracion*2),p.vel,pos, (tiempoAcumulado + p.t)), {t : 0});
 		return funcionCuadraticaFin;
 	};
 
@@ -81,17 +71,12 @@
 	TrayectoriaReal.prototype.generarFuncion = function(p, indice){
 
 		var tiempoAcumulado = this.tiempoAcumulado(indice);
-		console.log(tiempoAcumulado);
 
 		var funcionCuadraticaIni = this.generarFuncionCuadraticaIni(p, indice, tiempoAcumulado);
 
-//		var funcionLineal = math.parse(this.lineal(p.vel, funcionCuadraticaIni.eval({t: this.tiempoAceleracion}), (tiempoAcumulado + this.tiempoAceleracion)), {t : 0});
-		var funcionLineal = math.parse(this.lineal(0,0), {t : 0});
+		var funcionLineal = math.parse(this.lineal(p.vel, funcionCuadraticaIni.eval({ t : (tiempoAcumulado + this.tiempoAceleracion)}), (tiempoAcumulado + this.tiempoAceleracion)), {t : 0});
 
-
-//		var funcionCuadraticaFin = math.parse(this.cuadratica((-p.vel)/(this.tiempoAceleracion*2), p.vel, pos, (tiempoAcumulado + p.t - (this.tiempoAceleracion/2)) ), {t : 0});
-		var funcionCuadraticaFin = this.generarFuncionCuadraticaFin(p, indice, tiempoAcumulado);
-//		var funcionCuadraticaFin = math.parse(this.cuadratica((-p.vel)/(this.tiempoAceleracion*2),p.vel,pos, (tiempoAcumulado + this.tiempoAceleracion)), {t : 0});
+		var funcionCuadraticaFin = this.generarFuncionCuadraticaFin(p, indice, funcionLineal.eval({t : (tiempoAcumulado + p.t)}),(tiempoAcumulado));
 
 		this.funciones[indice] = {
 			inicio : funcionCuadraticaIni,

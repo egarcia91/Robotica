@@ -26,7 +26,6 @@
 
 	Main.prototype.onCalc = function(){
 
-		console.log("Hola");
 		this.grafico.pushData(this.parametro.getTrayectoria());
 		this.grafico.show(true);
 	};

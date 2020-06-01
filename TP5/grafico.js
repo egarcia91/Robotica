@@ -77,7 +77,6 @@
 
 	Grafico.prototype.show = function(bool){
 
-		console.log(bool);
 		var divPlot = this.getElementsByClassName("trayectoria")[0];
 		var width = divPlot.clientWidth;
 		var heigth = divPlot.clientHeight;

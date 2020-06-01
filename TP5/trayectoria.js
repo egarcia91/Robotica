@@ -21,11 +21,24 @@
 
 		this.tiempoTotal = datos.tiempoAceleracion;
 
+		this.getTiempoSegmento();
+
 		for(var i = 0, posicion; posicion = datos.posiciones[i]; i++){
 			this.tiempoTotal += posicion.t;
 			this.generarFuncion(posicion, i);
 		}
 
+	};
+
+	Trayectoria.prototype.getTiempoSegmento = function(){
+		for(var i = 0, ele; ele = this.posiciones[i]; i++){
+			var pendiente = (ele.posFin - ele.posIni)/ele.t;
+			if(math.abs(pendiente) > math.abs(ele.vel)){
+				ele.t = (ele.posFin - ele.posIni)/ele.vel;
+			} else {
+				ele.vel = pendiente;
+			}
+		}
 	};
 
 	Trayectoria.prototype.generarFuncion = function(p, indice){
