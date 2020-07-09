@@ -52,11 +52,11 @@
 		return 0;
 	};
 
-	Trayectoria.prototype.primerTiempoMedio = function(t, c){
+	Trayectoria.prototype.primerTiempoMedio = function(t, c, tipo){
 		return 0;
 	};
 
-	Trayectoria.prototype.ultimoTiempoMedio = function(t, c){
+	Trayectoria.prototype.ultimoTiempoMedio = function(t, c, tipo){
 		return 0;
 	};
 
@@ -95,11 +95,12 @@
 		var medioTiempoAceleracion = this.tiempoAceleracion/2;
 
 		if(this.estoyDentroMedioTiempoAceleracion(tiempo)){
-			return this.primerTiempoMedio(tiempo,tipo);
+			return this.primerTiempoMedio(tiempo, null, tipo);
+			return 0;
 		}
 
 		if(this.estoyDentroUlitimoMedioTiempoAceleracion(tiempo)){
-			return this.ultimoTiempoMedio(tiempo, tipo);
+			return this.ultimoTiempoMedio(tiempo, null, tipo);
 		}
 
 		return this.posicionSegmento(this.enSegemnto(tiempo), tiempo, tipo);
@@ -148,6 +149,26 @@
 			}
 		}
 	};
+
+	Trayectoria.prototype.resultados = function(cantidad){
+		var tiempo = this.getTiempoFinal();
+		var tiempos = linspace(0, tiempo, cantidad);
+		var resultados = {
+			posicion : [],
+			velocidad : [],
+			aceleracion : [],
+			tiempo : tiempos
+		};
+
+		for(var i = 0, t; (t = tiempos[i]) != undefined; i++){
+			resultados.posicion.push(this.posicion(t));
+			resultados.velocidad.push(this.velocidad(t));
+			resultados.aceleracion.push(this.aceleracion(t));
+		}
+
+		return resultados;
+	};
+
 
 	Trayectoria.prototype.constante = function(c){
 		return c;

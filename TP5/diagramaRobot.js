@@ -20,8 +20,8 @@
 	DiagramaRobot.prototype.constructor = "DiagramaRobot";
 
 	DiagramaRobot.prototype.ejecutar = function(data){
-		this.generadorTrayectoria.generar(data);
-		this.generadorTrayectoria.resultados();
+
+		console.log(this.generadorTrayectoria.generar(data)); //Posion, vel, Acel deseados.
 
 	};
 
