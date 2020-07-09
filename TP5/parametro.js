@@ -5,19 +5,16 @@
 		this.basicDraw();
 
 		var divSegementos = this.getElementsByClassName('segmento')[0];
+
 		this.segmentos = new Segmento(divSegementos,{
 			len : 1,
 			indice : 0,
 			defecto : JSON.parse(JSON.stringify(this.defecto[0]))
 		});
+
 		this.segmentos.addEventListener('quierenAgregar', this.onAgregar.bind(this));
 		this.segmentos.addEventListener('mostrar', this.onMostrar.bind(this));
 		this.segmentos.addEventListener('quierenCambiarParametro', this.onCambio.bind(this));
-
-
-		this.trayectoriaReal = new TrayectoriaReal(null,{});
-
-		this.trayectoriaIdeal = new TrayectoriaIdeal(null,{});
 
 		this.datosSegmentos = JSON.parse(JSON.stringify(this.defecto));
 	}
@@ -54,26 +51,9 @@
 		return true;
 	};
 
-	Parametro.prototype.getTrayectoria = function(){
-		var tiempo = this.trayectoriaIdeal.getTiempoFinal();
-		var tiempos = linspace(0, tiempo, 1001);
-		var lista = [];
-
-		for(var i = 0, t; (t = tiempos[i]) != undefined; i++){
-			var valoresIdeal = this.trayectoriaIdeal.posicion(t);
-			var valoresReal = this.trayectoriaReal.posicion(t);
-			lista.push([t,valoresIdeal,valoresReal]);
-		}
-
-		return lista;
-	};
-
 	Parametro.prototype.calculate = function(){
 		this.getData();
-
-		this.trayectoriaIdeal.calcular(JSON.parse(JSON.stringify(this.datos)));
-		this.trayectoriaReal.calcular(JSON.parse(JSON.stringify(this.datos)));
-		this.emit('calcule');
+		this.emit('calcule', JSON.parse(JSON.stringify(this.datos)));
 	};
 
 	Parametro.prototype.onCambio = function(indice, nombre, valor){

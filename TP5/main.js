@@ -11,6 +11,8 @@
 //		var divResultados = this.getElementsByClassName('resultados')[0];
 //		this.resultado = new Resultado(divResultados,{});
 
+		this.diagramaRobot = new DiagramaRobot(undefined,{});
+
 		var divGraficos = this.getElementsByClassName('graficos')[0];
 		this.grafico = new Grafico(divGraficos,{});
 
@@ -24,10 +26,11 @@
 		this.d.innerHTML = template;
 	};
 
-	Main.prototype.onCalc = function(){
+	Main.prototype.onCalc = function(data){
 
-		this.grafico.pushData(this.parametro.getTrayectoria());
-		this.grafico.show(true);
+		this.diagramaRobot.ejecutar(data);
+//		this.grafico.pushData(this.parametro.getTrayectoria());
+//		this.grafico.show(true);
 	};
 
 	window.Main = Main;

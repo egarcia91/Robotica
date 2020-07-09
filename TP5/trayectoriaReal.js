@@ -2,13 +2,12 @@
 	function TrayectoriaReal(div,config){
 		Trayectoria.call(this,div,config);
 
-		this.funciones = [];
 	}
 
 	TrayectoriaReal.prototype = Object.create(Trayectoria.prototype);
 	TrayectoriaReal.prototype.constructor = "TrayectoriaReal";
 
-	TrayectoriaReal.prototype.primerTiempoMedio = function(tiempo, c){
+	TrayectoriaReal.prototype.primerTiempoMedio = function(tiempo, c, tipo){
 
 		var indice = 0;
 
@@ -16,10 +15,10 @@
 			indice = c.indice;
 		}
 
-		return this.funciones[indice].inicio.eval({t : tiempo});
+		return this["funciones"+tipo][indice].inicio.eval({t : tiempo});
 	};
 
-	TrayectoriaReal.prototype.ultimoTiempoMedio = function(tiempo, c){
+	TrayectoriaReal.prototype.ultimoTiempoMedio = function(tiempo, c, tipo){
 
 		var indice = this.cantidadSegmentos - 1;
 
@@ -27,11 +26,11 @@
 			indice = c.indice;
 		}
 
-		return this.funciones[indice].fin.eval({t : tiempo});
+		return this["funciones"+tipo][indice].fin.eval({t : tiempo});
 	};
 
-	TrayectoriaReal.prototype.tiempoFueraAceleracion = function(tiempo, c){
-		return this.funciones[c.indice].medio.eval({t : tiempo});
+	TrayectoriaReal.prototype.tiempoFueraAceleracion = function(tiempo, c, tipo){
+		return this["funciones"+tipo][c.indice].medio.eval({t : tiempo});
 	};
 
 	TrayectoriaReal.prototype.tiempoAcumulado = function(indice){
@@ -73,15 +72,33 @@
 		var tiempoAcumulado = this.tiempoAcumulado(indice);
 
 		var funcionCuadraticaIni = this.generarFuncionCuadraticaIni(p, indice, tiempoAcumulado);
+		var dfuncionCuadraticaIni = math.derivative(funcionCuadraticaIni,"t");
+		var ddfuncionCuadraticaIni = math.derivative(dfuncionCuadraticaIni,"t");
 
 		var funcionLineal = math.parse(this.lineal(p.vel, funcionCuadraticaIni.eval({ t : (tiempoAcumulado + this.tiempoAceleracion)}), (tiempoAcumulado + this.tiempoAceleracion)), {t : 0});
+		var dfuncionLineal = math.derivative(funcionLineal,"t");
+		var ddfuncionLineal = math.derivative(dfuncionLineal,"t");
 
 		var funcionCuadraticaFin = this.generarFuncionCuadraticaFin(p, indice, funcionLineal.eval({t : (tiempoAcumulado + p.t)}),(tiempoAcumulado));
+		var dfuncionCuadraticaFin = math.derivative(funcionCuadraticaFin,"t");
+		var ddfuncionCuadraticaFin = math.derivative(dfuncionCuadraticaFin,"t");
 
-		this.funciones[indice] = {
+		this.funcionesposicion[indice] = {
 			inicio : funcionCuadraticaIni,
 			medio : funcionLineal,
 			fin : funcionCuadraticaFin
+		};
+
+		this.funcionesvelocidad[indice] = {
+			inicio : dfuncionCuadraticaIni,
+			medio : dfuncionLineal,
+			fin : dfuncionCuadraticaFin
+		};
+
+		this.funcionesaceleracion[indice] = {
+			inicio : ddfuncionCuadraticaIni,
+			medio : ddfuncionLineal,
+			fin : ddfuncionCuadraticaFin
 		};
 	};
 
