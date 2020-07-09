@@ -48,7 +48,7 @@
 	Trayectoria.prototype.generarFuncion = function(p, indice){
 	};
 
-	Trayectoria.prototype.tiempoFueraAceleracion = function(t, c){
+	Trayectoria.prototype.tiempoFueraAceleracion = function(t, c, tipo){
 		return 0;
 	};
 

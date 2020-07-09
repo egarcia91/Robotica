@@ -46,7 +46,7 @@
 
 	TrayectoriaReal.prototype.generarFuncionCuadraticaIni = function(p, indice, tiempoAcumulado){
 		if(indice){
-			return this.funciones[indice-1].fin;
+			return this.funcionesposicion[indice-1].fin;
 		}
 		var funcionCuadraticaIni = math.parse(this.cuadratica((p.vel)/(this.tiempoAceleracion*2), 0, p.posIni, tiempoAcumulado), {t : 0});
 
