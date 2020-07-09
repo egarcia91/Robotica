@@ -60,19 +60,33 @@
 	Grafico.prototype.clear = function(){
 	};
 
-	Grafico.prototype.pushData = function(lista){
+	Grafico.prototype.pushData = function(lista, funcion){
+
+		if(!lista){
+			return;
+		}
+
+		this.configPlot.options.scales.yAxes[0].scaleLabel.labelString = funcion;
+
 		this.configPlot.data.labels = [];
-		this.datosIdeal.data = [];
-		this.datosReal.data = [];
 		this.configPlot.data.datasets = [];
 
-		for(var i = 0, ele; ele = lista[i]; i++){
-			this.configPlot.data.labels.push(ele[0]);
-			this.datosIdeal.data.push(ele[1]);
-			this.datosReal.data.push(ele[2]);
+		var fillLabels = true;
+
+		for(var i = 0, key; key = Object.keys(lista)[i]; i++){
+			this['datos'+key].data = [];
+			for(var j = 0, ele; ele = lista[key][j]; j++){
+				if(j == 0 && this.configPlot.data.labels.length != 0){
+					fillLabels = false;
+				}
+				if(fillLabels){
+					this.configPlot.data.labels.push(ele.tiempo);
+				}
+				this['datos'+key].data.push(ele[funcion]);
+			}
+			this.configPlot.data.datasets.push(this['datos'+key]);
 		}
-		this.configPlot.data.datasets.push(this.datosIdeal);
-		this.configPlot.data.datasets.push(this.datosReal);
+
 	};
 
 	Grafico.prototype.show = function(bool){
@@ -85,7 +99,7 @@
 
 		var plot = this.getElementsByClassName("tray")[0].getContext("2d");
 		if(bool){
-			var myChart = new Chart(plot, this.configPlot);
+			var myChart = new Chart(plot, JSON.parse(JSON.stringify(this.configPlot)));
 		}
 
 	};

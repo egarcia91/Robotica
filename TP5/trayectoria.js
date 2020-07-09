@@ -96,7 +96,6 @@
 
 		if(this.estoyDentroMedioTiempoAceleracion(tiempo)){
 			return this.primerTiempoMedio(tiempo, null, tipo);
-			return 0;
 		}
 
 		if(this.estoyDentroUlitimoMedioTiempoAceleracion(tiempo)){
@@ -153,17 +152,16 @@
 	Trayectoria.prototype.resultados = function(cantidad){
 		var tiempo = this.getTiempoFinal();
 		var tiempos = linspace(0, tiempo, cantidad);
-		var resultados = {
-			posicion : [],
-			velocidad : [],
-			aceleracion : [],
-			tiempo : tiempos
-		};
+		resultados = [];
 
 		for(var i = 0, t; (t = tiempos[i]) != undefined; i++){
-			resultados.posicion.push(this.posicion(t));
-			resultados.velocidad.push(this.velocidad(t));
-			resultados.aceleracion.push(this.aceleracion(t));
+			var resultado = {
+				posicion : this.posicion(t),
+				velocidad : this.velocidad(t),
+				aceleracion : this.aceleracion(t),
+				tiempo : t
+			};
+			resultados.push(resultado);
 		}
 
 		return resultados;
@@ -182,6 +180,20 @@
 	Trayectoria.prototype.cuadratica = function(a, b, c, corr){
 		var corrimiento = (corr || 0);
 		return a+"(t - "+corrimiento+")^2 +"+b+"(t - "+corrimiento+") +"+c;
+	};
+
+	Trayectoria.prototype.tiempoAcumulado = function(indice){
+
+		var tiempoAcumulado = 0;
+
+		for(var i = 0, ele; ele = this.posiciones[i]; i++){
+			if(i == indice){
+				break;
+			}
+			tiempoAcumulado += ele.t
+
+		}
+		return tiempoAcumulado
 	};
 
 	window.Trayectoria = Trayectoria;

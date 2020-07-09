@@ -13,8 +13,10 @@
 
 		this.diagramaRobot = new DiagramaRobot(undefined,{});
 
-		var divGraficos = this.getElementsByClassName('graficos')[0];
-		this.grafico = new Grafico(divGraficos,{});
+		var divGraficos = this.getElementsByClassName('graficos');
+		this.graficoPosicion = new Grafico(divGraficos[0],{});
+		this.graficoVelocidad = new Grafico(divGraficos[1],{});
+		this.graficoAceleracion = new Grafico(divGraficos[2],{});
 
 	}
 
@@ -29,8 +31,14 @@
 	Main.prototype.onCalc = function(data){
 
 		this.diagramaRobot.ejecutar(data);
-//		this.grafico.pushData(this.parametro.getTrayectoria());
-//		this.grafico.show(true);
+
+		var res = this.diagramaRobot.getTrayectoria();
+		this.graficoPosicion.pushData(res,"posicion");
+		this.graficoPosicion.show(true);
+		this.graficoVelocidad.pushData(res,"velocidad");
+		this.graficoVelocidad.show(true);
+		this.graficoAceleracion.pushData(res,"aceleracion");
+		this.graficoAceleracion.show(true);
 	};
 
 	window.Main = Main;

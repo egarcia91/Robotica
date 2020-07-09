@@ -11,24 +11,39 @@
 		if(c){
 			return this["funciones"+tipo][c.indice].eval({t : c.tiempoRelativo});
 		}
-		return this["constante"](this.posiciones[0].posIni);
+		if(tipo == "posicion"){
+			return this["constante"](this.posiciones[0].posIni);
+		} else {
+			return 0;
+		}
 	};
 
 	TrayectoriaIdeal.prototype.ultimoTiempoMedio = function(tiempo, c, tipo){
 		if(c){
 			return this["funciones"+tipo][c.indice].eval({t : c.tiempoRelativo});
 		}
-		return this["constante"](this.posiciones[this.cantidadSegmentos - 1].posFin);
+		if(tipo == "posicion"){
+			return this["constante"](this.posiciones[this.cantidadSegmentos - 1].posFin);
+		} else {
+			return 0;
+		}
 	};
 
 	TrayectoriaIdeal.prototype.tiempoFueraAceleracion = function(tiempo, c, tipo){
 		return this["funciones"+tipo][c.indice].eval({t : c.tiempoRelativo});
 	};
 
-	TrayectoriaIdeal.prototype.generarFuncion = function(p, indice){
+	TrayectoriaIdeal.prototype.generarFuncionLieal = function(p, indice, tiempoAcumulado){
 		var pendiente = (p.posFin - p.posIni)/p.t;
 		var ordenada = p.posIni;
-		var funcion = math.parse(this.lineal(pendiente, ordenada), {t : 0});
+		return math.parse(this.lineal(pendiente, ordenada), {t : 0});
+	};
+
+	TrayectoriaIdeal.prototype.generarFuncion = function(p, indice){
+
+		var tiempoAcumulado = this.tiempoAcumulado(indice);
+
+		var funcion = this.generarFuncionLieal(p, indice, tiempoAcumulado);
 		var dfuncion = math.derivative(funcion, "t");
 		var ddfuncion = math.derivative(dfuncion, "t");
 

@@ -19,9 +19,13 @@
 
 	DiagramaRobot.prototype.constructor = "DiagramaRobot";
 
+	DiagramaRobot.prototype.getTrayectoria = function(){
+		return this.deseado || {};
+	};
+
 	DiagramaRobot.prototype.ejecutar = function(data){
 
-		console.log(this.generadorTrayectoria.generar(data)); //Posion, vel, Acel deseados.
+		this.deseado = this.generadorTrayectoria.generar(data); //Posion, vel, Acel deseados.
 
 	};
 

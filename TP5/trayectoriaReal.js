@@ -33,20 +33,6 @@
 		return this["funciones"+tipo][c.indice].medio.eval({t : tiempo});
 	};
 
-	TrayectoriaReal.prototype.tiempoAcumulado = function(indice){
-
-		var tiempoAcumulado = 0;
-
-		for(var i = 0, ele; ele = this.posiciones[i]; i++){
-			if(i == indice){
-				break;
-			}
-			tiempoAcumulado += ele.t
-
-		}
-		return tiempoAcumulado
-	};
-
 	TrayectoriaReal.prototype.generarFuncionCuadraticaFin = function(p, indice, pos, tiempoAcumulado){
 		var sigPosicion = this.posiciones[indice+1];
 		var velSiguiente = 0;
