@@ -31,5 +31,3 @@
 
 	window.DiagramaRobot = DiagramaRobot;
 })();
-
-
