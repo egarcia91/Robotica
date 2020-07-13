@@ -15,7 +15,11 @@
 			datasets : []
 		},
 		options : {
+			bezierCurve : false,
 			elements : {
+				line : {
+					tension : 0
+				},
 				point : {
 					radius : 0
 				}

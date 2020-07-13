@@ -31,8 +31,14 @@
 	Main.prototype.onCalc = function(data){
 
 		this.diagramaRobot.ejecutar(data);
+		console.log(data);
 
 		var res = this.diagramaRobot.getTrayectoria();
+		console.log(res);
+		var paginado = Math.round(res.Ideal.length*0.1);
+		res.Ideal = res.Ideal.slice(0, paginado);
+		res.Real = res.Real.slice(0, paginado);
+		console.log(res);
 		this.graficoPosicion.pushData(res,"posicion");
 		this.graficoPosicion.show(true);
 		this.graficoVelocidad.pushData(res,"velocidad");

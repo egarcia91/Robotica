@@ -42,7 +42,8 @@
 
 	Segmento.prototype.thisChange = function(event,t,that){
 		var name = t.getAttribute('data-name');
-		this.emit('quierenCambiarParametro', this.indexSegmentos, name, t.value);
+		var campo = t.getAttribute('data-campo');
+		this.emit('quierenCambiarParametro', this.indexSegmentos, name, campo, t.value);
 		return true;
 	};
 

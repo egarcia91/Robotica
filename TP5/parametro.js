@@ -22,18 +22,37 @@
 	Parametro.prototype = Object.create(HtmlWidget.prototype);
 	Parametro.prototype.constructor = "Parametro";
 
+	Parametro.prototype.defectoGeneral = {
+		cantidadSegmentos : 100,
+		tiempoAceleracion : 1,
+		velocidadMotor1 : 6000*2*Math.PI/60,
+		velocidadMotor2 : 6000*2*Math.PI/60
+	};
+
 	Parametro.prototype.defecto = [{
-		posIni : -300,
-		posFin : 300,
-		vel : 100,
-		t : 1
+		posIni : {
+			X : -300,
+			Y : 300,
+			Z : 0
+		},
+		posFin : {
+			X : 300,
+			Y : 300,
+			Z : 0
+		}
 	}];
 
 	Parametro.prototype.nuevo = {
-		posIni : 0,
-		posFin : 0,
-		vel : 100,
-		t : 0
+		posIni : {
+			X : 0,
+			Y : 0,
+			Z : 0
+		},
+		posFin : {
+			X : 0,
+			Y : 0,
+			Z : 0
+		}
 	};
 
 
@@ -56,14 +75,14 @@
 		this.emit('calcule', JSON.parse(JSON.stringify(this.datos)));
 	};
 
-	Parametro.prototype.onCambio = function(indice, nombre, valor){
+	Parametro.prototype.onCambio = function(indice, nombre, campo, valor){
 		var nuevoValor = parseFloat(valor);
-		this.datosSegmentos[indice][nombre] = nuevoValor;
+		this.datosSegmentos[indice][nombre][campo] = nuevoValor;
 
 		if(nombre == 'posFin'){
 			var siguiente = this.datosSegmentos[indice+1];
 			if(siguiente){
-				siguiente.posIni = nuevoValor;
+				siguiente.posIni[campo] = nuevoValor;
 			}
 		}
 	};
@@ -95,7 +114,7 @@
 	};
 
 	Parametro.prototype.basicDraw = function(){
-		var template = TrimPath.processDOMTemplate('parametros',{});
+		var template = TrimPath.processDOMTemplate('parametros',JSON.parse(JSON.stringify(this.defectoGeneral)));
 
 		this.d.innerHTML = template;
 	};

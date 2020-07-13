@@ -9,7 +9,7 @@
 
 	TrayectoriaIdeal.prototype.primerTiempoMedio = function(tiempo, c, tipo){
 		if(c){
-			return this["funciones"+tipo][c.indice].eval({t : c.tiempoRelativo});
+			return this["funciones"+tipo][c.indice].evaluate({t : c.tiempoRelativo});
 		}
 		if(tipo == "posicion"){
 			return this["constante"](this.posiciones[0].posIni);
@@ -20,7 +20,7 @@
 
 	TrayectoriaIdeal.prototype.ultimoTiempoMedio = function(tiempo, c, tipo){
 		if(c){
-			return this["funciones"+tipo][c.indice].eval({t : c.tiempoRelativo});
+			return this["funciones"+tipo][c.indice].evaluate({t : c.tiempoRelativo});
 		}
 		if(tipo == "posicion"){
 			return this["constante"](this.posiciones[this.cantidadSegmentos - 1].posFin);
@@ -30,7 +30,7 @@
 	};
 
 	TrayectoriaIdeal.prototype.tiempoFueraAceleracion = function(tiempo, c, tipo){
-		return this["funciones"+tipo][c.indice].eval({t : c.tiempoRelativo});
+		return this["funciones"+tipo][c.indice].evaluate({t : c.tiempoRelativo});
 	};
 
 	TrayectoriaIdeal.prototype.generarFuncionLieal = function(p, indice, tiempoAcumulado){
