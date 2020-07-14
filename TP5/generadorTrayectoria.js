@@ -52,6 +52,7 @@
 
 	GeneradorTrayectoria.prototype._PODER_VER_THETA1_THETA2_FUNCION_TIEMPO = function(data){
 		this.cantidadEquiespacios = data.cantidadSegmentos+1;
+		this.pasosGrafico = data.pasosGrafico;
 		trayectoria = {};
 		//Antes transformar los datos!!!
 		//
@@ -118,7 +119,7 @@
 		data.posiciones = this._PODER_VER_THETA1_THETA2_FUNCION_TIEMPO(data);
 		for(var i = 0, elemento; elemento = this.lista[i]; i++){
 			this["trayectoria"+elemento].calcular(data);
-			this.trayectoria[elemento] = this["trayectoria"+elemento].resultados(this.cantidadEquiespacios*100);
+			this.trayectoria[elemento] = this["trayectoria"+elemento].resultados(this.cantidadEquiespacios*this.pasosGrafico);
 		}
 
 		return JSON.parse(JSON.stringify(this.trayectoria));

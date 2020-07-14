@@ -7,7 +7,7 @@
 	<textarea id="parametros" style="display:none;visibility:hidden;">
 		<table align='center'>
 			<tr>
-				<td colspan="2" align="center" style="border-style:solid;">
+				<td colspan="4" align="center" style="border-style:solid;">
 					<span>
 						Parametros
 					</span>
@@ -15,13 +15,13 @@
 			</tr>
 			<tr>
 				<td align="right">
-					<span>Cantidad segmentos []:</span>
-				</td>
-				<td align="center">
+					<span>Cantidad segmentos :</span>
 					<input style="width:40%" type='text' class="datos" data-name="cantidadSegmentos" value='${cantidadSegmentos}'>
 				</td>
-			</tr>
-			<tr>
+				<td align="center">
+					<span>Cantidad puntos grafico :</span>
+					<input style="width:40%" type='text' class="datos" data-name="pasosGrafico" value='${pasosGrafico}'>
+				</td>
 				<td align="right">
 					<span>Tiempo aceleracion [ms]:</span>
 				</td>
@@ -31,15 +31,13 @@
 			</tr>
 			<tr>
 				<td align="right">
-					<span>Velocidad maxima motor 1 [rad/s]:</span>
+					<span>Velocidad motor 1 [rad/s]:</span>
 				</td>
 				<td align="center">
 					<input style="width:40%" type='text' class="datos" data-name="velocidadMotor1" value='${velocidadMotor1}'>
 				</td>
-			</tr>
-			<tr>
 				<td align="right">
-					<span>Velocidad maxima motor 2 [rad/s]:</span>
+					<span>Velocidad motor 2 [rad/s]:</span>
 				</td>
 				<td align="center">
 					<input style="width:40%" type='text' class="datos" data-name="velocidadMotor2" value='${velocidadMotor2}'>
@@ -55,6 +53,7 @@
 				</td>
 			</tr>
 		</table>
+		<div class="paginado" style="border-style:solid;"></div>
 
 	</textarea>
 
@@ -171,6 +170,27 @@
 	</div>
 	</textarea>
 
+	<textarea id="paginado" style="display:none;visibility:hidden;">
+		<table align='center'>
+			<tr>
+				<td align="center">
+					<input style="width:20px;" type='button' value='|<' data-evt="primero" >
+					<input style="width:20px;" type='button' value='<' data-evt="anterior" >
+					<span>
+						Pagina ${pag}
+					</span>
+					<input style="width:45px;" type='button' value='1' data-evt="modificar" >
+					<input style="width:45px;" type='button' value='5' data-evt="modificar" >
+					<input style="width:45px;" type='button' value='10' data-evt="modificar" >
+					<input style="width:45px;" type='button' value='20' data-evt="modificar" >
+					<input style="width:45px;" type='button' value='50' data-evt="modificar" >
+					<input style="width:45px;" type='button' value='100' data-evt="modificar" >
+					<input style="width:20px;" type='button' value='>' data-evt="siguiente">
+					<input style="width:20px;" type='button' value='>|' data-evt="ultimo">
+				</td>
+			</tr>
+		</table>
+	</textarea>
 	</body>
 
 <style type="text/css">
@@ -182,6 +202,7 @@ body {
 <script src="HtmlWidget.js"></script>
 <script src="main.js"></script>
 <script src="parametro.js"></script>
+<script src="paginado.js"></script>
 <script src="resultado.js"></script>
 <script src="grafico.js"></script>
 <script src="trayectoria.js"></script>

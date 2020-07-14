@@ -16,6 +16,12 @@
 		this.segmentos.addEventListener('mostrar', this.onMostrar.bind(this));
 		this.segmentos.addEventListener('quierenCambiarParametro', this.onCambio.bind(this));
 
+		var divPaginado = this.getElementsByClassName('paginado')[0];
+		this.paginado = new Paginado(divPaginado, {
+			cantidadPaginas : JSON.parse(JSON.stringify(this.defectoGeneral.cantidadSegmentos))
+		});
+		this.paginado.addEventListener('quierenCambiarPagina', this.onCambioPagina.bind(this));
+
 		this.datosSegmentos = JSON.parse(JSON.stringify(this.defecto));
 	}
 
@@ -24,6 +30,7 @@
 
 	Parametro.prototype.defectoGeneral = {
 		cantidadSegmentos : 100,
+		pasosGrafico : 10,
 		tiempoAceleracion : 1,
 		velocidadMotor1 : 6000*2*Math.PI/60,
 		velocidadMotor2 : 6000*2*Math.PI/60
@@ -56,6 +63,23 @@
 	};
 
 
+	Parametro.prototype.thisChange = function(event,t,that){
+		var name = t.getAttribute('data-name');
+
+		if(name == "cantidadSegmentos"){
+			var value = parseInt(t.value,10);
+			this.defectoGeneral.cantidadSegmentos = value;
+			this.paginado.recargarInfo(value);
+		}
+
+		if(name == "pasosGrafico"){
+			var value = parseInt(t.value,10);
+			this.defectoGeneral.pasosGrafico = value;
+		}
+
+		return true;
+	};
+
 	Parametro.prototype.thisClick = function(event,t,that){
 		var name = t.getAttribute('data-evt');
 		switch(name){
@@ -73,6 +97,10 @@
 	Parametro.prototype.calculate = function(){
 		this.getData();
 		this.emit('calcule', JSON.parse(JSON.stringify(this.datos)));
+	};
+
+	Parametro.prototype.onCambioPagina = function(desde, hasta){
+		this.emit('pagina', desde*this.defectoGeneral.pasosGrafico, hasta*this.defectoGeneral.pasosGrafico);
 	};
 
 	Parametro.prototype.onCambio = function(indice, nombre, campo, valor){
