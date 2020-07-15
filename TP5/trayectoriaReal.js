@@ -48,6 +48,7 @@
 		if(indice){
 			return this.funcionesposicion[indice-1].fin;
 		}
+		console.log(p);
 		var funcionCuadraticaIni = math.parse(this.cuadratica((p.vel)/(this.tiempoAceleracion*2), 0, p.posIni, tiempoAcumulado), {t : 0});
 
 		return funcionCuadraticaIni;

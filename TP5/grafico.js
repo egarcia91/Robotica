@@ -24,9 +24,9 @@
 					radius : 0
 				}
 			},
-			legend : {
-				display : false
-			},
+//			legend : {
+//				display : false
+//			},
 			responsive : false,
 			scales : {
 				xAxes : [{

@@ -7,7 +7,7 @@
 	<textarea id="parametros" style="display:none;visibility:hidden;">
 		<table align='center'>
 			<tr>
-				<td colspan="4" align="center" style="border-style:solid;">
+				<td colspan="6" align="center" style="border-style:solid;">
 					<span>
 						Parametros
 					</span>
@@ -16,10 +16,14 @@
 			<tr>
 				<td align="right">
 					<span>Cantidad segmentos :</span>
+				</td>
+				<td align="center">
 					<input style="width:40%" type='text' class="datos" data-name="cantidadSegmentos" value='${cantidadSegmentos}'>
 				</td>
 				<td align="center">
 					<span>Cantidad puntos grafico :</span>
+				</td>
+				<td align="center">
 					<input style="width:40%" type='text' class="datos" data-name="pasosGrafico" value='${pasosGrafico}'>
 				</td>
 				<td align="right">
@@ -41,6 +45,10 @@
 				</td>
 				<td align="center">
 					<input style="width:40%" type='text' class="datos" data-name="velocidadMotor2" value='${velocidadMotor2}'>
+				</td>
+				<td align="center">
+				</td>
+				<td align="center">
 				</td>
 			</tr>
 		</table>
@@ -159,15 +167,15 @@
 		</div>
 	</textarea>
 	<textarea id="mainPage" style="display:none;visibility:hidden;">
-	<div style="display:inline-block;width:60%;height:100%;">
-		<div class="parametros" style="width:60%;height:35%;min-height:200px;margin-left:20%"></div>
+	<!--div style="display:inline-block;width:60%;height:100%;"-->
+		<div class="parametros" style="width:90%;height:35%;min-height:200px;"></div>
 		<!--div class="resultados" style="width:100%;height:69%;"></div-->
+	<!--/div-->
+	<!--div style="display:inline-block;width:39%;height:100%;"-->
 		<div class="graficos" style="width:100%;height:64%"></div>
-	</div>
-	<div style="display:inline-block;width:39%;height:100%;">
 		<div class="graficos" style="width:100%;height:50%;"></div>
 		<div class="graficos" style="width:100%;height:49%;"></div>
-	</div>
+	<!--/div-->
 	</textarea>
 
 	<textarea id="paginado" style="display:none;visibility:hidden;">
