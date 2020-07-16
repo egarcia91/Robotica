@@ -29,7 +29,7 @@
 	Parametro.prototype.constructor = "Parametro";
 
 	Parametro.prototype.defectoGeneral = {
-		cantidadSegmentos : 1,
+		cantidadSegmentos : 3,
 		pasosGrafico : 100,
 		tiempoAceleracion : 0.5,
 		velocidadMotor1 : 10*2*Math.PI/60,

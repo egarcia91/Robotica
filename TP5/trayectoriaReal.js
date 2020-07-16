@@ -48,25 +48,28 @@
 		if(indice){
 			return this.funcionesposicion[indice-1].fin;
 		}
-		console.log(p);
 		var funcionCuadraticaIni = math.parse(this.cuadratica((p.vel)/(this.tiempoAceleracion*2), 0, p.posIni, tiempoAcumulado), {t : 0});
 
 		return funcionCuadraticaIni;
 	};
 
-	TrayectoriaReal.prototype.generarFuncion = function(p, indice){
+	TrayectoriaReal.prototype.generarFuncion = function(datos, indice){
 
 		var tiempoAcumulado = this.tiempoAcumulado(indice);
 
-		var funcionCuadraticaIni = this.generarFuncionCuadraticaIni(p, indice, tiempoAcumulado);
+		var funcionCuadraticaIni = this.generarFuncionCuadraticaIni(datos, indice, tiempoAcumulado);
 		var dfuncionCuadraticaIni = math.derivative(funcionCuadraticaIni,"t");
 		var ddfuncionCuadraticaIni = math.derivative(dfuncionCuadraticaIni,"t");
 
-		var funcionLineal = math.parse(this.lineal(p.vel, funcionCuadraticaIni.evaluate({ t : (tiempoAcumulado + this.tiempoAceleracion)}), (tiempoAcumulado + this.tiempoAceleracion)), {t : 0});
+//		console.log("esta es el Tiempo    en este segmento :"+datos.t);
+//		console.log("esta es la Velocidad en este segmento :"+datos.vel);
+//		console.log("esta es la PosFin    en este segmento :"+datos.posFin);
+//		console.log("esta es la PosIni    en este segmento :"+datos.posIni);
+		var funcionLineal = math.parse(this.lineal(datos.vel, funcionCuadraticaIni.evaluate({ t : (tiempoAcumulado + this.tiempoAceleracion)}), (tiempoAcumulado + this.tiempoAceleracion)), {t : 0});
 		var dfuncionLineal = math.derivative(funcionLineal,"t");
 		var ddfuncionLineal = math.derivative(dfuncionLineal,"t");
 
-		var funcionCuadraticaFin = this.generarFuncionCuadraticaFin(p, indice, funcionLineal.evaluate({t : (tiempoAcumulado + p.t)}),(tiempoAcumulado));
+		var funcionCuadraticaFin = this.generarFuncionCuadraticaFin(datos, indice, funcionLineal.evaluate({t : (tiempoAcumulado + datos.t)}),(tiempoAcumulado));
 		var dfuncionCuadraticaFin = math.derivative(funcionCuadraticaFin,"t");
 		var ddfuncionCuadraticaFin = math.derivative(dfuncionCuadraticaFin,"t");
 

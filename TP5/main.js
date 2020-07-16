@@ -34,8 +34,8 @@
 
 		this.diagramaRobot.ejecutar(data);
 
-		this.res = this.diagramaRobot.getTrayectoria();
-		this._QUE_GRAFICAR();
+//		this.res = this.diagramaRobot.getTrayectoria();
+//		this._QUE_GRAFICAR();
 
 	};
 
