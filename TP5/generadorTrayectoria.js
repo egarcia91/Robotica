@@ -17,13 +17,13 @@
 		"Real"
 	];
 
-	GeneradorTrayectoria.prototype._CALCULAR_TIEMPO = function(data, cantidad, indice){
+	GeneradorTrayectoria.prototype.calculoIntervalo = function(data, cantidad, indice){
 		var posicionesX = linspace(data.posiciones[indice].posIni.X, data.posiciones[indice].posFin.X, cantidad);
 		var posicionesY = linspace(data.posiciones[indice].posIni.Y, data.posiciones[indice].posFin.Y, cantidad);
 		var vMaxM1 = data.velocidadMotor1;
 		var vMaxM2 = data.velocidadMotor2;
-		this.listaTheta1 = [];
-		this.listaTheta2 = [];
+		var listaTheta1 = [];
+		var listaTheta2 = [];
 
 		var tiempoTotal = 0;
 
@@ -40,125 +40,100 @@
 				this.diccionarioThetas[indiceX][indiceY] = this.scara.problemaInverso(posicionX, posicionY, 0, -1);
 			}
 
-			this.listaTheta1.push(this.diccionarioThetas[indiceX][indiceY].theta1);
-			this.listaTheta2.push(this.diccionarioThetas[indiceX][indiceY].theta2);
+			listaTheta1.push(this.diccionarioThetas[indiceX][indiceY].theta1);
+			listaTheta2.push(this.diccionarioThetas[indiceX][indiceY].theta2);
 
 			var tiempoSegmento = 0;
-			if(this.listaTheta1[i-1] != undefined){
-				var tiempoSeg1 = math.abs(this.listaTheta1[i-1] - this.listaTheta1[i])/vMaxM1;
-				var tiempoSeg2 = math.abs(this.listaTheta2[i-1] - this.listaTheta2[i])/vMaxM2;
+			if(listaTheta1[i-1] != undefined){
+				var tiempoSeg1 = math.abs(listaTheta1[i-1] - listaTheta1[i])/vMaxM1;
+				var tiempoSeg2 = math.abs(listaTheta2[i-1] - listaTheta2[i])/vMaxM2;
 				tiempoSegmento = math.max(tiempoSeg1, tiempoSeg2);
 				//tiempoSegmento = math.max(tiempoSeg1, tiempoSeg2, data.tiempoAceleracion);
 				tiempoTotal += tiempoSegmento;
 			}
 		}
 
-		return tiempoTotal;
-	};
-
-	GeneradorTrayectoria.prototype.armarSegmentos = function(data, cantidad){
-		this.cantidadEquiespacios = cantidad;
-
-		//Antes transformar los datos!!!
-
-		var vMaxM1 = data.velocidadMotor1;
-		var vMaxM2 = data.velocidadMotor2;
-
-		var dataNueva = [];
-		var salteoPosible = false;
-		var j = 0;
-		var tolerancia = 5e-4;
-
-		for(var i = 1, theta1, theta2; (theta1 = this.listaTheta1[i]) != undefined &&  (theta2 = this.listaTheta2[i]) != undefined; i++){
-			if(!salteoPosible){
-				j = i-1;
-			} else {
-			}
-
-			var diff1 = math.abs(this.listaTheta1[j] - this.listaTheta1[i]);
-			var diff2 = math.abs(this.listaTheta2[j] - this.listaTheta2[i]);
-			if( (diff1 < tolerancia) && (diff2 < tolerancia) ){
-				salteoPosible = true;
-			} else {
-				salteoPosible = false;
-				var tiempoSegmento = 0;
-				var tiempoSeg1 = math.abs(this.listaTheta1[j] - this.listaTheta1[i])/vMaxM1;
-				var tiempoSeg2 = math.abs(this.listaTheta2[j] - this.listaTheta2[i])/vMaxM2;
-				tiempoSegmento = math.max(tiempoSeg1, tiempoSeg2, data.tiempoAceleracion);
-				var resultado = {
-					posIni : this.listaTheta1[j],
-					posFin : this.listaTheta1[i],
-					t : tiempoSegmento,
-					vel : (this.listaTheta1[i] - this.listaTheta1[j])/tiempoSegmento
-				};
-				dataNueva.push(resultado);
-			}
+		return {
+			tiempo : tiempoTotal,
+			listaTheta1 : listaTheta1,
+			listaTheta2 : listaTheta2
 		}
-		return dataNueva;
-
-//		var posicionesX = linspace(data.posiciones[0].posIni.X, data.posiciones[0].posFin.X, this.cantidadEquiespacios);
-//		var posicionesY = linspace(data.posiciones[0].posIni.Y, data.posiciones[0].posFin.Y, this.cantidadEquiespacios);
-//		var theta1 = [];
-//		var theta2 = [];
-//
-
-//		var tiempoTotal = 0;
-//
-//
-//		for(var i = 0, posicionX, posicionY; (posicionX = posicionesX[i]) != undefined && (posicionY = posicionesY[i]) != undefined; i++){
-////			var res = this.scara.problemaInverso(posicionX, posicionY, 0, -1);
-////			theta1.push(res.theta1);
-////			theta2.push(res.theta2);
-////			var tiempoSegmento = 0;
-////			if(theta1[i-1] != undefined){
-////				var tiempoSeg1 = math.abs(theta1[i-1] - theta1[i])/vMaxM1;
-////				var tiempoSeg2 = math.abs(theta2[i-1] - theta2[i])/vMaxM2;
-////				tiempoSegmento = math.max(tiempoSeg1, tiempoSeg2);
-////				//tiempoSegmento = math.max(tiempoSeg1, tiempoSeg2, data.tiempoAceleracion);
-////				tiempoTotal += tiempoSegmento;
-////				var resultado = {
-////					posIni : theta2[i-1],
-////					posFin : theta2[i],
-////					t : tiempoSegmento,
-////					vel : (theta2[i] - theta2[i-1])/tiempoSegmento
-////				};
-////				dataNueva.push(resultado);
-////			}
-//		}
-
-//		console.log(tiempoTotal);
-//		return dataNueva;
-
 	};
 
 	GeneradorTrayectoria.prototype.calculoTiempo = function(data, indice, cantidad){
 
-		this.iter++;
-		var valor1 = this._CALCULAR_TIEMPO(data, cantidad, indice);
-		var valor2 = this._CALCULAR_TIEMPO(data, cantidad*10, indice);
-		if(this.iter == 5){
-			console.log("ERROR Muchas iteraciones en metodo recursivo");
-			return 0;
-		}
+		var valor = 0;
+		var res1 = this.calculoIntervalo(data, cantidad, indice);
+		var res2 = this.calculoIntervalo(data, cantidad+2, indice);
+		var valor1 = res1.tiempo;
+		var valor2 = res2.tiempo;
+
 		if(math.abs(valor1 - valor2) > 1e-3){
-			return this.calculoTiempo(data, indice, cantidad*10);
+			if(cantidad == 1){
+				cantidad = 16; //FIXME desharcodear en algun momento
+			}
+
+			var cantidadMitad = parseInt(cantidad/2,10);
+
+			var posicionIniY = data.posiciones[indice].posIni.Y;
+			var mitadPosicionY = (data.posiciones[indice].posFin.Y - posicionIniY)/2 + posicionIniY;
+
+			var posicionIniX = data.posiciones[indice].posIni.X;
+			var mitadPosicionX = (data.posiciones[indice].posFin.X - posicionIniX)/2 + posicionIniX;
+			var primerMitadData = JSON.parse(JSON.stringify(data));
+			primerMitadData.posiciones[indice].posFin.X = mitadPosicionX;
+			primerMitadData.posiciones[indice].posFin.Y = mitadPosicionY;
+			var valorPrimerMitad = this.calculoTiempo(primerMitadData, indice, cantidadMitad);
+
+			var segundaMitadData = JSON.parse(JSON.stringify(data));
+			segundaMitadData.posiciones[indice].posIni.X = mitadPosicionX;
+			segundaMitadData.posiciones[indice].posIni.Y = mitadPosicionY;
+			var valorSegundaMitad = this.calculoTiempo(segundaMitadData, indice, cantidadMitad);
+
+			valor = valorPrimerMitad + valorSegundaMitad;
+		} else {
+			valor = valor1;
+			this.armarSegmentoIntervalo(res1.listaTheta1, res1.listaTheta2, data);
 		}
 
-		return cantidad;
+		return valor;
+	};
+
+	GeneradorTrayectoria.prototype.armarSegmentoIntervalo = function(listaTheta1, listaTheta2, data){
+
+		if(!listaTheta1.length || !listaTheta2.length){
+			return;
+		}
+
+		var vMaxM1 = data.velocidadMotor1;
+		var vMaxM2 = data.velocidadMotor2;
+
+		for(var i = 1, theta1, theta2; (theta1 = listaTheta1[i]) != undefined &&  (theta2 = listaTheta2[i]) != undefined; i++){
+			var tiempoSeg1 = math.abs(listaTheta1[i-1] - listaTheta1[i])/vMaxM1;
+			var tiempoSeg2 = math.abs(listaTheta2[i-1] - listaTheta2[i])/vMaxM2;
+			var tiempoSegmento = math.max(tiempoSeg1, tiempoSeg2);
+			//var tiempoSegmento = math.max(tiempoSeg1, tiempoSeg2, data.tiempoAceleracion);
+			var resultado = {
+				posIni : listaTheta1[i-1],
+				posFin : listaTheta1[i],
+				t : tiempoSegmento,
+				vel : (listaTheta1[i] - listaTheta1[i-1])/tiempoSegmento
+			};
+			this.dataNueva.push(resultado);
+		}
 	};
 
 	GeneradorTrayectoria.prototype.generar = function(data){
 
 		this.trayectoria = {};
 		//Antes transformar los datos!!!
-		this.iter = 0;
-		this.listaTheta1 = [];
-		this.listaTheta2 = [];
 
-		var mejorEstimacionCantidad = this.calculoTiempo(data, 0, data.cantidadSegmentos);
-		data.posiciones = this.armarSegmentos(data, mejorEstimacionCantidad);
-		console.log(data.posiciones.length);
-		//this.trayectoria = this.armarSegmentos(data);
+		this.dataNueva = [];
+		console.log(this.calculoTiempo(data, 0, data.cantidadSegmentos));
+		data.posiciones = this.dataNueva;
+
+//		console.log(data);
+//		//this.trayectoria = this.armarSegmentos(data);
 		for(var i = 0, elemento; elemento = this.lista[i]; i++){
 			this["trayectoria"+elemento].calcular(data);
 			this.trayectoria[elemento] = this["trayectoria"+elemento].resultados(this.pasosGrafico);
