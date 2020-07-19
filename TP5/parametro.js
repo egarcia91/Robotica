@@ -16,11 +16,11 @@
 		this.segmentos.addEventListener('mostrar', this.onMostrar.bind(this));
 		this.segmentos.addEventListener('quierenCambiarParametro', this.onCambio.bind(this));
 
-		var divPaginado = this.getElementsByClassName('paginado')[0];
-		this.paginado = new Paginado(divPaginado, {
-			cantidadPaginas : JSON.parse(JSON.stringify(this.defectoGeneral.cantidadSegmentos))
-		});
-		this.paginado.addEventListener('quierenCambiarPagina', this.onCambioPagina.bind(this));
+//		var divPaginado = this.getElementsByClassName('paginado')[0];
+//		this.paginado = new Paginado(divPaginado, {
+//			cantidadPaginas : JSON.parse(JSON.stringify(this.defectoGeneral.cantidadSegmentos))
+//		});
+//		this.paginado.addEventListener('quierenCambiarPagina', this.onCambioPagina.bind(this));
 
 		this.datosSegmentos = JSON.parse(JSON.stringify(this.defecto));
 	}
@@ -69,7 +69,7 @@
 		if(name == "cantidadSegmentos"){
 			var value = parseInt(t.value,10);
 			this.defectoGeneral.cantidadSegmentos = value;
-			this.paginado.recargarInfo(value);
+//			this.paginado.recargarInfo(value);
 		}
 
 		if(name == "pasosGrafico"){
