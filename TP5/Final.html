@@ -3,7 +3,39 @@
 	</head>
 	<body>
 
+	<script id="vertex-shader" type="x-shader/x-vertex">
+		attribute vec2 aVertexPosition;
+
+		uniform vec2 uScalingFactor;
+		uniform vec2 uRotationVector;
+
+		void main() {
+			vec2 rotatedPosition = vec2(
+				aVertexPosition.x * uRotationVector.y + aVertexPosition.y * uRotationVector.x,
+				aVertexPosition.y * uRotationVector.y - aVertexPosition.x * uRotationVector.x
+			);
+
+			gl_Position = vec4(rotatedPosition * uScalingFactor, 0.0, 1.0);
+		}
+	</script>
+	<script id="fragment-shader" type="x-shader/x-fragment">
+		#ifdef GL_ES
+			precision highp float;
+		#endif
+
+		uniform vec4 uGlobalColor;
+
+		void main() {
+			gl_FragColor = uGlobalColor;
+		}
+	</script>
+	<canvas id="glcanvas" width="600" height="460">
+		Oh no! Your browser doesn't support canvas!
+	</canvas>
+	<script src="animacion.js"></script>
+
 	<div id="main"></div>
+
 	<textarea id="parametros" style="display:none;visibility:hidden;">
 		<table align='center'>
 			<tr>
@@ -21,10 +53,10 @@
 					<input style="width:40%" type='text' class="datos" data-name="cantidadSegmentos" value='${cantidadSegmentos}'>
 				</td>
 				<td align="center">
-					<span>Cantidad puntos grafico :</span>
+					<span>Tiempo muestreo [ms]:</span>
 				</td>
 				<td align="center">
-					<input style="width:40%" type='text' class="datos" data-name="pasosGrafico" value='${pasosGrafico}'>
+					<input style="width:40%" type='text' class="datos" data-name="tiempoMuestreo" value='${tiempoMuestreo}'>
 				</td>
 				<td align="right">
 					<span>Tiempo aceleracion [ms]:</span>
@@ -183,6 +215,7 @@
 			<div class="graficos" style="width:100%;height:49%;"></div>
 		</div>
 	</div>
+
 	</textarea>
 
 	<textarea id="paginado" style="display:none;visibility:hidden;">
@@ -206,6 +239,7 @@
 			</tr>
 		</table>
 	</textarea>
+
 	</body>
 
 <style type="text/css">

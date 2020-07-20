@@ -30,7 +30,7 @@
 
 	Parametro.prototype.defectoGeneral = {
 		cantidadSegmentos : 4,
-		pasosGrafico : 100,
+		tiempoMuestreo : 1,
 		tiempoAceleracion : 0.5,
 		velocidadMotor1 : 10*2*Math.PI/60,
 		velocidadMotor2 : 10*2*Math.PI/60

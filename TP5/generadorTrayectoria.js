@@ -208,7 +208,7 @@
 			this.trayectoria["motor"+motor] = {};
 			for(var i = 0, elemento; elemento = this.lista[i]; i++){
 				this["trayectoria"+elemento+"motor"+motor].calcular(dataMotores["motor"+motor]);
-				this.trayectoria["motor"+motor][elemento] = this["trayectoria"+elemento+"motor"+motor].resultados(this.pasosGrafico);
+				this.trayectoria["motor"+motor][elemento] = this["trayectoria"+elemento+"motor"+motor].resultados(this.tiempoMuestreo);
 			}
 		}
 
