@@ -1,142 +1,136 @@
-let gl = null;
-let glCanvas = null;
+(function(){
+	function Animacion(data){
 
-// Aspect ratio and coordinate system
-// details
+		this.container = document.getElementById("container3D");
+		this.renderer;
+		this.camera;
+		this.scene;
+		this.controls;
+		this.barra1;
+		this.barra2;
+		this.trail1;
+		this.trail2;
+		this.sphere1;
+		this.sphere2;
 
-let aspectRatio;
-let currentRotation = [0, 1];
-let currentScale = [1.0, 1.0];
+		this.i = 0;
+		this.largo = 0;
 
-// Vertex information
+		this.theta1 = data.theta1 || [];
+		this.theta2 = data.theta2 || [];
+		this.largo = this.theta1.length;
+		this.comienzo();
+		this.armarEscena();
+		this.dibujado();
 
-let vertexArray;
-let vertexBuffer;
-let vertexNumComponents;
-let vertexCount;
-
-// Rendering data shared with the
-// scalers.
-
-let uScalingFactor;
-let uGlobalColor;
-let uRotationVector;
-let aVertexPosition;
-
-// Animation timing
-
-let previousTime = 0.0;
-let degreesPerSecond = 10.0; //Velocidad de giro
-window.addEventListener("load", startup, false);
-
-function startup() {
-	glCanvas = document.getElementById("glcanvas");
-	gl = glCanvas.getContext("webgl");
-
-	const shaderSet = [
-		{
-			type: gl.VERTEX_SHADER,
-			id: "vertex-shader"
-		},
-		{
-			type: gl.FRAGMENT_SHADER,
-			id: "fragment-shader"
-		}
-	];
-
-	shaderProgram = buildShaderProgram(shaderSet);
-
-	aspectRatio = glCanvas.width/glCanvas.height;
-	currentRotation = [0, 1];
-	currentScale = [1.0, aspectRatio];
-
-	vertexArray = new Float32Array([
-		-0.1, 0, 0.2, 0, 0.2, -0.1,
-		-0.1, 0, 0.2, -0.1, -0.1, -0.1
-	]);
-
-	vertexBuffer = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-	gl.bufferData(gl.ARRAY_BUFFER, vertexArray, gl.STATIC_DRAW);
-
-	vertexNumComponents = 2;
-	vertexCount = vertexArray.length/vertexNumComponents;
-
-	currentAngle = 0.0; //Angulo inicial
-	rotationRate = 6;
-
-	animateScene();
-}
-
-function buildShaderProgram(shaderInfo) {
-	let program = gl.createProgram();
-
-	shaderInfo.forEach(function(desc) {
-		let shader = compileShader(desc.id, desc.type);
-
-		if (shader) {
-			gl.attachShader(program, shader);
-		}
-	});
-
-	gl.linkProgram(program)
-
-	if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-		console.log("Error linking shader program:");
-		console.log(gl.getProgramInfoLog(program));
 	}
 
-	return program;
-}
+	Animacion.prototype.constructor = "Animacion";
 
-function compileShader(id, type) {
-	let code = document.getElementById(id).firstChild.nodeValue;
-	let shader = gl.createShader(type);
 
-	gl.shaderSource(shader, code);
-	gl.compileShader(shader);
+	Animacion.prototype.comienzo = function(){
 
-	if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-		console.log(`Error compiling ${type === gl.VERTEX_SHADER ? "vertex" : "fragment"} shader:`);
-		console.log(gl.getShaderInfoLog(shader));
+		// configuración básica de Three.js
+		this.renderer = new THREE.WebGLRenderer({
+			antialias : true
+		});
+
+		var renderWidth = 1280;
+		var renderHeight = 720;
+		this.renderer.setSize(renderWidth, renderHeight);
+		this.renderer.setClearColor(0xFFFFFF);
+
+		var aspect = renderWidth/renderHeight;
+
+		this.camera = new THREE.PerspectiveCamera( 65, aspect, 1, 100000);
+		this.camera.position.set(200, 50, 0);
+		this.camera.lookAt(new THREE.Vector3(0,0,0));
+
+		this.scene = new THREE.Scene();
+		this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+		this.controls.target.y = 50;
+		this.controls.update();
+		this.controls.screenSpacePanning = true;
+		this.container.append(this.renderer.domElement);
+
+		// Defino elementos de la escena
+
+		var ambienLight = new THREE.AmbientLight(0x666666);
+		this.scene.add(ambienLight);
+
+		var light1 = new THREE.PointLight(0xFFFFFF, 1);
+		light1.position.set(500.0,1000.0,0.0);
+		this.scene.add(light1);
+
+		var gridHelper = new THREE.GridHelper( 1500,200 );
+		gridHelper.rotation.x = math.pi/2;
+		gridHelper.rotation.z = math.pi/2;
+		this.scene.add( gridHelper );
+
+		var axesHelper = new THREE.AxesHelper( 8 );
+		this.scene.add( axesHelper );
+
+	};
+
+
+	Animacion.prototype.armarEscena = function(){
+
+
+		var geometry = new THREE.BoxGeometry( 5, 50, 5 );
+		var material = new THREE.MeshPhongMaterial( {color: 0xCCCC00} );
+		geometry.translate(0,25,0);
+
+		this.sphere1 = new THREE.Mesh( new THREE.SphereGeometry( 5, 32, 32 ), new THREE.MeshPhongMaterial( {color: 0xff0000} ) );
+		this.sphere1.position.y = 50;
+
+		this.barra1 = new THREE.Mesh( geometry, material );
+		this.barra1.position.y = 100;
+		this.barra1.add( this.sphere1 );
+
+		material2 = new THREE.MeshPhongMaterial( {color: 0x00FFFF} );
+
+		this.barra2 = new THREE.Mesh( geometry, material2 );
+		this.barra2.position.y = 50;
+		this.sphere2 = this.sphere1.clone()
+		this.barra2.add( this.sphere2 );
+
+		this.barra1.add(this.barra2)
+		this.scene.add(this.barra1);
+
+		var axesHelper = new THREE.AxesHelper( 8 );
+		this.barra1.add( axesHelper );
+
+		axesHelper = new THREE.AxesHelper( 8 );
+		this.barra2.add( axesHelper );
+
+//		this.trail1 = new Trail(1000,new THREE.Vector3(0,0,0),0.0, this.scene);
+		this.trail2 = new Trail(1000,new THREE.Vector3(0,0,0),0.0, this.scene);
 	}
-	return shader;
-}
 
-function animateScene() {
-	gl.viewport(0, 0, glCanvas.width, glCanvas.height);
-	gl.clearColor(0.8, 0.9, 1.0, 1.0);
-	gl.clear(gl.COLOR_BUFFER_BIT);
+	Animacion.prototype.dibujado = function() {
 
-	let radians = currentAngle * Math.PI / 180.0;
-	currentRotation[0] = Math.sin(radians);
-	currentRotation[1] = Math.cos(radians);
+		if(this.i > this.largo - 1){
+			//requestAnimationFrame(function(){});
+			requestAnimationFrame(this.dibujado.bind(this));
 
-	gl.useProgram(shaderProgram);
+			this.renderer.render(this.scene, this.camera,false,false);
 
-	uScalingFactor = gl.getUniformLocation(shaderProgram, "uScalingFactor");
-	uGlobalColor = gl.getUniformLocation(shaderProgram, "uGlobalColor");
-	uRotationVector = gl.getUniformLocation(shaderProgram, "uRotationVector");
+		} else {
+			requestAnimationFrame(this.dibujado.bind(this));
 
-	gl.uniform2fv(uScalingFactor, currentScale);
-	gl.uniform2fv(uRotationVector, currentRotation);
-	gl.uniform4fv(uGlobalColor, [0.1, 0.7, 0.2, 1.0]);
+//		console.log(this.i);
 
-	gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+			this.barra1.rotation.x = this.theta1[this.i].posicion - math.pi/2;
+			this.barra2.rotation.x = this.theta2[this.i].posicion;
 
-	aVertexPosition = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+//			this.trail1.pushPosition(this.sphere1.getWorldPosition(new THREE.Vector3(0,0,0)));
+			this.trail2.pushPosition(this.sphere2.getWorldPosition(new THREE.Vector3(0,0,0)));
 
-	gl.enableVertexAttribArray(aVertexPosition);
-	gl.vertexAttribPointer(aVertexPosition, vertexNumComponents, gl.FLOAT, false, 0, 0);
+			this.i++;
+			this.renderer.render(this.scene, this.camera,false,false);
 
-	gl.drawArrays(gl.TRIANGLES, 0, vertexCount);
+		}
+	}
 
-	window.requestAnimationFrame(function(currentTime) {
-		let deltaAngle = ((currentTime - previousTime) / 1000.0) * degreesPerSecond;
-
-		currentAngle = (currentAngle + deltaAngle) % 360;
-
-		previousTime = currentTime;
-		animateScene();
-	});
-}
+	window.Animacion = Animacion;
+})();

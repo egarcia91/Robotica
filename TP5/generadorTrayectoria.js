@@ -11,7 +11,6 @@
 	}
 
 	GeneradorTrayectoria.prototype.constructor = "GeneradorTrayectoria";
-	GeneradorTrayectoria.prototype.tiempoMuestreo = 1e-3;
 	GeneradorTrayectoria.prototype.diccionarioThetas = {};
 
 	GeneradorTrayectoria.prototype.lista = [
@@ -191,6 +190,8 @@
 	GeneradorTrayectoria.prototype.generar = function(data){
 
 		this.trayectoria = {};
+		this.trayectoria.movimiento = {};
+		this.trayectoria.movimiento.Real = [];
 		//Antes transformar los datos!!!
 
 		this.motor1 = [];
@@ -204,13 +205,21 @@
 			dataMotores["motor"+motor].posiciones = this["motor"+motor];
 		}
 
+
 		for(var j = 0, motor; motor = this.motores[j]; j++){
 			this.trayectoria["motor"+motor] = {};
 			for(var i = 0, elemento; elemento = this.lista[i]; i++){
 				this["trayectoria"+elemento+"motor"+motor].calcular(dataMotores["motor"+motor]);
-				this.trayectoria["motor"+motor][elemento] = this["trayectoria"+elemento+"motor"+motor].resultados(this.tiempoMuestreo);
+				this.trayectoria["motor"+motor][elemento] = this["trayectoria"+elemento+"motor"+motor].resultados(data.tiempoMuestreo);
 			}
 		}
+
+		for(var i = 0, theta1, theta2; (theta1 = this.trayectoria.motor1.Real[i]) != undefined &&  (theta2 = this.trayectoria.motor2.Real[i]) != undefined; i++){
+			this.trayectoria.movimiento.Real.push({
+				posicion : this.scara.problemaDirecto(theta1.posicion, theta2.posicion),
+				tiempo : theta1.tiempo
+			});
+		};
 
 		return JSON.parse(JSON.stringify(this.trayectoria));
 	};

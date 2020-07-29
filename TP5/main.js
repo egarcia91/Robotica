@@ -20,6 +20,7 @@
 		this.graficoPosicion2 = new Grafico(divGraficos[3],{});
 		this.graficoVelocidad2 = new Grafico(divGraficos[4],{});
 		this.graficoAceleracion2 = new Grafico(divGraficos[5],{});
+		this.graficoPosicion3 = new Grafico(divGraficos[6],{});
 
 
 		this.res = {};
@@ -44,6 +45,10 @@
 
 	Main.prototype._QUE_GRAFICAR = function(){
 		var res = this.res || {};
+		new Animacion({
+			theta1 : res["motor1"]["Ideal"],
+			theta2 : res["motor2"]["Ideal"]
+		});
 		this.graficoPosicion1.pushData(res["motor1"],"posicion",);
 		this.graficoPosicion1.show(true);
 		this.graficoVelocidad1.pushData(res["motor1"],"velocidad");
@@ -57,6 +62,9 @@
 		this.graficoVelocidad2.show(true);
 		this.graficoAceleracion2.pushData(res["motor2"],"aceleracion");
 		this.graficoAceleracion2.show(true);
+
+		this.graficoPosicion3.pushData(res["movimiento"],"posicion");
+		this.graficoPosicion3.show(true);
 	};
 
 	window.Main = Main;

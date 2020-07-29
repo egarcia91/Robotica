@@ -1,6 +1,7 @@
 (function(){
 	function DiagramaRobot(div,config){
 
+		this.scara = new Scara(undefined,{});
 		//Generador Trayectoria
 		//
 		this.generadorTrayectoria = new GeneradorTrayectoria(undefined,{});
