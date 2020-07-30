@@ -42,7 +42,7 @@
 
 		var aspect = renderWidth/renderHeight;
 
-		this.camera = new THREE.PerspectiveCamera( 65, aspect, 1, 100000);
+		this.camera = new THREE.PerspectiveCamera( 65, aspect, 1, 1000);
 		this.camera.position.set(200, 50, 0);
 		this.camera.lookAt(new THREE.Vector3(0,0,0));
 
@@ -62,7 +62,7 @@
 		light1.position.set(500.0,1000.0,0.0);
 		this.scene.add(light1);
 
-		var gridHelper = new THREE.GridHelper( 1500,200 );
+		var gridHelper = new THREE.GridHelper( 1500,600 );
 		gridHelper.rotation.x = math.pi/2;
 		gridHelper.rotation.z = math.pi/2;
 		this.scene.add( gridHelper );
@@ -76,22 +76,27 @@
 	Animacion.prototype.armarEscena = function(){
 
 
-		var geometry = new THREE.BoxGeometry( 5, 50, 5 );
+		var esc = 3;
+		var geometry = new THREE.BoxGeometry( 5*esc, 40*esc, 5*esc );
 		var material = new THREE.MeshPhongMaterial( {color: 0xCCCC00} );
-		geometry.translate(0,25,0);
+		geometry.translate(0,20*esc,0);
 
-		this.sphere1 = new THREE.Mesh( new THREE.SphereGeometry( 5, 32, 32 ), new THREE.MeshPhongMaterial( {color: 0xff0000} ) );
-		this.sphere1.position.y = 50;
+		this.sphere1 = new THREE.Mesh( new THREE.SphereGeometry( 5*esc, 32*esc, 32*esc ), new THREE.MeshPhongMaterial( {color: 0xff0000} ) );
+		this.sphere1.position.y = 40*esc;
 
 		this.barra1 = new THREE.Mesh( geometry, material );
-		this.barra1.position.y = 100;
+		this.barra1.position.y = 0;
 		this.barra1.add( this.sphere1 );
 
+		var geometry2 = new THREE.BoxGeometry( 5*esc, 30*esc, 5*esc );
 		material2 = new THREE.MeshPhongMaterial( {color: 0x00FFFF} );
+		geometry2.translate(0,15*esc,0);
 
-		this.barra2 = new THREE.Mesh( geometry, material2 );
-		this.barra2.position.y = 50;
-		this.sphere2 = this.sphere1.clone()
+		this.barra2 = new THREE.Mesh( geometry2, material2 );
+		this.barra2.position.y = 40*esc;
+
+		this.sphere2 = new THREE.Mesh( new THREE.SphereGeometry( 5*esc, 32*esc, 32*esc ), new THREE.MeshPhongMaterial( {color: 0xff0000} ) );
+		this.sphere2.position.y = 30*esc;
 		this.barra2.add( this.sphere2 );
 
 		this.barra1.add(this.barra2)
@@ -103,8 +108,8 @@
 		axesHelper = new THREE.AxesHelper( 8 );
 		this.barra2.add( axesHelper );
 
-//		this.trail1 = new Trail(1000,new THREE.Vector3(0,0,0),0.0, this.scene);
-		this.trail2 = new Trail(1000,new THREE.Vector3(0,0,0),0.0, this.scene);
+		this.trail1 = new Trail(1000,new THREE.Vector3(0,0,0),0.0, this.scene);
+		this.trail2 = new Trail(100000,new THREE.Vector3(0,0,0),0.0, this.scene);
 	}
 
 	Animacion.prototype.dibujado = function() {
@@ -118,12 +123,10 @@
 		} else {
 			requestAnimationFrame(this.dibujado.bind(this));
 
-//		console.log(this.i);
-
 			this.barra1.rotation.x = this.theta1[this.i].posicion - math.pi/2;
 			this.barra2.rotation.x = this.theta2[this.i].posicion;
 
-//			this.trail1.pushPosition(this.sphere1.getWorldPosition(new THREE.Vector3(0,0,0)));
+			this.trail1.pushPosition(this.sphere1.getWorldPosition(new THREE.Vector3(0,0,0)));
 			this.trail2.pushPosition(this.sphere2.getWorldPosition(new THREE.Vector3(0,0,0)));
 
 			this.i++;
