@@ -42,20 +42,30 @@
 		this.motor2.Igmzz = (this.motor2.masa/2)*(this.motor2.radio/1000)*(this.motor2.radio/1000); //[Kg m^2] origen terna 2
 
 		this.eslabon1ConCarga = {
-			Izz : (this.eslabon1.Iglzz+this.eslabon1.masa*(this.eslabon1Xgl*this.eslabon1Xgl+this.eslabon1.Ygl*this.eslabon1.Ygl))+(this.motor2.Igmzz)
-//			Xgl : ,
-//			Ygl :
+			Izz : (this.eslabon1.Iglzz+this.eslabon1.masa*(this.eslabon1.Xgl*this.eslabon1.Xgl+this.eslabon1.Ygl*this.eslabon1.Ygl))+(this.motor2.Igmzz),
+			Xgl : ((this.eslabon1.Xgl*this.eslabon1.masa) + (0*this.motor2.masa))/(this.eslabon1.masa+this.motor2.masa),
+			Ygl : ((this.eslabon1.Ygl*this.eslabon1.masa) + (0*this.motor2.masa))/(this.eslabon1.masa+this.motor2.masa),
+			masa : (this.eslabon1.masa + this.motor2.masa)
 		};
-//////% Parámetros dinámicos para el eslabón 1 
-//////% calculados al origen de la terna del eslabón. 
-//////% Cuando se incluyan los motores,  suponer que el motor 2
-//////% está fijado al eslabón 1.
-//////global I01zz Xg1 Yg1 m1;
-//////I01zz = (Igl1zz + ml1 * (Xgl1^2+Ygl1^2)) + (Igm2zz);
-//////Xg1 = ((Xgl1*ml1) + (0*mm2))/(ml1+mm2);
-//////Yg1 = ((Ygl1*ml1) + (0*mm2))/(ml1+mm2);
-//////m1 = ml1 + mm2;
-//////
+
+		this.eslabon2ConCarga = {
+			Izz : (this.eslabon2.Iglzz+this.eslabon2.masa*(this.eslabon2.Xgl*this.eslabon2.Xgl+this.eslabon1.Ygl*this.eslabon1.Ygl)),
+			Xgl : ((this.eslabon2.Xgl*this.eslabon2.masa) + (0*this.carga.masa))/(this.eslabon2.masa+this.carga.masa),
+			Ygl : ((this.eslabon2.Ygl*this.eslabon2.masa) + (0*this.carga.masa))/(this.eslabon2.masa+this.carga.masa),
+			masa : (this.eslabon2.masa + this.carga.masa)
+		};
+
+
+		this.motorU9D_D = {
+//			wm : 2*math.pi/ tiempomuestreo,
+//			Jm : 3.95E-5*identidad(2,2), //Nm,
+//			Bm : 0.8*3/(math.pi*1e3)*identidad(2,2), // Nm/(rad/s),
+//			N : 100*identidad(2,2),
+//			Fm : [[0*2.8/100],[0*2.8/100]],
+//			Km : 0.076*identidad(2), //Nm/A
+//			v_max : 6000*2*math.pi/60, //[rad/seg]
+//			Tau_max : 5.134 // [Nm]
+		};
 	}
 
 	Scara.prototype.constructor = "Scara";
