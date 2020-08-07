@@ -131,6 +131,53 @@
 		};
 	};
 
+	Scara.prototype.matrizDinamica = function(x){
+		var matM;
+		var vecH;
+		var vecG;
+
+		var a1 = this.eslabon1.largo; //[mm]
+		var a2 = this.eslabon2.largo; //[mm]
+
+
+		var i1zz = this.eslabon1ConCarga.Izz;
+		var xg1 = this.eslabon1ConCarga.Xgl;
+		var yg1 = this.eslabon1ConCarga.Ygl;
+		var m1 = this.eslabon1ConCarga.masa;
+
+		var i2zz = this.eslabon2ConCarga.Izz;
+		var xg2 = this.eslabon2ConCarga.Xgl;
+		var yg2 = this.eslabon2ConCarga.Ygl;
+		var m2 = this.eslabon2ConCarga.masa;
+
+		var theta = [ 1, 2]; // vector de dos componentes, sale de x
+		var thetap = [3, 4]; // vector de dos componenete, sale de x
+
+		var g = math.gravity.value;
+
+		var matM22 = i2zz + 2*a2*xg2*m2 + a2*a2*m2;
+		var matM21 = matM22 + a1*((a2+xg2)*math.cos(theta[1])-yg2*math.sin(theta[1]))*m2;
+		var matM11 = i1zz + 2*a1*xg1*m1 + a1*a1*(m1+m2) + 2*matM21 - matM22;
+
+		matM = [
+			[matM11, matM21],
+			[matM21, matM22]
+		];
+
+		vecH = [
+			-a1*((a2 + xg2)*math.sin(theta[1]) + yg2*math.cos(theta[1]))*m2*(2*thetap[0]*thetap[1]+thetap[1]*thetap[1]),
+			-a1*((a2 + xg2)*math.sin(theta[1]) + yg2*math.cos(theta[1]))*m2*(-thetap[2]*thetap[2]);
+		];
+
+		vecG2 = m2*g*((xg2 + a2)*math.cos(theta[0]+theta[1])- yg2*math.sin(theta[0]+theta[1]));
+		vecG = [
+			m1*g*((xg1 + a1)*math.cos(theta[0])- yg1*math.sin(theta[0])) + m2*g*a1*math.cos(theta[0]) + vecG2,
+			vecG2
+		];
+
+		return matM, vecH, vecG;
+	};
+
 	Scara.prototype.problemaDirecto = function(t1, t2){
 
 		var a1 = this.eslabon1.largo; //[mm]
