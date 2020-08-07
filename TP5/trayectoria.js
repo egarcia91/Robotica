@@ -15,6 +15,7 @@
 	Trayectoria.prototype.tolerancia = 1e-3;
 
 	Trayectoria.prototype.calcular = function(datos){
+		console.log(datos);
 
 		this.tiempoAceleracion = datos.tiempoAceleracion;
 
@@ -158,11 +159,11 @@
 		for(var i = 0, t; (t = tiempos[i]) != undefined; i++){
 			var resultado = {
 				posicion : this.posicion(t),
-				velocidad : this.velocidad(t),
-				aceleracion : this.aceleracion(t),
+//				velocidad : this.velocidad(t),
+//				aceleracion : this.aceleracion(t),
 				tiempo : t
 			};
-			resultados.push(resultado);
+//			resultados.push(resultado);
 		}
 
 		return resultados;

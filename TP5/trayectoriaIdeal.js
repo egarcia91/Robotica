@@ -12,6 +12,7 @@
 			return this["funciones"+tipo][c.indice].evaluate({t : c.tiempoRelativo});
 		}
 		if(tipo == "posicion"){
+			console.log(this.posiciones[0]);
 			return this["constante"](this.posiciones[0].posIni);
 		} else {
 			return 0;

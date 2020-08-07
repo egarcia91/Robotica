@@ -3,8 +3,12 @@
 
 		this.cantidadEjes = 2;
 
+		this.tiempoMuestreo = 1e-3;
+
+		this.tiempoAceleracion = 100e-3;
+
 		this.eslabon1 = {
-			largo : 400,
+			largo : 0.400,
 			Iglzz : 0.07,
 			Ygl : 0,
 			masa : 5
@@ -12,7 +16,7 @@
 		this.eslabon1.Xgl = -this.eslabon1.largo/2,
 
 		this.eslabon2 = {
-			largo : 300,
+			largo : 0.300,
 			Iglzz : 0.015,
 			Ygl : 0,
 			masa : 2
@@ -31,13 +35,13 @@
 
 		this.motor1 = {
 			masa : 1.7, //[Kg]
-			radio : 111/2, //[mm]
+			radio : 0.111/2, //[m]
 		};
 		this.motor1.Igmzz = (this.motor1.masa/2)*(this.motor1.radio/1000)*(this.motor1.radio/1000); //[Kg m^2] origen terna 2
 
 		this.motor2 = {
 			masa : 1.7, //[Kg]
-			radio : 111/2, //[mm]
+			radio : 0.111/2, //[mm]
 		};
 		this.motor2.Igmzz = (this.motor2.masa/2)*(this.motor2.radio/1000)*(this.motor2.radio/1000); //[Kg m^2] origen terna 2
 
@@ -56,15 +60,19 @@
 		};
 
 
-		this.motorU9D_D = {
-//			wm : 2*math.pi/ tiempomuestreo,
-//			Jm : 3.95E-5*identidad(2,2), //Nm,
-//			Bm : 0.8*3/(math.pi*1e3)*identidad(2,2), // Nm/(rad/s),
-//			N : 100*identidad(2,2),
-//			Fm : [[0*2.8/100],[0*2.8/100]],
-//			Km : 0.076*identidad(2), //Nm/A
-//			v_max : 6000*2*math.pi/60, //[rad/seg]
-//			Tau_max : 5.134 // [Nm]
+//		Seleccion motor "U9D_D"
+		this.caracteristicasMotor = {
+			wm : 2*math.pi/this.tiempoMuestreo,
+			Jm : 3.95e-5, //Nm
+			Bm : 0.8*3/(math.pi*1e3), // Nm/(rad/s)
+			N : 100,
+			Fm : [
+				[0*2.8/100],
+				[0*2.8/100]
+			],
+			Km : 0.076, //Nm/A
+			velocidadMax : 6000*2*math.pi/60, //[rad/seg]
+			tauMax : 5.134 // [Nm]
 		};
 	}
 
@@ -131,7 +139,28 @@
 		};
 	};
 
-	Scara.prototype.matrizDinamica = function(x){
+	Scara.prototype.modeloDinamico = function(tiempo, estadoActualPosicion, estadoActualVelocidad, fuerzaControl){
+		var t = tiempo;
+		var x = estadoActualPosicion; //theta
+//		var x = estadoActualVelocidad; //thetap
+		var u = fuerzaControl;
+
+		var n = this.caracteristicasMotor.N;
+		var jm = this.caracteristicasMotor.Jm;
+		var bm = this.caracteristicasMotor.Bm;
+		var km = this.caracteristicasMotor.Km;
+
+		var torque = km*n*u;
+		var n_ejes = this.cantidadEjes;
+		var res = this.matrizDinamica(x);
+
+//		thetap = x(n_ejes+1:end);
+//		theta2p = (M+Jm*N^2)\( Torq -Bm*N^2*thetap -H -G);
+//		dxdt = [thetap; theta2p];
+
+	};
+
+	Scara.prototype.matrizDinamica = function(posicion, velocidad){
 		var matM;
 		var vecH;
 		var vecG;
@@ -166,7 +195,7 @@
 
 		vecH = [
 			-a1*((a2 + xg2)*math.sin(theta[1]) + yg2*math.cos(theta[1]))*m2*(2*thetap[0]*thetap[1]+thetap[1]*thetap[1]),
-			-a1*((a2 + xg2)*math.sin(theta[1]) + yg2*math.cos(theta[1]))*m2*(-thetap[2]*thetap[2]);
+			-a1*((a2 + xg2)*math.sin(theta[1]) + yg2*math.cos(theta[1]))*m2*(-thetap[2]*thetap[2])
 		];
 
 		vecG2 = m2*g*((xg2 + a2)*math.cos(theta[0]+theta[1])- yg2*math.sin(theta[0]+theta[1]));
@@ -175,7 +204,11 @@
 			vecG2
 		];
 
-		return matM, vecH, vecG;
+		return {
+			'matM' : matM,
+			'vecH' : vecH,
+			'vecG' : vecG
+		};
 	};
 
 	Scara.prototype.problemaDirecto = function(t1, t2){
@@ -198,87 +231,3 @@
 	window.Scara = Scara;
 })();
 
-
-//////% **************************************************************
-//////% Parametros del robot
-//////% **************************************************************
-
-
-//////% Parámetros dinámicos para el eslabón 1 
-//////% calculados al origen de la terna del eslabón. 
-//////% Cuando se incluyan los motores,  suponer que el motor 2
-//////% está fijado al eslabón 1.
-//////global I01zz Xg1 Yg1 m1;
-//////I01zz = (Igl1zz + ml1 * (Xgl1^2+Ygl1^2)) + (Igm2zz);
-//////Xg1 = ((Xgl1*ml1) + (0*mm2))/(ml1+mm2);
-//////Yg1 = ((Ygl1*ml1) + (0*mm2))/(ml1+mm2);
-//////m1 = ml1 + mm2;
-//////
-//////global I02zz Xg2 Yg2 m2;
-//////% Parámetros dinámicos para el eslabón 2, calculados al origen de la terna 2
-//////% Cuando se incluya el efecto de la carga, considerarla colgada en el origen
-//////% de la terna 2.
-//////I02zz = (Igl2zz + ml2 * (Xgl2^2+Ygl2^2)) ;
-//////Xg2 = ((Xgl2*ml2) + 0*ml)/(ml2+ml); 
-//////Yg2 = ((Ygl2*ml2)+ 0*ml)/(ml2+ml) ; 
-//////m2 = ml2 + ml;
-//////
-//////% **************************************************************
-//////% Parametros del motor
-//////% **************************************************************
-//////% VALORES del manual de Kollmorgen
-//////global Jm;
-//////global Bm;
-//////global N;
-//////global Fm;
-//////global Km;
-//////global fe;
-//////global fm;
-//////
-//////% Valores originales
-//////%{
-//////Jm = 1E-5*eye(2,2);      
-//////Bm = 0.000076*eye(2,2);         % Nm/(rad/s)   
-//////N = 1*eye(2,2);
-//////Fm = 0*[2.8/100;2.8/100];	% Si deseara considerar su efecto, incluirla en el modelo
-//////
-//////Km=0.10*eye(2);      % Nm/A
-//////
-//////% Maximos del motor
-//////v_max = 3000*RPM;   % [rad/seg]
-//////Tau_max = 1;       % [Nm]
-//////%}
-//////
-//////
-//////
-//////%{
-//////% Motor U9D-A
-//////wm = 2*pi/Tm;
-//////%we = ;
-//////Jm = 3.95E-5*eye(2,2); % Nm      
-//////Bm = 5.73E-4*eye(2,2);         % Nm/(rad/s)   
-//////N = 100*eye(2,2);
-//////Fm = 0*[2.8/100;2.8/100];	% Si deseara considerar su efecto, incluirla en el modelo
-//////
-//////Km=0.048*eye(2);      % Nm/A
-//////
-//////% Maximos del motor
-//////v_max = 6000*RPM;   % [rad/seg]
-//////Tau_max = 3.199;       % [Nm]
-//////%}
-//////
-//////
-//////% Motor U9D-D
-//////wm = 2*pi/Tm;
-//////%we = ;
-//////Jm = 3.95E-5*eye(2,2); % Nm      
-//////Bm = 0.8*3/(pi*1E3)*eye(2,2);         % Nm/(rad/s)   
-//////N = 100*eye(2,2);
-//////Fm = 0*[2.8/100;2.8/100];	% Si deseara considerar su efecto, incluirla en el modelo
-//////
-//////Km=0.076*eye(2);      % Nm/A
-//////
-//////% Maximos del motor
-//////v_max = 6000*RPM;   % [rad/seg]
-//////Tau_max = 5.134;       % [Nm]
-//////

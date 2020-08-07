@@ -152,6 +152,7 @@
 			var segmentoUnido2 = this.sumarSegmentos(this.motor2[i-1],this.motor2[i],data,"2");
 			this.motor2.splice(i-1,2,segmentoUnido2);
 			this.comprimirSegmentos(data);
+
 		}
 	};
 
@@ -201,6 +202,7 @@
 
 		var dataMotores = {};
 		for(var j = 0, motor; motor = this.motores[j]; j++){
+			console.log(this["motor"+motor]);
 			dataMotores["motor"+motor] = JSON.parse(JSON.stringify(data));
 			dataMotores["motor"+motor].posiciones = this["motor"+motor];
 		}
@@ -213,13 +215,13 @@
 				this.trayectoria["motor"+motor][elemento] = this["trayectoria"+elemento+"motor"+motor].resultados(data.tiempoMuestreo);
 			}
 		}
-
-		for(var i = 0, theta1, theta2; (theta1 = this.trayectoria.motor1.Real[i]) != undefined &&  (theta2 = this.trayectoria.motor2.Real[i]) != undefined; i++){
-			this.trayectoria.movimiento.Real.push({
-				posicion : this.scara.problemaDirecto(theta1.posicion, theta2.posicion),
-				tiempo : theta1.tiempo
-			});
-		};
+//
+//		for(var i = 0, theta1, theta2; (theta1 = this.trayectoria.motor1.Real[i]) != undefined &&  (theta2 = this.trayectoria.motor2.Real[i]) != undefined; i++){
+//			this.trayectoria.movimiento.Real.push({
+//				posicion : this.scara.problemaDirecto(theta1.posicion, theta2.posicion),
+//				tiempo : theta1.tiempo
+//			});
+//		};
 
 		return JSON.parse(JSON.stringify(this.trayectoria));
 	};
