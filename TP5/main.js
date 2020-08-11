@@ -13,15 +13,14 @@
 
 		this.diagramaRobot = new DiagramaRobot(undefined,{});
 
-		var divGraficos = this.getElementsByClassName('graficos');
-		this.graficoPosicion1 = new Grafico(divGraficos[0],{});
-		this.graficoVelocidad1 = new Grafico(divGraficos[1],{});
-		this.graficoAceleracion1 = new Grafico(divGraficos[2],{});
-		this.graficoPosicion2 = new Grafico(divGraficos[3],{});
-		this.graficoVelocidad2 = new Grafico(divGraficos[4],{});
-		this.graficoAceleracion2 = new Grafico(divGraficos[5],{});
-		this.graficoPosicion3 = new Grafico(divGraficos[6],{});
-
+//		var divGraficos = this.getElementsByClassName('graficos');
+//		this.graficoPosicion1 = new Grafico(divGraficos[0],{});
+//		this.graficoVelocidad1 = new Grafico(divGraficos[1],{});
+//		this.graficoAceleracion1 = new Grafico(divGraficos[2],{});
+//		this.graficoPosicion2 = new Grafico(divGraficos[3],{});
+//		this.graficoVelocidad2 = new Grafico(divGraficos[4],{});
+//		this.graficoAceleracion2 = new Grafico(divGraficos[5],{});
+//		this.graficoPosicion3 = new Grafico(divGraficos[6],{});
 
 		this.res = {};
 	}
@@ -38,33 +37,33 @@
 
 		this.diagramaRobot.ejecutar(data);
 
-		this.res = this.diagramaRobot.getTrayectoria();
-		this._QUE_GRAFICAR();
+//		this.res = this.diagramaRobot.getTrayectoria();
+//		this._QUE_GRAFICAR();
 
 	};
 
 	Main.prototype._QUE_GRAFICAR = function(){
-		var res = this.res || {};
-		new Animacion({
-			theta1 : res["motor1"]["Ideal"],
-			theta2 : res["motor2"]["Ideal"]
-		});
-		this.graficoPosicion1.pushData(res["motor1"],"posicion",);
-		this.graficoPosicion1.show(true);
-		this.graficoVelocidad1.pushData(res["motor1"],"velocidad");
-		this.graficoVelocidad1.show(true);
-		this.graficoAceleracion1.pushData(res["motor1"],"aceleracion");
-		this.graficoAceleracion1.show(true);
-
-		this.graficoPosicion2.pushData(res["motor2"],"posicion");
-		this.graficoPosicion2.show(true);
-		this.graficoVelocidad2.pushData(res["motor2"],"velocidad");
-		this.graficoVelocidad2.show(true);
-		this.graficoAceleracion2.pushData(res["motor2"],"aceleracion");
-		this.graficoAceleracion2.show(true);
-
-		this.graficoPosicion3.pushData(res["movimiento"],"posicion");
-		this.graficoPosicion3.show(true);
+//		var res = this.res || {};
+//		new Animacion({
+//			theta1 : res["motor1"]["Ideal"],
+//			theta2 : res["motor2"]["Ideal"]
+//		});
+//		this.graficoPosicion1.pushData(res["motor1"],"posicion",);
+//		this.graficoPosicion1.show(true);
+//		this.graficoVelocidad1.pushData(res["motor1"],"velocidad");
+//		this.graficoVelocidad1.show(true);
+//		this.graficoAceleracion1.pushData(res["motor1"],"aceleracion");
+//		this.graficoAceleracion1.show(true);
+//
+//		this.graficoPosicion2.pushData(res["motor2"],"posicion");
+//		this.graficoPosicion2.show(true);
+//		this.graficoVelocidad2.pushData(res["motor2"],"velocidad");
+//		this.graficoVelocidad2.show(true);
+//		this.graficoAceleracion2.pushData(res["motor2"],"aceleracion");
+//		this.graficoAceleracion2.show(true);
+//
+//		this.graficoPosicion3.pushData(res["movimiento"],"posicion");
+//		this.graficoPosicion3.show(true);
 	};
 
 	window.Main = Main;

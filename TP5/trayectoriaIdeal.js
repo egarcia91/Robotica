@@ -34,8 +34,10 @@
 	};
 
 	TrayectoriaIdeal.prototype.generarFuncionLieal = function(p, indice, tiempoAcumulado){
+
 		var pendiente = (p.posFin - p.posIni)/p.t;
 		var ordenada = p.posIni;
+
 		return math.parse(this.lineal(pendiente, ordenada), {t : 0});
 	};
 

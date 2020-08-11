@@ -192,8 +192,8 @@
 				break;
 			}
 			tiempoAcumulado += ele.t
-
 		}
+
 		return tiempoAcumulado
 	};
 

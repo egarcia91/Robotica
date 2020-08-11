@@ -166,7 +166,7 @@
 
 		vecH = [
 			-a1*((a2 + xg2)*math.sin(theta[1]) + yg2*math.cos(theta[1]))*m2*(2*thetap[0]*thetap[1]+thetap[1]*thetap[1]),
-			-a1*((a2 + xg2)*math.sin(theta[1]) + yg2*math.cos(theta[1]))*m2*(-thetap[2]*thetap[2]);
+			-a1*((a2 + xg2)*math.sin(theta[1]) + yg2*math.cos(theta[1]))*m2*(-thetap[2]*thetap[2])
 		];
 
 		vecG2 = m2*g*((xg2 + a2)*math.cos(theta[0]+theta[1])- yg2*math.sin(theta[0]+theta[1]));

@@ -2,9 +2,9 @@
 	function GeneradorTrayectoria(div,config){
 
 		this.scara = new Scara();
-		for(var i = 0, elemento; elemento = this.lista[i]; i++){
-			for(var j = 0, motor; motor = this.motores[j]; j++){
-				this["trayectoria"+elemento+"motor"+motor] = new window["Trayectoria"+elemento](null,{});
+		for(var i = 0, tipo; tipo = this.tipos[i]; i++){
+			for(var j = 0, ejeCartesiano; ejeCartesiano = this.ejesCartenianos[j]; j++){
+				this["trayectoria"+tipo+ejeCartesiano] = new window["Trayectoria"+tipo](null,{});
 			}
 		}
 
@@ -13,9 +13,14 @@
 	GeneradorTrayectoria.prototype.constructor = "GeneradorTrayectoria";
 	GeneradorTrayectoria.prototype.diccionarioThetas = {};
 
-	GeneradorTrayectoria.prototype.lista = [
+	GeneradorTrayectoria.prototype.tipos = [
 		"Ideal",
 		"Real"
+	];
+
+	GeneradorTrayectoria.prototype.ejesCartenianos = [
+		"X",
+		"Y"
 	];
 
 	GeneradorTrayectoria.prototype.motores = [
@@ -187,40 +192,85 @@
 		}
 	};
 
-	GeneradorTrayectoria.prototype.generar = function(data){
-
-		this.trayectoria = {};
-		this.trayectoria.movimiento = {};
-		this.trayectoria.movimiento.Real = [];
-		//Antes transformar los datos!!!
-
-		this.motor1 = [];
-		this.motor2 = [];
-		this.calculoTiempo(data, 0, data.cantidadSegmentos);
-		this.comprimirSegmentos(data);
-
-		var dataMotores = {};
-		for(var j = 0, motor; motor = this.motores[j]; j++){
-			dataMotores["motor"+motor] = JSON.parse(JSON.stringify(data));
-			dataMotores["motor"+motor].posiciones = this["motor"+motor];
+	GeneradorTrayectoria.prototype.separacionVariables = function(data){
+		var vMax = data.velocidadMotor1;
+		var apartado = {};
+		for(var j = 0, ejeCartesiano; ejeCartesiano = this.ejesCartenianos[j]; j++){
+			apartado[ejeCartesiano] = {
+				posiciones : [],
+				tiempoAceleracion : data.tiempoAceleracion
+			};
 		}
 
+		for(var i = 0, ele; ele = data.posiciones[i]; i++){
+			var tiempos = {};
 
-		for(var j = 0, motor; motor = this.motores[j]; j++){
-			this.trayectoria["motor"+motor] = {};
-			for(var i = 0, elemento; elemento = this.lista[i]; i++){
-				this["trayectoria"+elemento+"motor"+motor].calcular(dataMotores["motor"+motor]);
-				this.trayectoria["motor"+motor][elemento] = this["trayectoria"+elemento+"motor"+motor].resultados(data.tiempoMuestreo);
+			for(var j = 0, ejeCartesiano; ejeCartesiano = this.ejesCartenianos[j]; j++){
+				apartado[ejeCartesiano].posiciones.push({
+					posFin : ele.posFin[ejeCartesiano],
+					posIni : ele.posIni[ejeCartesiano],
+					t : 0
+				});
+				tiempos[ejeCartesiano] = math.abs(ele.posFin[ejeCartesiano] - ele.posIni[ejeCartesiano])/vMax;
+
+			}
+
+			var tiempoSegmento = math.max(tiempos.X, tiempos.Y, 2*data.tiempoAceleracion, ele.tiempoDeseado);
+
+			for(var j = 0, ejeCartesiano; ejeCartesiano = this.ejesCartenianos[j]; j++){
+				apartado[ejeCartesiano].posiciones[i].t = tiempoSegmento;
+				apartado[ejeCartesiano].posiciones[i].vel = math.abs(ele.posFin[ejeCartesiano] - ele.posIni[ejeCartesiano])/tiempoSegmento;
 			}
 		}
 
-		for(var i = 0, theta1, theta2; (theta1 = this.trayectoria.motor1.Real[i]) != undefined &&  (theta2 = this.trayectoria.motor2.Real[i]) != undefined; i++){
-			this.trayectoria.movimiento.Real.push({
-				posicion : this.scara.problemaDirecto(theta1.posicion, theta2.posicion),
-				tiempo : theta1.tiempo
-			});
-		};
+		return apartado;
+	};
 
+	GeneradorTrayectoria.prototype.generar = function(data){
+
+		console.log(data);
+		this.trayectoria = {};
+		var dataSeparada = this.separacionVariables(data);
+		for(var i = 0, tipo; tipo = this.tipos[i]; i++){
+			for(var j = 0, ejeCartesiano; ejeCartesiano = this.ejesCartenianos[j]; j++){
+				this.trayectoria[tipo+ejeCartesiano] = {};
+				this["trayectoria"+tipo+ejeCartesiano].calcular(dataSeparada[ejeCartesiano]);
+			}
+////			//this.trayectoria[tipo] = this["trayectoria"+tipo].resultados(data.tiempoMuestreo);
+		}
+		console.log(this.trayectoria);
+
+//		this.trayectoria.movimiento = {};
+//		this.trayectoria.movimiento.Real = [];
+//		//Antes transformar los datos!!!
+//
+//		this.motor1 = [];
+//		this.motor2 = [];
+//		this.calculoTiempo(data, 0, data.cantidadSegmentos);
+//		this.comprimirSegmentos(data);
+//
+//		var dataMotores = {};
+//		for(var j = 0, motor; motor = this.motores[j]; j++){
+//			dataMotores["motor"+motor] = JSON.parse(JSON.stringify(data));
+//			dataMotores["motor"+motor].posiciones = this["motor"+motor];
+//		}
+//
+//
+//		for(var j = 0, motor; motor = this.motores[j]; j++){
+//			this.trayectoria["motor"+motor] = {};
+//			for(var i = 0, elemento; elemento = this.lista[i]; i++){
+//				this["trayectoria"+elemento+"motor"+motor].calcular(dataMotores["motor"+motor]);
+//				this.trayectoria["motor"+motor][elemento] = this["trayectoria"+elemento+"motor"+motor].resultados(data.tiempoMuestreo);
+//			}
+//		}
+//
+//		for(var i = 0, theta1, theta2; (theta1 = this.trayectoria.motor1.Real[i]) != undefined &&  (theta2 = this.trayectoria.motor2.Real[i]) != undefined; i++){
+//			this.trayectoria.movimiento.Real.push({
+//				posicion : this.scara.problemaDirecto(theta1.posicion, theta2.posicion),
+//				tiempo : theta1.tiempo
+//			});
+//		};
+//
 		return JSON.parse(JSON.stringify(this.trayectoria));
 	};
 

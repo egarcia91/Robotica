@@ -29,11 +29,10 @@
 	Parametro.prototype.constructor = "Parametro";
 
 	Parametro.prototype.defectoGeneral = {
-		cantidadSegmentos : 1024,
 		tiempoMuestreo : 0.1,
 		tiempoAceleracion : 0.1,
-		velocidadMotor1 : 6000*2*Math.PI/60,
-		velocidadMotor2 : 6000*2*Math.PI/60
+		velocidadMotor1 : 1000,
+		velocidadMotor2 : 1000
 	};
 
 	Parametro.prototype.defecto = [{
@@ -46,7 +45,8 @@
 			X : 300,
 			Y : 300,
 			Z : 0
-		}
+		},
+		tiempoDeseado : 1
 	}];
 
 	Parametro.prototype.nuevo = {
@@ -59,7 +59,8 @@
 			X : 0,
 			Y : 0,
 			Z : 0
-		}
+		},
+		tiempoDeseado : 1
 	};
 
 
