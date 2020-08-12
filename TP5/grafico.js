@@ -9,7 +9,7 @@
 	Grafico.prototype.constructor = "Grafico";
 
 	Grafico.prototype.configPlot = {
-		type : 'line',
+		type : 'scatter',
 		data : {
 			labels : [],
 			datasets : []
@@ -30,6 +30,9 @@
 			responsive : false,
 			scales : {
 				xAxes : [{
+//					ticks: {
+//						stepSize : 0.2
+//					},
 					display : true,
 					scaleLabel : {
 						display : true,
@@ -37,6 +40,9 @@
 					}
 				}],
 				yAxes : [{
+//					ticks: {
+//						stepSize : 0.2
+//					},
 					display : true,
 					scaleLabel : {
 						display : true,
@@ -48,6 +54,7 @@
 	};
 
 	Grafico.prototype.datosIdeal = {
+		label : "Ideal",
 		backgroundColor : "green",
 		borderColor : "green",
 		data : [],
@@ -55,6 +62,7 @@
 	};
 
 	Grafico.prototype.datosReal = {
+		label : "Real",
 		backgroundColor : "red",
 		borderColor : "red",
 		data : [],
@@ -64,13 +72,21 @@
 	Grafico.prototype.clear = function(){
 	};
 
-	Grafico.prototype.pushData = function(lista, funcion){
+	Grafico.prototype.pushData = function(lista, funcion, listaSecundaria){
+		var funcionTiempo = true;
 
 		if(!lista){
 			return;
 		}
 
 		this.configPlot.options.scales.yAxes[0].scaleLabel.labelString = funcion;
+
+		if(listaSecundaria){
+			funcionTiempo = false;
+			this.configPlot.options.scales.xAxes[0].scaleLabel.labelString = "X";
+			this.configPlot.options.scales.yAxes[0].scaleLabel.labelString = "Y";
+		}
+
 
 		this.configPlot.data.labels = [];
 		this.configPlot.data.datasets = [];
@@ -80,13 +96,24 @@
 		for(var i = 0, key; key = Object.keys(lista)[i]; i++){
 			this['datos'+key].data = [];
 			for(var j = 0, ele; ele = lista[key][j]; j++){
+				var ejeX = 0;
+				var ejeY = 0;
 				if(j == 0 && this.configPlot.data.labels.length != 0){
 					fillLabels = false;
 				}
 				if(fillLabels){
-					this.configPlot.data.labels.push(ele.tiempo);
+					if(funcionTiempo){
+						ejeY = ele[funcion]
+						ejeX = ele.tiempo;
+					} else {
+						ejeY = listaSecundaria[key][j][funcion];
+						ejeX = ele[funcion]
+					}
 				}
-				this['datos'+key].data.push(ele[funcion]);
+				this['datos'+key].data.push({
+					y : ejeY,
+					x : ejeX
+				});
 			}
 			this.configPlot.data.datasets.push(this['datos'+key]);
 		}

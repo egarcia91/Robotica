@@ -29,8 +29,8 @@
 	Parametro.prototype.constructor = "Parametro";
 
 	Parametro.prototype.defectoGeneral = {
-		tiempoMuestreo : 0.1,
-		tiempoAceleracion : 0.1,
+		tiempoMuestreo : 0.01,
+		tiempoAceleracion : 1,
 		velocidadMotor1 : 1000,
 		velocidadMotor2 : 1000
 	};
@@ -106,7 +106,11 @@
 
 	Parametro.prototype.onCambio = function(indice, nombre, campo, valor){
 		var nuevoValor = parseFloat(valor);
-		this.datosSegmentos[indice][nombre][campo] = nuevoValor;
+		if(!campo){
+			this.datosSegmentos[indice][nombre] = nuevoValor;
+		} else {
+			this.datosSegmentos[indice][nombre][campo] = nuevoValor;
+		}
 
 		if(nombre == 'posFin'){
 			var siguiente = this.datosSegmentos[indice+1];

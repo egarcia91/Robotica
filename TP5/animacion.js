@@ -123,8 +123,8 @@
 		} else {
 			requestAnimationFrame(this.dibujado.bind(this));
 
-			this.barra1.rotation.x = this.theta1[this.i].posicion - math.pi/2;
-			this.barra2.rotation.x = this.theta2[this.i].posicion;
+			this.barra1.rotation.x = this.theta1[this.i] - math.pi/2;
+			this.barra2.rotation.x = this.theta2[this.i];
 
 			this.trail1.pushPosition(this.sphere1.getWorldPosition(new THREE.Vector3(0,0,0)));
 			this.trail2.pushPosition(this.sphere2.getWorldPosition(new THREE.Vector3(0,0,0)));
