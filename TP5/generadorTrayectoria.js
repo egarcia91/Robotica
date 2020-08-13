@@ -28,6 +28,16 @@
 		"2"
 	];
 
+	GeneradorTrayectoria.prototype.calculoDerivada = function(lista, tiempoMuestreo){
+		var derivada = [0];
+
+		for(var i = 1, elemento, elementoAnterior; ((elemento = lista[i]) != undefined) && ((elementoAnterior = lista[i-1]) != undefined); i++){
+			derivada.push((elemento - elementoAnterior)/tiempoMuestreo)
+		}
+
+		return derivada;
+	};
+
 	GeneradorTrayectoria.prototype.calculoAnguloMotores = function(){
 		var posicionesX = this.trayectoria["X"]["Real"];
 		var posicionesY = this.trayectoria["Y"]["Real"];
@@ -100,6 +110,9 @@
 		var angulos = this.calculoAnguloMotores();
 		for(var i = 0, motor; motor = this.motores[i]; i++){
 			this.trayectoria["motor"+motor] = angulos["listaTheta"+motor];
+			var derivada = this.calculoDerivada(angulos["listaTheta"+motor],data.tiempoMuestreo);
+			this.trayectoria["motor"+motor+"."] = derivada;
+			this.trayectoria["motor"+motor+".."] = this.calculoDerivada(derivada,data.tiempoMuestreo);
 		}
 
 		return JSON.parse(JSON.stringify(this.trayectoria));

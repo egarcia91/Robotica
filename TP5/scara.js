@@ -56,19 +56,23 @@
 		};
 
 
-		this.motorU9D_D = {
-//			wm : 2*math.pi/ tiempomuestreo,
-//			Jm : 3.95E-5*identidad(2,2), //Nm,
-//			Bm : 0.8*3/(math.pi*1e3)*identidad(2,2), // Nm/(rad/s),
-//			N : 100*identidad(2,2),
-//			Fm : [[0*2.8/100],[0*2.8/100]],
-//			Km : 0.076*identidad(2), //Nm/A
-//			v_max : 6000*2*math.pi/60, //[rad/seg]
-//			Tau_max : 5.134 // [Nm]
-		};
+		this.motorU9D_D = {};
 	}
 
 	Scara.prototype.constructor = "Scara";
+
+	Scara.prototype.actualizarFrecuencia = function(tiempoMuestreo){
+		this.motorU9D_D = {
+			wm : 2*math.pi/ tiempoMuestreo,
+			Jm : 3.95e-5, //Nm,
+			Bm : 0.8*3/(math.pi*1e3), // Nm/(rad/s),
+			N : 100,
+			Fm : [[0*2.8/100],[0*2.8/100]],
+			Km : 0.076, //Nm/A
+			v_max : 6000*2*math.pi/60, //[rad/seg]
+			Tau_max : 5.134 // [Nm]
+		};
+	};
 
 	Scara.prototype.determinante = function(matrizA){
 		//solo para 2x2
@@ -102,10 +106,10 @@
 		var a2 = this.eslabon2.largo; //[mm]
 
 //		//A x = b
-//
+
 //		//|a1+a2.c2 -a2.s2   | |c1|   | x |
 //		//|a2.s2     a1+a2.c2| |s1| = | y |
-//
+
 		var vectorb = [
 			x,
 			y
