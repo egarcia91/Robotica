@@ -37,13 +37,13 @@
 
 	Parametro.prototype.defecto = [{
 		posIni : {
-			X : -300,
-			Y : 300,
+			X : -0.3,
+			Y : 0.3,
 			Z : 0
 		},
 		posFin : {
-			X : 300,
-			Y : 300,
+			X : 0.3,
+			Y : 0.3,
 			Z : 0
 		},
 		tiempoDeseado : 1

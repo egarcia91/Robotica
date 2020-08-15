@@ -1,38 +1,58 @@
 (function(){
-	function ControlPD(div,config){
+	function ControlPD(){
 	}
 
 	ControlPD.prototype.constructor = "ControlPD";
 	ControlPD.prototype.constanteProporcional = 0;
 	ControlPD.prototype.constanteDerivativa = 0;
-	ControlPD.prototype.constanteMotor = 0;
 	ControlPD.prototype.toleranciaMotorMaxima = 0;
 
-	ControlPD.prototype.accionar = function(thetaDeseado){
+	ControlPD.prototype.accionar = function(thetaDeseado1, thetaDeseado2, constantes, theta, thetap){
 
-		var thetaD = thetaDeseado;
+		var kp = constantes.kp;
+		var kd = constantes.kd;
+		var km = constantes.km;
+		this.toleranciaMotorMaxima = constantes.tauMax;
 
-		var kp = this.constanteProporcional;
-		var kd = this.constanteDerivativa;
-		var theta;
-		var thetap;
+		var thetaD1 = thetaDeseado1;
+		var thetaD2 = thetaDeseado2;
 
-		var u = kp*(thetaD-theta)-kd*thetap;
-		var largo = u.length;
+		this.constanteProporcional = kp;
+		this.constanteDerivativa = kd;
 
-		var km = this.constanteMotor;
+		var kp1 = kp["1"];
+		var kp2 = kp["2"];
 
-		var toleranciaMotor = km*u;
+		var kd1 = kd["1"];
+		var kd2 = kd["2"];
 
-		for(var i = 0; i < largo; i++){
-			if(this.saturaMorot(toleranciaMotor)){
-				u[i] = math.sign(u[i])*this.toleranciaMotorMaxima/(km[i][i]);
-			}
+
+		var theta1 = theta["1"];
+		var theta2 = theta["2"];
+		var thetap1 = thetap["1"];
+		var thetap2 = thetap["2"];
+
+		var u1 = kp1*(thetaD1-theta1)-kd1*thetap1;
+		var u2 = kp2*(thetaD2-theta2)-kd2*thetap2;
+
+		var toleranciaMotor1 = km*u1;
+		var toleranciaMotor2 = km*u2;
+
+		if(this.saturaMorot(toleranciaMotor1)){
+				u1 = math.sign(u1)*this.toleranciaMotorMaxima/km;
 		}
 
-		this.resolverEcuacionDiferencialOrdinaria();
+		if(this.saturaMorot(toleranciaMotor2)){
+				u2 = math.sign(u2)*this.toleranciaMotorMaxima/km;
+		}
 
-		this.lectorEncoder();
+		return {
+			u1 : u1,
+			u2 : u2
+		}
+//		this.resolverEcuacionDiferencialOrdinaria();
+//
+//		this.lectorEncoder();
 	};
 
 	ControlPD.prototype.lectorEncoder = function(toleranciaMotor){
@@ -61,22 +81,6 @@
 		res.x;
 
 	};
-
-	ControlPD.prototype.modeloDinamico = function(tiempo, x, u){
-
-		var N;
-		var Jm;
-		var Bm;
-		var Km;
-
-		var torquq = Km*N*u;
-		var n_ejes = length(Torq);
-//		[M,H,G] = calcMatrizDinamica(x);
-//
-//		thetap = x(n_ejes+1:end);
-//		theta2p = (M+Jm*N^2)\( Torq -Bm*N^2*thetap -H -G);
-//		dxdt = [thetap; theta2p];
-	}
 
 	window.ControlPD = ControlPD;
 })();

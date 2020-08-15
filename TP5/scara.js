@@ -4,7 +4,7 @@
 		this.cantidadEjes = 2;
 
 		this.eslabon1 = {
-			largo : 400,
+			largo : 0.4,
 			Iglzz : 0.07,
 			Ygl : 0,
 			masa : 5
@@ -12,7 +12,7 @@
 		this.eslabon1.Xgl = -this.eslabon1.largo/2,
 
 		this.eslabon2 = {
-			largo : 300,
+			largo : 0.3,
 			Iglzz : 0.015,
 			Ygl : 0,
 			masa : 2
@@ -31,13 +31,13 @@
 
 		this.motor1 = {
 			masa : 1.7, //[Kg]
-			radio : 111/2, //[mm]
+			radio : 0.111/2, //[mm]
 		};
 		this.motor1.Igmzz = (this.motor1.masa/2)*(this.motor1.radio/1000)*(this.motor1.radio/1000); //[Kg m^2] origen terna 2
 
 		this.motor2 = {
 			masa : 1.7, //[Kg]
-			radio : 111/2, //[mm]
+			radio : 0.111/2, //[m]
 		};
 		this.motor2.Igmzz = (this.motor2.masa/2)*(this.motor2.radio/1000)*(this.motor2.radio/1000); //[Kg m^2] origen terna 2
 
@@ -60,6 +60,57 @@
 	}
 
 	Scara.prototype.constructor = "Scara";
+
+	Scara.prototype.constantesControl = function(){
+
+		var a1 = this.eslabon1.largo; //[mm]
+		var a2 = this.eslabon2.largo; //[mm]
+		var i1zz = this.eslabon1ConCarga.Izz;
+		var m1 = this.eslabon1ConCarga.masa;
+		var xg1 = this.eslabon1ConCarga.Xgl;
+		var i2zz = this.eslabon2ConCarga.Izz;
+		var m2 = this.eslabon2ConCarga.masa;
+		var xg2 = this.eslabon2ConCarga.Xgl;
+		var yg2 = this.eslabon2ConCarga.Ygl;
+
+		var m22 = i2zz + 2*a2*xg2*m2 + a2*a2*m2;
+		var m12_max = m22 + a1*(a2+xg2);
+		var m12_min = m22 - a1*(a2+xg2);
+		var m11_max = i1zz + 2*a1*xg1*m1 + a1*a1*(m1+m2) + 2*m12_min - m22;
+		var m11_min = i1zz + 2*a1*xg1*m1 + a1*a1*(m1+m2) + 2*m12_min - m22;
+
+		var m11rr = (m11_max + m11_min)/2;
+		var m22rr = i2zz + 2*a2*xg2*m2 + a2*a2*m2;
+
+		var jm = this.motorU9D_D.Jm;
+		var km = this.motorU9D_D.Km;
+		var bm = this.motorU9D_D.Bm;
+		var n = this.motorU9D_D.N;
+		var tauMax = this.motorU9D_D.Tau_max;
+
+		var jeff = [
+			[(jm*n*n + m11rr),                0],
+			[               0, (jm*n*n + m22rr)]
+		];
+
+		var wn = 2*math.pi*30;
+		var kp = {
+			1 : jeff[0][0]*wn*wn/(km*n),
+			2 : jeff[1][1]*wn*wn/(km*n)
+		};
+
+		var kd = {
+			1 : (math.sqrt(km*n*kp["1"]*jeff[0][0])/(km*n)) - bm*n*n,
+			2 : (math.sqrt(km*n*kp["2"]*jeff[1][1])/(km*n)) - bm*n*n
+		};
+
+		return {
+			kd : kd,
+			kp : kp,
+			km : km,
+			tauMax : tauMax
+		}
+	};
 
 	Scara.prototype.actualizarFrecuencia = function(tiempoMuestreo){
 		this.motorU9D_D = {
@@ -135,7 +186,7 @@
 		};
 	};
 
-	Scara.prototype.matrizDinamica = function(x){
+	Scara.prototype.matrizDinamica = function(theta, thetap){
 		var matM;
 		var vecH;
 		var vecG;
@@ -154,13 +205,15 @@
 		var yg2 = this.eslabon2ConCarga.Ygl;
 		var m2 = this.eslabon2ConCarga.masa;
 
-		var theta = [ 1, 2]; // vector de dos componentes, sale de x
-		var thetap = [3, 4]; // vector de dos componenete, sale de x
+		var theta1 = theta["1"]; // vector de dos componentes, sale de x
+		var theta2 = theta["2"]; // vector de dos componentes, sale de x
+		var thetap1 = thetap["1"]; // vector de dos componentes, sale de x
+		var thetap2 = thetap["2"]; // vector de dos componentes, sale de x
 
 		var g = math.gravity.value;
 
 		var matM22 = i2zz + 2*a2*xg2*m2 + a2*a2*m2;
-		var matM21 = matM22 + a1*((a2+xg2)*math.cos(theta[1])-yg2*math.sin(theta[1]))*m2;
+		var matM21 = matM22 + a1*((a2+xg2)*math.cos(theta2)-yg2*math.sin(theta2))*m2;
 		var matM11 = i1zz + 2*a1*xg1*m1 + a1*a1*(m1+m2) + 2*matM21 - matM22;
 
 		matM = [
@@ -169,17 +222,21 @@
 		];
 
 		vecH = [
-			-a1*((a2 + xg2)*math.sin(theta[1]) + yg2*math.cos(theta[1]))*m2*(2*thetap[0]*thetap[1]+thetap[1]*thetap[1]),
-			-a1*((a2 + xg2)*math.sin(theta[1]) + yg2*math.cos(theta[1]))*m2*(-thetap[2]*thetap[2])
+			-a1*((a2 + xg2)*math.sin(theta2) + yg2*math.cos(theta2))*m2*(2*thetap1*thetap2+thetap2*thetap2),
+			-a1*((a2 + xg2)*math.sin(theta2) + yg2*math.cos(theta2))*m2*(-thetap2*thetap2)
 		];
 
-		vecG2 = m2*g*((xg2 + a2)*math.cos(theta[0]+theta[1])- yg2*math.sin(theta[0]+theta[1]));
+		vecG2 = m2*g*((xg2 + a2)*math.cos(theta1+theta2)- yg2*math.sin(theta1+theta2));
 		vecG = [
-			m1*g*((xg1 + a1)*math.cos(theta[0])- yg1*math.sin(theta[0])) + m2*g*a1*math.cos(theta[0]) + vecG2,
+			m1*g*((xg1 + a1)*math.cos(theta1)- yg1*math.sin(theta1)) + m2*g*a1*math.cos(theta1) + vecG2,
 			vecG2
 		];
 
-		return matM, vecH, vecG;
+		return {
+			matM : matM,
+			vecH : vecH,
+			vecG : vecG
+		}
 	};
 
 	Scara.prototype.problemaDirecto = function(t1, t2){
@@ -199,90 +256,27 @@
 		return rotoTraslacion[0][3];
 	};
 
+	Scara.prototype.modeloDinamico = function(tiempo, x, xp, control){
+
+		var jm = this.motorU9D_D.Jm;
+		var km = this.motorU9D_D.Km;
+		var bm = this.motorU9D_D.Bm;
+		var n = this.motorU9D_D.N;
+
+		var u1 = control.u1;
+		var u2 = control.u2;
+
+		var torque1 = km*n*u1;
+		var torque2 = km*n*u2;
+
+		var nejes = this.cantidadEjes;
+		var parametrosDinamicos = this.matrizDinamica(x, xp);
+
+//		thetap = x(n_ejes+1:end);
+//		theta2p = (M+Jm*N^2)\( Torq -Bm*N^2*thetap -H -G);
+//		dxdt = [thetap; theta2p];
+	}
+
+
 	window.Scara = Scara;
 })();
-
-
-//////% **************************************************************
-//////% Parametros del robot
-//////% **************************************************************
-
-
-//////% Parámetros dinámicos para el eslabón 1 
-//////% calculados al origen de la terna del eslabón. 
-//////% Cuando se incluyan los motores,  suponer que el motor 2
-//////% está fijado al eslabón 1.
-//////global I01zz Xg1 Yg1 m1;
-//////I01zz = (Igl1zz + ml1 * (Xgl1^2+Ygl1^2)) + (Igm2zz);
-//////Xg1 = ((Xgl1*ml1) + (0*mm2))/(ml1+mm2);
-//////Yg1 = ((Ygl1*ml1) + (0*mm2))/(ml1+mm2);
-//////m1 = ml1 + mm2;
-//////
-//////global I02zz Xg2 Yg2 m2;
-//////% Parámetros dinámicos para el eslabón 2, calculados al origen de la terna 2
-//////% Cuando se incluya el efecto de la carga, considerarla colgada en el origen
-//////% de la terna 2.
-//////I02zz = (Igl2zz + ml2 * (Xgl2^2+Ygl2^2)) ;
-//////Xg2 = ((Xgl2*ml2) + 0*ml)/(ml2+ml); 
-//////Yg2 = ((Ygl2*ml2)+ 0*ml)/(ml2+ml) ; 
-//////m2 = ml2 + ml;
-//////
-//////% **************************************************************
-//////% Parametros del motor
-//////% **************************************************************
-//////% VALORES del manual de Kollmorgen
-//////global Jm;
-//////global Bm;
-//////global N;
-//////global Fm;
-//////global Km;
-//////global fe;
-//////global fm;
-//////
-//////% Valores originales
-//////%{
-//////Jm = 1E-5*eye(2,2);      
-//////Bm = 0.000076*eye(2,2);         % Nm/(rad/s)   
-//////N = 1*eye(2,2);
-//////Fm = 0*[2.8/100;2.8/100];	% Si deseara considerar su efecto, incluirla en el modelo
-//////
-//////Km=0.10*eye(2);      % Nm/A
-//////
-//////% Maximos del motor
-//////v_max = 3000*RPM;   % [rad/seg]
-//////Tau_max = 1;       % [Nm]
-//////%}
-//////
-//////
-//////
-//////%{
-//////% Motor U9D-A
-//////wm = 2*pi/Tm;
-//////%we = ;
-//////Jm = 3.95E-5*eye(2,2); % Nm      
-//////Bm = 5.73E-4*eye(2,2);         % Nm/(rad/s)   
-//////N = 100*eye(2,2);
-//////Fm = 0*[2.8/100;2.8/100];	% Si deseara considerar su efecto, incluirla en el modelo
-//////
-//////Km=0.048*eye(2);      % Nm/A
-//////
-//////% Maximos del motor
-//////v_max = 6000*RPM;   % [rad/seg]
-//////Tau_max = 3.199;       % [Nm]
-//////%}
-//////
-//////
-//////% Motor U9D-D
-//////wm = 2*pi/Tm;
-//////%we = ;
-//////Jm = 3.95E-5*eye(2,2); % Nm      
-//////Bm = 0.8*3/(pi*1E3)*eye(2,2);         % Nm/(rad/s)   
-//////N = 100*eye(2,2);
-//////Fm = 0*[2.8/100;2.8/100];	% Si deseara considerar su efecto, incluirla en el modelo
-//////
-//////Km=0.076*eye(2);      % Nm/A
-//////
-//////% Maximos del motor
-//////v_max = 6000*RPM;   % [rad/seg]
-//////Tau_max = 5.134;       % [Nm]
-//////
