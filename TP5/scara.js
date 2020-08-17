@@ -272,9 +272,26 @@
 		var nejes = this.cantidadEjes;
 		var parametrosDinamicos = this.matrizDinamica(x, xp);
 
-//		thetap = x(n_ejes+1:end);
-//		theta2p = (M+Jm*N^2)\( Torq -Bm*N^2*thetap -H -G);
-//		dxdt = [thetap; theta2p];
+		var thetap = xp;
+
+		var matA = parametrosDinamicos.matM;
+		matA[0][0] += jm*n*n;
+		matA[1][1] += jm*n*n;
+
+		var vecb = [
+			torque1 -bm*n*n*thetap["1"] - parametrosDinamicos.vecH[0] - parametrosDinamicos.vecG[0],
+			torque2 -bm*n*n*thetap["2"] - parametrosDinamicos.vecH[1] - parametrosDinamicos.vecG[1]
+		];
+		var res = this.metodoCramer(matA, vecb);
+		var thetapp = {
+			1 : res.x,
+			2 : res.y
+		};
+
+		return {
+			thetap : thetap,
+			thetapp : thetapp
+		}
 	}
 
 
