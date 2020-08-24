@@ -7,7 +7,7 @@
 	ControlPD.prototype.constanteDerivativa = 0;
 	ControlPD.prototype.toleranciaMotorMaxima = 0;
 
-	ControlPD.prototype.accionar = function(thetaDeseado1, thetaDeseado2, constantes, theta, thetap){
+	ControlPD.prototype.accionar = function(thetaDeseado1, thetaDeseado2, constantes, theta){
 
 		var kp = constantes.kp;
 		var kd = constantes.kd;
@@ -27,10 +27,10 @@
 		var kd2 = kd["2"];
 
 
-		var theta1 = theta["1"];
-		var theta2 = theta["2"];
-		var thetap1 = thetap["1"];
-		var thetap2 = thetap["2"];
+		var theta1 = theta[0];
+		var theta2 = theta[1];
+		var thetap1 = theta[2];
+		var thetap2 = theta[3];
 
 		var u1 = kp1*(thetaD1-theta1)-kd1*thetap1;
 		var u2 = kp2*(thetaD2-theta2)-kd2*thetap2;
@@ -50,14 +50,6 @@
 			u1 : u1,
 			u2 : u2
 		}
-//		this.resolverEcuacionDiferencialOrdinaria();
-//
-//		this.lectorEncoder();
-	};
-
-	ControlPD.prototype.lectorEncoder = function(toleranciaMotor){
-//		theta=X(end, 1:n_ejes)';
-//		thetap=X(end, n_ejes+1:end)';
 	};
 
 	ControlPD.prototype.saturaMorot = function(toleranciaMotor){
@@ -69,17 +61,6 @@
 		}
 
 		return seSatura;
-	};
-
-	ControlPD.prototype.resolverEcuacionDiferencialOrdinaria = function(u, theta, thetap){
-		var modeloDinamico;
-		var odeOptions;
-		var tm;
-
-		var res = ode45(modeloDinamico,[0, tm],[theta,thetap],odeOptions,u);
-		res.tode;
-		res.x;
-
 	};
 
 	window.ControlPD = ControlPD;

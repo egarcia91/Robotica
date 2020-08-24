@@ -62,7 +62,7 @@
 		this.graficoAceleracion2.pushData(res["Y"],"aceleracion");
 		this.graficoAceleracion2.show(true);
 
-		this.graficoPosicion3.pushData(res["X"],"posicion",res["Y"]);
+		this.graficoPosicion3.pushData(res["Xgraf"],"posicion",res["Ygraf"]);
 		this.graficoPosicion3.show(true);
 	};
 

@@ -87,6 +87,7 @@
 		var bm = this.motorU9D_D.Bm;
 		var n = this.motorU9D_D.N;
 		var tauMax = this.motorU9D_D.Tau_max;
+		var mWn = this.motorU9D_D.wn;
 
 		var jeff = [
 			[(jm*n*n + m11rr),                0],
@@ -108,13 +109,15 @@
 			kd : kd,
 			kp : kp,
 			km : km,
-			tauMax : tauMax
+			tauMax : tauMax,
+			n : n,
+			wn : wn
 		}
 	};
 
 	Scara.prototype.actualizarFrecuencia = function(tiempoMuestreo){
 		this.motorU9D_D = {
-			wm : 2*math.pi/ tiempoMuestreo,
+			wn : 2*math.pi/ tiempoMuestreo,
 			Jm : 3.95e-5, //Nm,
 			Bm : 0.8*3/(math.pi*1e3), // Nm/(rad/s),
 			N : 100,
@@ -186,7 +189,7 @@
 		};
 	};
 
-	Scara.prototype.matrizDinamica = function(theta, thetap){
+	Scara.prototype.matrizDinamica = function(){
 		var matM;
 		var vecH;
 		var vecG;
@@ -205,37 +208,35 @@
 		var yg2 = this.eslabon2ConCarga.Ygl;
 		var m2 = this.eslabon2ConCarga.masa;
 
-		var theta1 = theta["1"]; // vector de dos componentes, sale de x
-		var theta2 = theta["2"]; // vector de dos componentes, sale de x
-		var thetap1 = thetap["1"]; // vector de dos componentes, sale de x
-		var thetap2 = thetap["2"]; // vector de dos componentes, sale de x
-
 		var g = math.gravity.value;
 
-		var matM22 = i2zz + 2*a2*xg2*m2 + a2*a2*m2;
-		var matM21 = matM22 + a1*((a2+xg2)*math.cos(theta2)-yg2*math.sin(theta2))*m2;
-		var matM11 = i1zz + 2*a1*xg1*m1 + a1*a1*(m1+m2) + 2*matM21 - matM22;
+		return function(theta1, theta2, thetap1, thetap2){
 
-		matM = [
-			[matM11, matM21],
-			[matM21, matM22]
-		];
+			var matM22 = i2zz + 2*a2*xg2*m2 + a2*a2*m2;
+			var matM21 = matM22 + a1*((a2+xg2)*math.cos(theta2)-yg2*math.sin(theta2))*m2;
+			var matM11 = i1zz + 2*a1*xg1*m1 + a1*a1*(m1+m2) + 2*matM21 - matM22;
 
-		vecH = [
-			-a1*((a2 + xg2)*math.sin(theta2) + yg2*math.cos(theta2))*m2*(2*thetap1*thetap2+thetap2*thetap2),
-			-a1*((a2 + xg2)*math.sin(theta2) + yg2*math.cos(theta2))*m2*(-thetap2*thetap2)
-		];
+			matM = [
+				[matM11, matM21],
+				[matM21, matM22]
+			];
 
-		vecG2 = m2*g*((xg2 + a2)*math.cos(theta1+theta2)- yg2*math.sin(theta1+theta2));
-		vecG = [
-			m1*g*((xg1 + a1)*math.cos(theta1)- yg1*math.sin(theta1)) + m2*g*a1*math.cos(theta1) + vecG2,
-			vecG2
-		];
+			vecH = [
+				-a1*((a2 + xg2)*math.sin(theta2) + yg2*math.cos(theta2))*m2*(2*thetap1*thetap2+thetap2*thetap2),
+				-a1*((a2 + xg2)*math.sin(theta2) + yg2*math.cos(theta2))*m2*(-thetap2*thetap2)
+			];
 
-		return {
-			matM : matM,
-			vecH : vecH,
-			vecG : vecG
+			vecG2 = m2*g*((xg2 + a2)*math.cos(theta1+theta2)- yg2*math.sin(theta1+theta2));
+			vecG = [
+				m1*g*((xg1 + a1)*math.cos(theta1)- yg1*math.sin(theta1)) + m2*g*a1*math.cos(theta1) + vecG2,
+				vecG2
+			];
+
+			return {
+				matM : matM,
+				vecH : vecH,
+				vecG : vecG
+			}
 		}
 	};
 
@@ -253,10 +254,10 @@
 
 		var config = math.sign(math.sin(t2));
 
-		return rotoTraslacion[0][3];
+		return rotoTraslacion;
 	};
 
-	Scara.prototype.modeloDinamico = function(tiempo, x, xp, control){
+	Scara.prototype.modeloDinamico = function(tiempo, control){
 
 		var jm = this.motorU9D_D.Jm;
 		var km = this.motorU9D_D.Km;
@@ -270,27 +271,34 @@
 		var torque2 = km*n*u2;
 
 		var nejes = this.cantidadEjes;
-		var parametrosDinamicos = this.matrizDinamica(x, xp);
 
-		var thetap = xp;
+		var matrizDinamica = this.matrizDinamica();
+		var metodoCramer = this.metodoCramer.bind(this);
 
-		var matA = parametrosDinamicos.matM;
-		matA[0][0] += jm*n*n;
-		matA[1][1] += jm*n*n;
+		return function(t, theta){
 
-		var vecb = [
-			torque1 -bm*n*n*thetap["1"] - parametrosDinamicos.vecH[0] - parametrosDinamicos.vecG[0],
-			torque2 -bm*n*n*thetap["2"] - parametrosDinamicos.vecH[1] - parametrosDinamicos.vecG[1]
-		];
-		var res = this.metodoCramer(matA, vecb);
-		var thetapp = {
-			1 : res.x,
-			2 : res.y
-		};
+			var theta1 = theta[0];
+			var theta2 = theta[1];
+			var thetap1 = theta[2];
+			var thetap2 = theta[3];
+			var parametrosDinamicos = matrizDinamica(theta1, theta2, thetap1, thetap2);
 
-		return {
-			thetap : thetap,
-			thetapp : thetapp
+			var matA = parametrosDinamicos.matM;
+			matA[0][0] += jm*n*n;
+			matA[1][1] += jm*n*n;
+
+			var vecb = [
+				torque1 -bm*n*n*thetap1 - parametrosDinamicos.vecH[0] - parametrosDinamicos.vecG[0],
+				torque2 -bm*n*n*thetap2 - parametrosDinamicos.vecH[1] - parametrosDinamicos.vecG[1]
+			];
+			var res = metodoCramer(matA, vecb);
+
+			return [
+				thetap1,
+				thetap2,
+				res.x,
+				res.y
+			]
 		}
 	}
 

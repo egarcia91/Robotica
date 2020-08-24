@@ -29,7 +29,7 @@
 	Parametro.prototype.constructor = "Parametro";
 
 	Parametro.prototype.defectoGeneral = {
-		tiempoMuestreo : 0.01,
+		tiempoMuestreo : 0.001,
 		tiempoAceleracion : 1,
 		velocidadMotor1 : 1000,
 		velocidadMotor2 : 1000

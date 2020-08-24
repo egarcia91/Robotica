@@ -6,7 +6,9 @@
 		//
 		this.generadorTrayectoria = new GeneradorTrayectoria(undefined,{});
 
-		this.control = new ControlPD();
+//		this.control = new ControlPD();
+//		this.control = new ControlPDPesoPropio();
+		this.control = new ControlTorqueComputado();
 
 		//Control
 		//
@@ -36,19 +38,41 @@
 
 		this.deseado = this.generadorTrayectoria.generar(data); //Posion, vel, Acel deseados. MOVEL
 
-		var theta = [{
-			1 : 0,
-			2 : 0
-		}];
+		var theta = [
+			[ this.deseado.motor1[0], this.deseado.motor2[0], 0, 0 ]
+		];
 
-		var thetap = [{
-			1 : 0,
-			2 : 0
-		}];
+		for(var i = 0, thetaD1, thetaD2; ((thetaD1 = this.deseado.motor1[i]) != undefined) && ((thetaD2 = this.deseado.motor2[i]) != undefined); i++){
+			var thetaD1p = this.deseado["motor1."][i];
+			var thetaD2p = this.deseado["motor2."][i];
+			var thetaD1pp = this.deseado["motor1.."][i];
+			var thetaD2pp = this.deseado["motor2.."][i];
+			var control = this.control.accionar(thetaD1, thetaD2, constantesControl, theta[i], this.scara.matrizDinamica(), thetaD1p, thetaD2p, thetaD1pp, thetaD2pp);
+			var ecuDiferencial = new odex.Solver(4); //cantidad variables independientes 4
+			var nuevaTheta = ecuDiferencial.solve(this.scara.modeloDinamico(0, control), 0, theta[i], data.tiempoMuestreo).y;
+			theta.push(nuevaTheta);
+		}
 
-		var control = this.control.accionar(this.deseado.motor1[0], this.deseado.motor2[0], constantesControl, theta[0], thetap[0]);
+		this.deseado['Xgraf'] = {'Real' : [], 'Ideal' : []};
+		this.deseado['Ygraf'] = {'Real' : [], 'Ideal' : []};
 
-		this.scara.modeloDinamico(0, theta[0], thetap[0], control);
+		for(var i = 0, the; (the = theta[i])!= undefined; i++){
+			this.deseado.motor1[i] = the[0];
+			this.deseado.motor2[i] = the[1];
+			var resMatriz = this.scara.problemaDirecto(the[0],the[1]);
+			this.deseado['Xgraf']['Real'].push({ 'posicion' : resMatriz[0][3] });
+			if(this.deseado['X']['Real'][i]){
+				this.deseado['Xgraf']['Ideal'].push({ 'posicion' : this.deseado['X']['Real'][i].posicion });
+			} else {
+				this.deseado['Xgraf']['Ideal'].push({ 'posicion' : this.deseado['X']['Real'][i-1].posicion });
+			}
+			this.deseado['Ygraf']['Real'].push({ 'posicion' : resMatriz[1][3] });
+			if(this.deseado['Y']['Real'][i]){
+				this.deseado['Ygraf']['Ideal'].push({ 'posicion' : this.deseado['Y']['Real'][i].posicion });
+			} else {
+				this.deseado['Ygraf']['Ideal'].push({ 'posicion' : this.deseado['Y']['Real'][i-1].posicion });
+			}
+		}
 
 		//Estructura real
 		//Conseguir el tiempo total
