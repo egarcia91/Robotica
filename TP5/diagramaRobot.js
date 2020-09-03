@@ -49,6 +49,10 @@
 			var thetaD2pp = this.deseado["motor2.."][i];
 			var control = this.control.accionar(thetaD1, thetaD2, constantesControl, theta[i], this.scara.matrizDinamica(), thetaD1p, thetaD2p, thetaD1pp, thetaD2pp);
 			var ecuDiferencial = new odex.Solver(4); //cantidad variables independientes 4
+			ecuDiferencial.absoluteTolerance = 0.001;
+			ecuDiferencial.relativeTolerance = 0.001;
+			ecuDiferencial.maxStepSize = data.tiempoMuestreo/5;
+			ecuDiferencial.initialStepSize = data.tiempoMuestreo/10;
 			var nuevaTheta = ecuDiferencial.solve(this.scara.modeloDinamico(0, control), 0, theta[i], data.tiempoMuestreo).y;
 			theta.push(nuevaTheta);
 		}
