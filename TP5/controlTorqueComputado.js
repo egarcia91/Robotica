@@ -12,6 +12,7 @@
 		var km = constantes.km;
 		var n = constantes.n;
 		var wn = constantes.wn;
+		this.toleranciaMotorMaxima = constantes.tauMax;
 
 		var thetaD1 = thetaDeseado1;
 		var thetaD2 = thetaDeseado2;
@@ -27,13 +28,22 @@
 		var thetap1 = theta[2];
 		var thetap2 = theta[3];
 
-//		var parametrosDinamicos = matrizDinamica(theta1, theta2, thetap1, thetap2);
 
-		var u1 = kp1*(thetaD1-theta1)-kd1*(thetaD1p - thetap1) + thetaD1pp;
-		var u2 = kp2*(thetaD2-theta2)-kd2*(thetaD2p - thetap2) + thetaD2pp;
-		//console.log(u2);
-		//var u1 = 0;
-		//var u2 = 0;
+		var u1 = kp1*(thetaD1-theta1)+kd1*(thetaD1p - thetap1) + thetaD1pp;
+//		console.log(u1);
+//		confirm("aa");
+		var u2 = kp2*(thetaD2-theta2)+kd2*(thetaD2p - thetap2) + thetaD2pp;
+
+		var toleranciaMotor1 = km*u1;
+		var toleranciaMotor2 = km*u2;
+
+		if(this.saturaMorot(toleranciaMotor1)){
+			u1 = math.sign(u1)*this.toleranciaMotorMaxima/km;
+		}
+
+		if(this.saturaMorot(toleranciaMotor2)){
+			u2 = math.sign(u2)*this.toleranciaMotorMaxima/km;
+		}
 
 		return {
 			u1 : u1,

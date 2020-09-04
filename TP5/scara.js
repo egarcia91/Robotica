@@ -87,7 +87,7 @@
 		var bm = this.motorU9D_D.Bm;
 		var n = this.motorU9D_D.N;
 		var tauMax = this.motorU9D_D.Tau_max;
-		var mWn = this.motorU9D_D.wn;
+		var wm = this.motorU9D_D.wm;
 
 		var jeff = [
 			[(jm*n*n + m11rr),                0],
@@ -117,14 +117,14 @@
 
 	Scara.prototype.actualizarFrecuencia = function(tiempoMuestreo){
 		this.motorU9D_D = {
-			wn : 2*math.pi/ tiempoMuestreo,
-			Jm : 3.95e-5, //Nm,
-			Bm : 0.8*3/(math.pi*1e3), // Nm/(rad/s),
+			wm : 2*math.pi/ tiempoMuestreo,
+			Jm : 3.95e-5, //Nm2, parametro Jm Moment of Inertia
+			Bm : (0.8*1e-3)/((2*math.pi/60)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
 			N : 100,
-			Fm : [[0*2.8/100],[0*2.8/100]],
-			Km : 0.076, //Nm/A
-			v_max : 6000*2*math.pi/60, //[rad/seg]
-			Tau_max : 5.134 // [Nm]
+			Fm : [[0*2.8/100],[0*2.8/100]], //Nm parametro Tf Static Friction Torque
+			Km : 0.076, //Nm/A parametro Kt Torque Constant +-10%
+			v_max : 6000*2*math.pi/60, //[rad/seg] RPM Maximum Recommended Speed
+			Tau_max : 5.134 // [Nm] Tp Peak Torque
 		};
 	};
 

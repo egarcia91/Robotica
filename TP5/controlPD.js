@@ -39,11 +39,11 @@
 		var toleranciaMotor2 = km*u2;
 
 		if(this.saturaMorot(toleranciaMotor1)){
-				u1 = math.sign(u1)*this.toleranciaMotorMaxima/km;
+			u1 = math.sign(u1)*this.toleranciaMotorMaxima/km;
 		}
 
 		if(this.saturaMorot(toleranciaMotor2)){
-				u2 = math.sign(u2)*this.toleranciaMotorMaxima/km;
+			u2 = math.sign(u2)*this.toleranciaMotorMaxima/km;
 		}
 
 		return {

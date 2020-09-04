@@ -39,6 +39,17 @@
 		var u1 = kp1*(thetaD1-theta1)-kd1*thetap1 + parametrosDinamicos.vecG[0]/(n*km);
 		var u2 = kp2*(thetaD2-theta2)-kd2*thetap2 + parametrosDinamicos.vecG[1]/(n*km);
 
+		var toleranciaMotor1 = km*u1;
+		var toleranciaMotor2 = km*u2;
+
+		if(this.saturaMorot(toleranciaMotor1)){
+			u1 = math.sign(u1)*this.toleranciaMotorMaxima/km;
+		}
+
+		if(this.saturaMorot(toleranciaMotor2)){
+			u2 = math.sign(u2)*this.toleranciaMotorMaxima/km;
+		}
+
 		return {
 			u1 : u1,
 			u2 : u2
