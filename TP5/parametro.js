@@ -143,6 +143,13 @@
 		this.getElementsByClassName('datos', function(ele){
 			this.datos[ele.getAttribute('data-name')] = parseFloat(ele.value);
 		});
+
+		this.getElementsByClassName('opciones', function(ele){
+			if(ele.checked){
+				this.datos[ele.getAttribute('name')] = ele.value;
+			}
+		});
+
 		this.datos.posiciones = this.datosSegmentos;
 	};
 

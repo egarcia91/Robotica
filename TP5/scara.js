@@ -55,13 +55,71 @@
 			masa : (this.eslabon2.masa + this.carga.masa)
 		};
 
+		this.motorU9D_A = {
+			Jm : 3.95e-5, //Nm2, parametro Jm Moment of Inertia
+			Bm : (0.6*1e-3)/((2*math.pi/60)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
+			N : 100,
+			Fm : [[0*2.8/100],[0*2.8/100]], //Nm parametro Tf Static Friction Torque
+			Km : 0.048, //Nm/A parametro Kt Torque Constant +-10%
+			v_max : 6000*2*math.pi/60, //[rad/seg] RPM Maximum Recommended Speed
+			Tau_max : 3.199 // [Nm] Tp Peak Torque
+		};
 
-		this.motorU9D_D = {};
+		this.motorU9D_B = {
+			Jm : 3.95e-5, //Nm2, parametro Jm Moment of Inertia
+			Bm : (0.6*1e-3)/((2*math.pi/60)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
+			N : 100,
+			Fm : [[0*2.8/100],[0*2.8/100]], //Nm parametro Tf Static Friction Torque
+			Km : 0.057, //Nm/A parametro Kt Torque Constant +-10%
+			v_max : 6000*2*math.pi/60, //[rad/seg] RPM Maximum Recommended Speed
+			Tau_max : 3.849 // [Nm] Tp Peak Torque
+		};
+
+		this.motorU9D_C = {
+			Jm : 3.95e-5, //Nm2, parametro Jm Moment of Inertia
+			Bm : (0.7*1e-3)/((2*math.pi/60)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
+			N : 100,
+			Fm : [[0*2.8/100],[0*2.8/100]], //Nm parametro Tf Static Friction Torque
+			Km : 0.061, //Nm/A parametro Kt Torque Constant +-10%
+			v_max : 6000*2*math.pi/60, //[rad/seg] RPM Maximum Recommended Speed
+			Tau_max : 4.103 // [Nm] Tp Peak Torque
+		};
+
+		this.motorU9D_D = {
+			Jm : 3.95e-5, //Nm2, parametro Jm Moment of Inertia
+			Bm : (0.8*1e-3)/((2*math.pi/60)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
+			N : 100,
+			Fm : [[0*2.8/100],[0*2.8/100]], //Nm parametro Tf Static Friction Torque
+			Km : 0.076, //Nm/A parametro Kt Torque Constant +-10%
+			v_max : 6000*2*math.pi/60, //[rad/seg] RPM Maximum Recommended Speed
+			Tau_max : 5.134 // [Nm] Tp Peak Torque
+		};
+
+		this.motorU9D_E = {
+			Jm : 3.95e-5, //Nm2, parametro Jm Moment of Inertia
+			Bm : (0.9*1e-3)/((2*math.pi/60)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
+			N : 100,
+			Fm : [[0*2.8/100],[0*2.8/100]], //Nm parametro Tf Static Friction Torque
+			Km : 0.081, //Nm/A parametro Kt Torque Constant +-10%
+			v_max : 6000*2*math.pi/60, //[rad/seg] RPM Maximum Recommended Speed
+			Tau_max : 5.459 // [Nm] Tp Peak Torque
+		};
+
+		this.motorU9D_F = {
+			Jm : 3.95e-5, //Nm2, parametro Jm Moment of Inertia
+			Bm : (0.8*1e-3)/((2*math.pi/60)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
+			N : 100,
+			Fm : [[0*2.8/100],[0*2.8/100]], //Nm parametro Tf Static Friction Torque
+			Km : 0.073, //Nm/A parametro Kt Torque Constant +-10%
+			v_max : 6000*2*math.pi/60, //[rad/seg] RPM Maximum Recommended Speed
+			Tau_max : 4.88 // [Nm] Tp Peak Torque
+		};
+
 	}
 
 	Scara.prototype.constructor = "Scara";
 
-	Scara.prototype.constantesControl = function(){
+	Scara.prototype.constantesControl = function(motor){
 
 		var a1 = this.eslabon1.largo; //[mm]
 		var a2 = this.eslabon2.largo; //[mm]
@@ -82,12 +140,11 @@
 		var m11rr = (m11_max + m11_min)/2;
 		var m22rr = i2zz + 2*a2*xg2*m2 + a2*a2*m2;
 
-		var jm = this.motorU9D_D.Jm;
-		var km = this.motorU9D_D.Km;
-		var bm = this.motorU9D_D.Bm;
-		var n = this.motorU9D_D.N;
-		var tauMax = this.motorU9D_D.Tau_max;
-		var wm = this.motorU9D_D.wm;
+		var jm = this["motorU9D_"+motor].Jm;
+		var km = this["motorU9D_"+motor].Km;
+		var bm = this["motorU9D_"+motor].Bm;
+		var n = this["motorU9D_"+motor].N;
+		var tauMax = this["motorU9D_"+motor].Tau_max;
 
 		var jeff = [
 			[(jm*n*n + m11rr),                0],
@@ -113,19 +170,6 @@
 			n : n,
 			wn : wn
 		}
-	};
-
-	Scara.prototype.actualizarFrecuencia = function(tiempoMuestreo){
-		this.motorU9D_D = {
-			wm : 2*math.pi/ tiempoMuestreo,
-			Jm : 3.95e-5, //Nm2, parametro Jm Moment of Inertia
-			Bm : (0.8*1e-3)/((2*math.pi/60)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
-			N : 100,
-			Fm : [[0*2.8/100],[0*2.8/100]], //Nm parametro Tf Static Friction Torque
-			Km : 0.076, //Nm/A parametro Kt Torque Constant +-10%
-			v_max : 6000*2*math.pi/60, //[rad/seg] RPM Maximum Recommended Speed
-			Tau_max : 5.134 // [Nm] Tp Peak Torque
-		};
 	};
 
 	Scara.prototype.determinante = function(matrizA){
@@ -257,12 +301,12 @@
 		return rotoTraslacion;
 	};
 
-	Scara.prototype.modeloDinamico = function(tiempo, control){
+	Scara.prototype.modeloDinamico = function(motor, control){
 
-		var jm = this.motorU9D_D.Jm;
-		var km = this.motorU9D_D.Km;
-		var bm = this.motorU9D_D.Bm;
-		var n = this.motorU9D_D.N;
+		var jm = this["motorU9D_"+motor].Jm;
+		var km = this["motorU9D_"+motor].Km;
+		var bm = this["motorU9D_"+motor].Bm;
+		var n = this["motorU9D_"+motor].N;
 
 		var u1 = control.u1;
 		var u2 = control.u2;

@@ -5,13 +5,12 @@
 	</head>
 	<body>
 
-	<div id="container3D"></div>
 	<div id="main"></div>
 
 	<textarea id="parametros" style="display:none;visibility:hidden;">
 		<table align='center'>
 			<tr>
-				<td colspan="6" align="center" style="border-style:solid;">
+				<td colspan="7" align="center" style="border-style:solid;">
 					<span>
 						Parametros
 					</span>
@@ -21,32 +20,78 @@
 				<td align="center">
 					<span>Tiempo muestreo [s]:</span>
 				</td>
-				<td align="center">
-					<input style="width:40%" type='text' class="datos" data-name="tiempoMuestreo" value='${tiempoMuestreo}'>
+				<td align="center" style="width:100px;">
+					<input style="width:100%" type='text' class="datos" data-name="tiempoMuestreo" value='${tiempoMuestreo}'>
 				</td>
 				<td align="right">
 					<span>Tiempo aceleracion [s]:</span>
 				</td>
-				<td align="center">
-					<input style="width:40%" type='text' class="datos" data-name="tiempoAceleracion" value='${tiempoAceleracion}'>
+				<td align="center" style="width:100px;">
+					<input style="width:100%" type='text' class="datos" data-name="tiempoAceleracion" value='${tiempoAceleracion}'>
 				</td>
 			</tr>
 			<tr>
 				<td align="right">
 					<span>Velocidad motor 1 [rad/s]:</span>
 				</td>
-				<td align="center">
-					<input style="width:40%" type='text' class="datos" data-name="velocidadMotor1" value='${velocidadMotor1}'>
+				<td align="center" style="width:100px;">
+					<input style="width:100%" type='text' class="datos" data-name="velocidadMotor1" value='${velocidadMotor1}'>
 				</td>
 				<td align="right">
 					<span>Velocidad motor 2 [rad/s]:</span>
 				</td>
-				<td align="center">
-					<input style="width:40%" type='text' class="datos" data-name="velocidadMotor2" value='${velocidadMotor2}'>
+				<td align="center" style="width:100px;">
+					<input style="width:100%" type='text' class="datos" data-name="velocidadMotor2" value='${velocidadMotor2}'>
 				</td>
 				<td align="center">
 				</td>
 				<td align="center">
+				</td>
+			</tr>
+			<tr>
+				<td align="right">
+					<span>Tipo control:</span>
+				</td>
+				<td align="center">
+					<input type="radio" class="opciones" value="PD" name="control" checked>
+					<label>PD</label><br>
+				</td>
+				<td align="center">
+					<input type="radio" class="opciones" value="PDPesoPropio" name="control">
+					<label>PD peso propio</label><br>
+				</td>
+				<td align="center">
+					<input type="radio" class="opciones" value="TorqueComputado" name="control">
+					<label>Torque Computado</label>
+				</td>
+			</tr>
+			<tr>
+				<td align="right">
+					<span>Motor:</span>
+				</td>
+				<td align="center" style="width:100px;">
+					<input type="radio" class="opciones" value="A" name="motor">
+					<label>U9D-A</label><br>
+				</td>
+				<td align="center" style="width:100px;">
+					<input type="radio" class="opciones" value="B" name="motor">
+					<label>U9D-B</label><br>
+				</td>
+				<td align="center" style="width:100px;">
+					<input type="radio" class="opciones" value="C" name="motor">
+					<label>U9D-C</label><br>
+				</td>
+				<td align="center" style="width:100px;">
+					<input type="radio" class="opciones" value="D" name="motor" checked>
+					<label>U9D-D</label><br>
+				</td>
+				<td align="center" style="width:100px;">
+					<input type="radio" class="opciones" value="E" name="motor">
+					<label>U9D-E</label><br>
+				</td>
+				<td align="center" style="width:100px;">
+					<input type="radio" class="opciones" value="F" name="motor">
+					<label>U9D-F</label><br>
 				</td>
 			</tr>
 		</table>
@@ -59,7 +104,6 @@
 				</td>
 			</tr>
 		</table>
-		<!--div class="paginado" style="border-style:solid;"></div-->
 
 	</textarea>
 
@@ -217,6 +261,7 @@
 		</table>
 	</textarea>
 
+	<div id="container3D"></div>
 	</body>
 
 <style type="text/css">

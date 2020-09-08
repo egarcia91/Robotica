@@ -44,10 +44,10 @@
 
 	Main.prototype._QUE_GRAFICAR = function(){
 		var res = this.res || {};
-		new Animacion({
-			theta1 : res["motor1"],
-			theta2 : res["motor2"]
-		});
+//		new Animacion({
+//			theta1 : res["motor1"],
+//			theta2 : res["motor2"]
+//		});
 		this.graficoPosicion1.pushData(res["X"],"posicion");
 		this.graficoPosicion1.show(true);
 		this.graficoVelocidad1.pushData(res["X"],"velocidad");

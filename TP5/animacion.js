@@ -115,8 +115,8 @@
 	Animacion.prototype.dibujado = function() {
 
 		if(this.i > this.largo - 1){
-			//requestAnimationFrame(function(){});
-			requestAnimationFrame(this.dibujado.bind(this));
+			requestAnimationFrame(function(){});
+//			requestAnimationFrame(this.dibujado.bind(this));
 
 			this.renderer.render(this.scene, this.camera,false,false);
 
