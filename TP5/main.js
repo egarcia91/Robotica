@@ -38,32 +38,37 @@
 		this.diagramaRobot.ejecutar(data);
 
 		this.res = this.diagramaRobot.getTrayectoria();
+		//console.log(this.res);
 		this._QUE_GRAFICAR();
 
 	};
 
 	Main.prototype._QUE_GRAFICAR = function(){
 		var res = this.res || {};
+		console.log(res);
 //		new Animacion({
 //			theta1 : res["motor1"],
 //			theta2 : res["motor2"]
 //		});
-		this.graficoPosicion1.pushData(res["X"],"posicion");
+		this.graficoPosicion1.subirData(res, 'trayectorias', 'posicion');
 		this.graficoPosicion1.show(true);
-		this.graficoVelocidad1.pushData(res["X"],"velocidad");
+
+		this.graficoVelocidad1.subirData(res, 'motores', 'angulo');
 		this.graficoVelocidad1.show(true);
-		this.graficoAceleracion1.pushData(res["X"],"aceleracion");
+
+		this.graficoAceleracion1.subirData(res, 'distanciaTrayectorias');
 		this.graficoAceleracion1.show(true);
 
-		this.graficoPosicion2.pushData(res["Y"],"posicion");
+		this.graficoPosicion2.subirData(res, 'fuerzas');
 		this.graficoPosicion2.show(true);
-		this.graficoVelocidad2.pushData(res["Y"],"velocidad");
-		this.graficoVelocidad2.show(true);
-		this.graficoAceleracion2.pushData(res["Y"],"aceleracion");
-		this.graficoAceleracion2.show(true);
 
-		this.graficoPosicion3.pushData(res["Xgraf"],"posicion",res["Ygraf"]);
-		this.graficoPosicion3.show(true);
+//		this.graficoVelocidad2.pushData(res["Y"],"velocidad");
+//		this.graficoVelocidad2.show(true);
+//		this.graficoAceleracion2.pushData(res["Y"],"aceleracion");
+//		this.graficoAceleracion2.show(true);
+//
+//		this.graficoPosicion3.pushData(res["Xgraf"],"posicion",res["Ygraf"]);
+//		this.graficoPosicion3.show(true);
 	};
 
 	window.Main = Main;

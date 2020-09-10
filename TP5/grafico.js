@@ -46,12 +46,23 @@
 					display : true,
 					scaleLabel : {
 						display : true,
-						labelString : "posicion"
+						labelString : "posicion [mm]"
 					}
 				}]
 			}
 		}
 	};
+
+	Grafico.prototype.colorIndex = 0;
+
+	Grafico.prototype.colorList = [
+		'red',
+		'green',
+		'blue',
+		'violet',
+		'grey',
+		'black'
+	];
 
 	Grafico.prototype.datosIdeal = {
 		label : "Ideal",
@@ -69,7 +80,133 @@
 		fill : false
 	};
 
+	Grafico.prototype.datosDinamico = function(nombre){
+
+		var dato = {
+			label : nombre,
+			backgroundColor : this.colorList[this.colorIndex],
+			borderColor : this.colorList[this.colorIndex],
+			data : [],
+			fill : false
+		}
+
+		this.colorIndex++;
+
+		return dato;
+	};
+
 	Grafico.prototype.clear = function(){
+	};
+
+	Grafico.prototype.subirData = function(data, key, funcion){
+
+		if(!data){
+			return;
+		}
+
+		this.colorIndex = 0;
+		this.configPlot.data.datasets = [];
+
+//		for(var i = 0, key; key = Object.keys(data)[i]; i++){
+			switch(key){
+				case 'trayectorias':
+					for(var j = 0, nKey; nKey = Object.keys(data[key])[j]; j++){
+						if(nKey == funcion){
+							this.configPlot.options.scales.yAxes[0].scaleLabel.labelString = nKey;
+							for(var k = 0, nnKey; nnKey = Object.keys(data[key][nKey])[k]; k++){
+								var datoAgregar = this.datosDinamico(nnKey);
+								for(var h = 0, pos; pos = data[key][nKey][nnKey][h]; h++){
+									datoAgregar.data.push({
+										y : pos.x,
+										x : data.tiempo[h]
+									});
+								}
+								this.configPlot.data.datasets.push(datoAgregar);
+							}
+						}
+					}
+					break
+
+				case 'distanciaTrayectorias':
+					this.configPlot.options.scales.yAxes[0].scaleLabel.labelString = 'delta [mm]';
+					for(var j = 0, nKey; nKey = Object.keys(data[key])[j]; j++){
+						var datoAgregar = this.datosDinamico(nKey);
+						for(var h = 0, pos; pos = data[key][nKey][h]; h++){
+							datoAgregar.data.push({
+								y : pos.xr*1000,
+								x : data.tiempo[h]
+							});
+						}
+						this.configPlot.data.datasets.push(datoAgregar);
+					}
+					break;
+
+				case 'fuerzas':
+					this.configPlot.options.scales.yAxes[0].scaleLabel.labelString = 'torque [Newton]';
+					for(var j = 0, nKey; nKey = Object.keys(data[key])[j]; j++){
+						var datoAgregar = this.datosDinamico(nKey);
+						for(var h = 0, pos; pos = data[key][nKey][h]; h++){
+							datoAgregar.data.push({
+								y : pos.u1,
+								x : data.tiempo[h]
+							});
+						}
+						this.configPlot.data.datasets.push(datoAgregar);
+					}
+					break;
+
+				case 'motores':
+					for(var j = 0, nKey; nKey = Object.keys(data[key])[j]; j++){
+						if(nKey == funcion){
+							this.configPlot.options.scales.yAxes[0].scaleLabel.labelString = nKey;
+							for(var k = 0, nnKey; nnKey = Object.keys(data[key][nKey])[k]; k++){
+								var datoAgregar = this.datosDinamico(nnKey);
+								for(var h = 0, pos; pos = data[key][nKey][nnKey][h]; h++){
+									datoAgregar.data.push({
+										y : pos.t1,
+										x : data.tiempo[h]
+									});
+								}
+								this.configPlot.data.datasets.push(datoAgregar);
+							}
+						}
+					}
+					break;
+
+				default :
+					break;
+			}
+//			if(key == 'trayectorias'){
+//				for(var j = 0, nKey; nKey = Object.keys(data[key])[j]; j++){
+//					if(nKey == 'posicion'){
+//						this.configPlot.options.scales.yAxes[0].scaleLabel.labelString = nKey;
+//						//console.log(data[key][nKey]);
+//						for(var k = 0, nnKey; nnKey = Object.keys(data[key][nKey])[k]; k++){
+//							var datoAgregar = this.datosDinamico(nnKey);
+//							for(var h = 0, pos; pos = data[key][nKey][nnKey][h]; h++){
+//								datoAgregar.data.push({
+//									y : pos.x,
+//									x : data.tiempo[h]
+//								});
+//							}
+//							this.configPlot.data.datasets.push(datoAgregar);
+//						}
+//					}
+//				}
+//			} else if(key == 'distanciaTrayectorias'){
+//				for(var j = 0, nKey; nKey = Object.keys(data[key])[j]; j++){
+//					var datoAgregar = this.datosDinamico(nKey);
+//					for(var h = 0, pos; pos = data[key][nKey][h]; h++){
+//						datoAgregar.data.push({
+//							y : pos.xr*1000,
+//							x : data.tiempo[h]
+//						});
+//					}
+//					this.configPlot.data.datasets.push(datoAgregar);
+//				}
+//			}
+//		}
+
 	};
 
 	Grafico.prototype.pushData = function(lista, funcion, listaSecundaria){
