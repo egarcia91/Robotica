@@ -151,7 +151,7 @@
 
 	Trayectoria.prototype.resultados = function(tiempoMuestreo){
 		var tiempo = this.getTiempoFinal();
-		var cantidad = parseInt(tiempo/tiempoMuestreo,10);
+		var cantidad = parseInt(tiempo/tiempoMuestreo,10)+1;
 		var tiempos = linspace(0, tiempo, cantidad);
 		resultados = [];
 

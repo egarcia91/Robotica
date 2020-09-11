@@ -61,7 +61,17 @@
 		'blue',
 		'violet',
 		'grey',
-		'black'
+		'black',
+		'magenta',
+		'lightblue',
+		'yellow',
+		'orange',
+		'cyan',
+		'brown',
+		'coral',
+		'bisque',
+		'crimson',
+		'gold'
 	];
 
 	Grafico.prototype.datosIdeal = {
@@ -82,15 +92,23 @@
 
 	Grafico.prototype.datosDinamico = function(nombre){
 
+		var color = "";
+		if(nombre == 'ideal'){
+			color = 'tomato';
+		}else if(nombre == 'real'){
+			color = 'turquoise';
+		} else {
+			color = this.colorList[this.colorIndex];
+			this.colorIndex++;
+		}
 		var dato = {
 			label : nombre,
-			backgroundColor : this.colorList[this.colorIndex],
-			borderColor : this.colorList[this.colorIndex],
+			backgroundColor : color,
+			borderColor : color,
 			data : [],
 			fill : false
 		}
 
-		this.colorIndex++;
 
 		return dato;
 	};
@@ -98,7 +116,7 @@
 	Grafico.prototype.clear = function(){
 	};
 
-	Grafico.prototype.subirData = function(data, key, funcion){
+	Grafico.prototype.subirData = function(data, key, funcion, param){
 
 		if(!data){
 			return;
@@ -112,12 +130,12 @@
 				case 'trayectorias':
 					for(var j = 0, nKey; nKey = Object.keys(data[key])[j]; j++){
 						if(nKey == funcion){
-							this.configPlot.options.scales.yAxes[0].scaleLabel.labelString = nKey;
+							this.configPlot.options.scales.yAxes[0].scaleLabel.labelString = nKey+" "+param+" [mm]";
 							for(var k = 0, nnKey; nnKey = Object.keys(data[key][nKey])[k]; k++){
 								var datoAgregar = this.datosDinamico(nnKey);
 								for(var h = 0, pos; pos = data[key][nKey][nnKey][h]; h++){
 									datoAgregar.data.push({
-										y : pos.x,
+										y : pos[param]*1000,
 										x : data.tiempo[h]
 									});
 								}
@@ -128,12 +146,12 @@
 					break
 
 				case 'distanciaTrayectorias':
-					this.configPlot.options.scales.yAxes[0].scaleLabel.labelString = 'delta [mm]';
+					this.configPlot.options.scales.yAxes[0].scaleLabel.labelString = 'delta '+param+' [mm]';
 					for(var j = 0, nKey; nKey = Object.keys(data[key])[j]; j++){
 						var datoAgregar = this.datosDinamico(nKey);
 						for(var h = 0, pos; pos = data[key][nKey][h]; h++){
 							datoAgregar.data.push({
-								y : pos.xr*1000,
+								y : pos[param+'r']*1000,
 								x : data.tiempo[h]
 							});
 						}
@@ -142,12 +160,12 @@
 					break;
 
 				case 'fuerzas':
-					this.configPlot.options.scales.yAxes[0].scaleLabel.labelString = 'torque [Newton]';
+					this.configPlot.options.scales.yAxes[0].scaleLabel.labelString = 'torque '+param+' [N]';
 					for(var j = 0, nKey; nKey = Object.keys(data[key])[j]; j++){
 						var datoAgregar = this.datosDinamico(nKey);
 						for(var h = 0, pos; pos = data[key][nKey][h]; h++){
 							datoAgregar.data.push({
-								y : pos.u1,
+								y : pos[param],
 								x : data.tiempo[h]
 							});
 						}
@@ -158,12 +176,12 @@
 				case 'motores':
 					for(var j = 0, nKey; nKey = Object.keys(data[key])[j]; j++){
 						if(nKey == funcion){
-							this.configPlot.options.scales.yAxes[0].scaleLabel.labelString = nKey;
+							this.configPlot.options.scales.yAxes[0].scaleLabel.labelString = nKey+" "+param+" [°]";
 							for(var k = 0, nnKey; nnKey = Object.keys(data[key][nKey])[k]; k++){
 								var datoAgregar = this.datosDinamico(nnKey);
 								for(var h = 0, pos; pos = data[key][nKey][nnKey][h]; h++){
 									datoAgregar.data.push({
-										y : pos.t1,
+										y : pos[param]*180/math.pi,
 										x : data.tiempo[h]
 									});
 								}

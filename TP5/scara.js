@@ -57,7 +57,7 @@
 
 		this.motorU9D_A = {
 			Jm : 3.95e-5, //Nm2, parametro Jm Moment of Inertia
-			Bm : (0.6*1e-3)/((2*math.pi/60)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
+			Bm : (0.6*3)/((math.pi)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
 			N : 100,
 			Fm : [[0*2.8/100],[0*2.8/100]], //Nm parametro Tf Static Friction Torque
 			Km : 0.048, //Nm/A parametro Kt Torque Constant +-10%
@@ -67,7 +67,7 @@
 
 		this.motorU9D_B = {
 			Jm : 3.95e-5, //Nm2, parametro Jm Moment of Inertia
-			Bm : (0.6*1e-3)/((2*math.pi/60)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
+			Bm : (0.6*3)/((math.pi)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
 			N : 100,
 			Fm : [[0*2.8/100],[0*2.8/100]], //Nm parametro Tf Static Friction Torque
 			Km : 0.057, //Nm/A parametro Kt Torque Constant +-10%
@@ -77,7 +77,7 @@
 
 		this.motorU9D_C = {
 			Jm : 3.95e-5, //Nm2, parametro Jm Moment of Inertia
-			Bm : (0.7*1e-3)/((2*math.pi/60)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
+			Bm : (0.7*3)/((math.pi)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
 			N : 100,
 			Fm : [[0*2.8/100],[0*2.8/100]], //Nm parametro Tf Static Friction Torque
 			Km : 0.061, //Nm/A parametro Kt Torque Constant +-10%
@@ -87,7 +87,7 @@
 
 		this.motorU9D_D = {
 			Jm : 3.95e-5, //Nm2, parametro Jm Moment of Inertia
-			Bm : (0.8*1e-3)/((2*math.pi/60)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
+			Bm : (0.8*3)/((math.pi)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
 			N : 100,
 			Fm : [[0*2.8/100],[0*2.8/100]], //Nm parametro Tf Static Friction Torque
 			Km : 0.076, //Nm/A parametro Kt Torque Constant +-10%
@@ -97,7 +97,7 @@
 
 		this.motorU9D_E = {
 			Jm : 3.95e-5, //Nm2, parametro Jm Moment of Inertia
-			Bm : (0.9*1e-3)/((2*math.pi/60)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
+			Bm : (0.9*3)/((math.pi)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
 			N : 100,
 			Fm : [[0*2.8/100],[0*2.8/100]], //Nm parametro Tf Static Friction Torque
 			Km : 0.081, //Nm/A parametro Kt Torque Constant +-10%
@@ -107,7 +107,7 @@
 
 		this.motorU9D_F = {
 			Jm : 3.95e-5, //Nm2, parametro Jm Moment of Inertia
-			Bm : (0.8*1e-3)/((2*math.pi/60)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
+			Bm : (0.8*3)/((math.pi)*1e3), // Nm/(rad/s), parametro Kd Viscous Damping Constant
 			N : 100,
 			Fm : [[0*2.8/100],[0*2.8/100]], //Nm parametro Tf Static Friction Torque
 			Km : 0.073, //Nm/A parametro Kt Torque Constant +-10%
