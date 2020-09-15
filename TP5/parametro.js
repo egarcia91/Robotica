@@ -88,11 +88,25 @@
 				this.calculate();
 				return true;
 				break;
+			case "animacion":
+				this.animate();
+				return true;
+				break;
 			default:
 				return true;
 				break;
 		}
 		return true;
+	};
+
+	Parametro.prototype.enableAnimation = function(){
+		this.getElementsByClassName('AnimationButton',function(e){
+			e.removeAttribute('disabled');
+		});
+	};
+
+	Parametro.prototype.animate = function(){
+		this.emit('animate');
 	};
 
 	Parametro.prototype.calculate = function(){

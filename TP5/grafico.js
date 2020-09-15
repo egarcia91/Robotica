@@ -93,9 +93,7 @@
 	Grafico.prototype.datosDinamico = function(nombre){
 
 		var color = "";
-		if(nombre == 'ideal'){
-			color = 'tomato';
-		}else if(nombre == 'real'){
+		if(nombre == 'real'){
 			color = 'turquoise';
 		} else {
 			color = this.colorList[this.colorIndex];

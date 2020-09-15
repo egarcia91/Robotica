@@ -25,7 +25,6 @@
 	DiagramaRobot.prototype.constructor = "DiagramaRobot";
 
 	DiagramaRobot.prototype.tipos = [
-		"Ideal",
 		"Real"
 	];
 
@@ -52,15 +51,12 @@
 		calculado : false,
 		trayectorias : {
 			posicion : {
-				ideal : [],
 				real : []
 			},
 			velocidad : {
-				ideal : [],
 				real : []
 			},
 			aceleracion : {
-				ideal : [],
 				real : []
 			}
 		},
@@ -136,55 +132,27 @@
 		return ecuDiferencial;
 	};
 
-	DiagramaRobot.prototype.datosMejorar = function(theta){
-		this.deseado['Xgraf'] = {'Real' : [], 'Ideal' : []};
-		this.deseado['Ygraf'] = {'Real' : [], 'Ideal' : []};
-
-		for(var i = 0, the; (the = theta[i])!= undefined; i++){
-			this.deseado.motor1[i] = the[0];
-			this.deseado.motor2[i] = the[1];
-			var resMatriz = this.scara.problemaDirecto(the[0],the[1]);
-			this.deseado['Xgraf']['Real'].push({ 'posicion' : resMatriz[0][3] });
-			if(this.deseado['X']['Real'][i]){
-				this.deseado['Xgraf']['Ideal'].push({ 'posicion' : this.deseado['X']['Real'][i].posicion });
-			} else {
-				this.deseado['Xgraf']['Ideal'].push({ 'posicion' : this.deseado['X']['Real'][i-1].posicion });
-			}
-			this.deseado['Ygraf']['Real'].push({ 'posicion' : resMatriz[1][3] });
-			if(this.deseado['Y']['Real'][i]){
-				this.deseado['Ygraf']['Ideal'].push({ 'posicion' : this.deseado['Y']['Real'][i].posicion });
-			} else {
-				this.deseado['Ygraf']['Ideal'].push({ 'posicion' : this.deseado['Y']['Real'][i-1].posicion });
-			}
-		}
-
-
-	};
-
-	DiagramaRobot.prototype.parseoTrayectoria = function(data){
+	DiagramaRobot.prototype.parseoTrayectoria = function(resultado){
 
 		if(this.resultados.calculado){
 			return;
 		}
 
-		var resultado = this.generadorTrayectoria.generar(data); //Posion, vel, Acel deseados. MOVEL
-		var tiempoCopiado = false;
 		var tiempo = [];
 		for(var h = 0, trayectoria; trayectoria = this.tipoTrayectorias[h]; h++){
 			for(var j = 0, tipo; tipo = this.tipos[j]; j++){
+				tiempo = [];
 				for(var i = 0, xi, yi; ((xi = resultado['X'][tipo][i]) != undefined) && ((yi = resultado['Y'][tipo][i]) != undefined); i++){
 					this.resultados.trayectorias[trayectoria][tipo.toLowerCase()].push(this.nodoTrayectoria(xi[trayectoria],yi[trayectoria]));
-					if(!tiempoCopiado){
-						tiempo.push(xi.tiempo);
-					}
+					tiempo.push(xi.tiempo);
+
 				}
-				tiempoCopiado = true;
 			}
 
 			var term = this.motorTerminologia[h];
-			var mortorTray = this.motorTrayectorias[h];
+			var motorTray = this.motorTrayectorias[h];
 			for(var i = 0, t1, t2; ((t1 = resultado['motor1'+term][i]) != undefined) && ((t2 = resultado['motor2'+term][i]) != undefined); i++){
-				this.resultados.motores[mortorTray]['real'].push(this.nodoTheta(t1,t2));
+				this.resultados.motores[motorTray]['real'].push(this.nodoTheta(t1,t2));
 			}
 		}
 
@@ -265,45 +233,118 @@
 
 	DiagramaRobot.prototype.ejecutar = function(data){
 
-		var ecuDiferencial = this.prepararSolver(data.tiempoMuestreo); //cantidad variables independientes 4
-
+		var informacionInicio = this.generadorTrayectoria.separacionVariables(data);
+		var tiempoTotal = informacionInicio.tiempoTotal;
 		this.control = this["control"+data.control];
 		var constantesControl = this.scara.constantesControl(data.motor);
 
-		this.parseoTrayectoria(data);
-//		this.deseado = this.generadorTrayectoria.generar(data); //Posion, vel, Acel deseados. MOVEL
+		var cantidad = parseInt(tiempoTotal/data.tiempoMuestreo,10)+1;
+//		var tiempos = linspace(0, (tiempoTotal), cantidad);
+		var tiempos = linspace(-data.tiempoAceleracion, (tiempoTotal-data.tiempoAceleracion), cantidad);
 
+		var ecuDiferencial = this.prepararSolver(data.tiempoMuestreo); //cantidad variables independientes 4
+
+		var indiceSegmento = 0;
+		var resultado = {
+			'X' : {
+				'Real' : []
+			},
+			'Y' : {
+				'Real': []
+			},
+			'motor1' : [],
+			'motor1.' : [],
+			'motor1..' : [],
+			'motor2' : [],
+			'motor2.' : [],
+			'motor2..' : []
+		};
+
+		var xAnterior = informacionInicio['X'].posiciones[0].posIni;
+		var xAntAux = 0;
+		var yAnterior = informacionInicio['Y'].posiciones[0].posIni;
+		var yAntAux = 0;
+		var corrimientoTiempo = 0;
+		var theta1DAnt = undefined;
+		var theta2DAnt = undefined;
+		var theta1DpAnt = undefined;
+		var theta2DpAnt = undefined;
 		var thetas = [];
-		thetas.push(this.posicionInicial());
+		var res = this.scara.problemaInverso(xAnterior, yAnterior, 0, -1);
+
+		thetas.push([
+			res.theta1,
+			res.theta2,
+			0,
+			0
+		]);
 
 		var fuerzas = [];
 
-		for(var i = 0, thetaD1, thetaD2; ((thetaD1 = this.getMotor("1",i)) != undefined) && ((thetaD2 = this.getMotor("2",i)) != undefined); i++){
-			var thetaD1p = this.getMotor("1",i,".");
-			var thetaD2p = this.getMotor("2",i,".");
-			var thetaD1pp = this.getMotor("1",i,"..");
-			var thetaD2pp = this.getMotor("2",i,"..");
+		for(var i = 0, tiempo; (tiempo = tiempos[i]) != undefined; i++){
+			var x = informacionInicio['X'].posiciones[indiceSegmento];
+			var y = informacionInicio['Y'].posiciones[indiceSegmento];
+			if(x == undefined){
+				break;
+			}
+			var tSeg = x.t;
+			var resultadosX = this.generadorTrayectoria[data.movimiento](xAnterior, x.posIni, x.posFin, tSeg, tiempo - corrimientoTiempo); //Posion, vel, Acel deseados. MOVEL
+			var resultadosY = this.generadorTrayectoria[data.movimiento](yAnterior, y.posIni, y.posFin, tSeg, tiempo - corrimientoTiempo); //Posion, vel, Acel deseados. MOVEL
+			if(resultadosX['deseado'] == undefined){
+				indiceSegmento++;
+				i--;
+				xAnterior = xAntAux;
+				yAnterior = yAntAux;
+				corrimientoTiempo += tSeg;
+			} else {
+				xAntAux = resultadosX['deseado'];
+				yAntAux = resultadosY['deseado'];
 
-			var control = this.control.accionar(thetaD1, thetaD2, constantesControl, thetas[i], this.scara.matrizDinamica(), thetaD1p, thetaD2p, thetaD1pp, thetaD2pp);
+				var res = this.scara.problemaInverso(resultadosX['deseado'], resultadosY['deseado'], 0, -1);
+				var theta1D = res.theta1;
+				var theta2D = res.theta2;
+				var theta1pD = (theta1D - theta1DAnt)/data.tiempoMuestreo || 0;
+				var theta2pD = (theta2D - theta2DAnt)/data.tiempoMuestreo || 0;
+				var theta1ppD = (theta1pD - theta1DpAnt)/data.tiempoMuestreo || 0;
+				var theta2ppD = (theta2pD - theta2DpAnt)/data.tiempoMuestreo || 0;
 
-			fuerzas.push(control);
-			var nuevaTheta = ecuDiferencial.solve(this.scara.modeloDinamico(data.motor, control), 0, thetas[i], data.tiempoMuestreo).y;
-			thetas.push(nuevaTheta);
+				resultado['X']['Real'].push({
+					'posicion' : resultadosX['deseado'],
+					'velocidad' : resultadosX['deseado.'],
+					'aceleracion' : resultadosX['deseado..'],
+					'tiempo' : (tiempo+data.tiempoAceleracion)
+				});
+				resultado['Y']['Real'].push({
+					'posicion' : resultadosY['deseado'],
+					'velocidad' : resultadosY['deseado.'],
+					'aceleracion' : resultadosY['deseado..'],
+					'tiempo' : (tiempo+data.tiempoAceleracion)
+				});
+
+				resultado['motor1'].push(theta1D);
+				resultado['motor1.'].push(theta1pD);
+				resultado['motor1..'].push(theta2ppD);
+				resultado['motor2'].push(theta2D);
+				resultado['motor2.'].push(theta2pD);
+				resultado['motor2..'].push(theta2ppD);
+
+				var control = this.control.accionar(theta1D, theta2D, constantesControl, thetas[i], this.scara.matrizDinamica(), theta1pD, theta2pD, theta1ppD, theta2ppD);
+				fuerzas.push(control);
+				var nuevaTheta = ecuDiferencial.solve(this.scara.modeloDinamico(data.motor, control), 0, thetas[i], data.tiempoMuestreo).y;
+				thetas.push(nuevaTheta);
+
+				theta1DpAnt = theta1pD;
+				theta2DpAnt = theta2pD;
+				theta1DAnt = theta1D;
+				theta2DAnt = theta2D;
+
+			}
 		}
 
+		this.parseoTrayectoria(resultado);
 		this.ordernarFuerzas(fuerzas, data.control, data.motor);
 		this.ordernarThetas(thetas, data.control, data.motor);
 
-//		this.datosMejorar(theta);
-//
-//		console.log(this.deseado);
-
-		//Estructura real
-		//Conseguir el tiempo total
-		//hacer un while iterando por todos los segmentos
-		//hacer un MOVE L o lo que fuere para moverse dentro de eso
-		//accion de control
-		//etc....
 	};
 
 

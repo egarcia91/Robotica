@@ -67,6 +67,23 @@
 			</tr>
 			<tr>
 				<td align="right">
+					<span>Tipo movimiento:</span>
+				</td>
+				<td align="center">
+					<input type="radio" class="opciones" value="moveL" name="movimiento" checked>
+					<label>MoveL</label><br>
+				</td>
+				<td align="center">
+					<input type="radio" class="opciones" value="moveC" name="movimiento" disabled>
+					<label>MoveC</label><br>
+				</td>
+				<td align="center">
+					<input type="radio" class="opciones" value="moveJ" name="movimiento" disabled>
+					<label>MoveJ</label>
+				</td>
+			</tr>
+			<tr>
+				<td align="right">
 					<span>Motor:</span>
 				</td>
 				<td align="center" style="width:100px;">
@@ -99,8 +116,11 @@
 		<table align='center'>
 
 			<tr>
-				<td colspan="2" align="center">
+				<td align="center">
 					<input style="width:100%" type='button' value='Calcular' data-evt="calculo">
+				</td>
+				<td align="center">
+					<input style="width:100%" type='button' class='AnimationButton' value='Animacion' data-evt="animacion" disabled>
 				</td>
 			</tr>
 		</table>
@@ -230,12 +250,14 @@
 			<div class="graficos" style="width:100%;height:30%;"></div>
 			<div class="graficos" style="width:100%;height:30%"></div>
 			<div class="graficos" style="width:100%;height:30%"></div>
+			<div class="graficos" style="width:100%;height:30%"></div>
 		</div>
 		<div style="display:inline-block;width:45%;height:200%;">
 			<div class="graficos" style="width:100%;height:30%"></div>
 			<div class="graficos" style="width:100%;height:30%;"></div>
 			<div class="graficos" style="width:100%;height:30%;"></div>
 			<div class="graficos" style="width:100%;height:30%;"></div>
+			<div class="graficos" style="width:100%;height:30%"></div>
 			<div class="graficos" style="width:100%;height:30%"></div>
 		</div>
 		<div class="graficos" style="width:100%;height:40%;"></div>

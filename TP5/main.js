@@ -7,33 +7,49 @@
 		var divParametros = this.getElementsByClassName('parametros')[0];
 		this.parametro = new Parametro(divParametros,{});
 		this.parametro.addEventListener('calcule',this.onCalc.bind(this));
-
-//		var divResultados = this.getElementsByClassName('resultados')[0];
-//		this.resultado = new Resultado(divResultados,{});
+		this.parametro.addEventListener('animate',this.onAnimation.bind(this));
 
 		this.diagramaRobot = new DiagramaRobot(undefined,{});
 
-		var divGraficos = this.getElementsByClassName('graficos');
-		this.grafico1 = new Grafico(divGraficos[0],{});
-		this.grafico2 = new Grafico(divGraficos[1],{});
-		this.grafico3 = new Grafico(divGraficos[2],{});
-		this.grafico4 = new Grafico(divGraficos[3],{});
-		this.grafico5 = new Grafico(divGraficos[4],{});
-		this.grafico6 = new Grafico(divGraficos[5],{});
-		this.grafico7 = new Grafico(divGraficos[6],{});
-		this.grafico8 = new Grafico(divGraficos[7],{});
-		this.grafico9 = new Grafico(divGraficos[8],{});
-		this.grafico10 = new Grafico(divGraficos[9],{});
+		this.graficos = [];
+
+		this.getElementsByClassName('graficos', (function(e){
+			var grafico = new Grafico(e,{});
+			this.graficos.push(grafico);
+		}).bind(this));
 
 		this.res = {};
 	}
 
 	Main.prototype = Object.create(HtmlWidget.prototype);
 	Main.prototype.constructor = "Main";
+	Main.prototype.vistas = [
+		['trayectorias','posicion','x'],
+		['trayectorias','velocidad','x'],
+		['trayectorias','aceleracion','x'],
+		['motores','angulo','t1'],
+		['distanciaTrayectorias',null,'x'],
+		['fuerzas',null,'u1'],
+		['trayectorias','posicion','y'],
+		['trayectorias','velocidad','y'],
+		['trayectorias','aceleracion','y'],
+		['motores','angulo','t2'],
+		['distanciaTrayectorias',null,'y'],
+		['fuerzas',null,'u2']
+	];
 
 	Main.prototype.basicDraw = function(){
 		var template = TrimPath.processDOMTemplate('mainPage',{});
 		this.d.innerHTML = template;
+	};
+
+	Main.prototype.onAnimation = function(){
+
+		console.log(this.res);
+//		new Animacion({
+//			theta1 : res["motor1"],
+//			theta2 : res["motor2"]
+//		});
 	};
 
 	Main.prototype.onCalc = function(data){
@@ -41,45 +57,18 @@
 		this.diagramaRobot.ejecutar(data);
 
 		this.res = this.diagramaRobot.getTrayectoria();
-		this._QUE_GRAFICAR();
+		this.mostrarDatos();
+		this.parametro.enableAnimation();
 
 	};
 
-	Main.prototype._QUE_GRAFICAR = function(){
+	Main.prototype.mostrarDatos = function(){
 		var res = this.res || {};
-//		new Animacion({
-//			theta1 : res["motor1"],
-//			theta2 : res["motor2"]
-//		});
-		this.grafico1.subirData(res, 'trayectorias', 'posicion', 'x');
-		this.grafico1.show(true);
 
-		this.grafico2.subirData(res, 'motores', 'angulo', 't1');
-		this.grafico2.show(true);
-
-		this.grafico3.subirData(res, 'motores', 'velocidadAngular', 't1');
-		this.grafico3.show(true);
-
-		this.grafico4.subirData(res, 'distanciaTrayectorias', null, 'x');
-		this.grafico4.show(true);
-
-		this.grafico5.subirData(res, 'fuerzas', null, 'u1');
-		this.grafico5.show(true);
-
-		this.grafico6.subirData(res, 'trayectorias', 'posicion', 'y');
-		this.grafico6.show(true);
-
-		this.grafico7.subirData(res, 'motores', 'angulo', 't2');
-		this.grafico7.show(true);
-
-		this.grafico8.subirData(res, 'motores', 'velocidadAngular', 't2');
-		this.grafico8.show(true);
-
-		this.grafico9.subirData(res, 'distanciaTrayectorias', null, 'y');
-		this.grafico9.show(true);
-
-		this.grafico10.subirData(res, 'fuerzas', null, 'u2');
-		this.grafico10.show(true);
+		for(var i = 0, vista; vista = this.vistas[i]; i++){
+			this.graficos[i].subirData(res,vista[0],vista[1],vista[2]);
+			this.graficos[i].show(true);
+		}
 
 	};
 
