@@ -2,23 +2,12 @@
 	function DiagramaRobot(div,config){
 
 		this.scara = new Scara(undefined,{});
-		//Generador Trayectoria
-		//
+
 		this.generadorTrayectoria = new GeneradorTrayectoria(undefined,{});
 
 		this.controlPD = new ControlPD();
 		this.controlPDPesoPropio = new ControlPDPesoPropio();
 		this.controlTorqueComputado = new ControlTorqueComputado();
-
-		//Control
-		//
-		//Actuador
-		//
-		//Planta Robot
-		//
-		//Sensor
-		//
-		//
 
 	}
 
@@ -45,7 +34,6 @@
 		".",
 		".."
 	];
-
 
 	DiagramaRobot.prototype.resultados = {
 		calculado : false,
@@ -75,7 +63,12 @@
 		},
 		distanciaTrayectorias : {
 		},
-		tiempo : []
+		tiempo : [],
+		animacion : {
+			theta1 : [],
+			theta2 : [],
+			tiempoMuestreo : undefined
+		}
 	}
 
 	DiagramaRobot.prototype.nodoTrayectoria = function(x, y){
@@ -183,9 +176,7 @@
 			var x = resMatriz[0][3];
 			var y = resMatriz[1][3];
 			var nodoTray = this.nodoTrayectoria(x,y);
-			//var xIdeal = math.abs(idealComparar.x - x);
 			var xReal = math.abs(realComparar.x - x);
-			//var yIdeal = math.abs(idealComparar.y - y);
 			var yReal = math.abs(realComparar.y - y);
 			var nodoDistancia = this.nodoDistancia(xReal, yReal);
 
@@ -205,15 +196,12 @@
 		this.resultados.fuerzas[controlAplicado+"--"+motorUtilizado] = JSON.parse(JSON.stringify(fuerzas));
 	};
 
-	DiagramaRobot.prototype.getMotor = function(numero, posicion, terminologia){
-		var term = terminologia || "";
-		var index = this.motorTerminologia.indexOf(term);
-		var motorTray = this.motorTrayectorias[index];
-		var aux = this.resultados.motores[motorTray].real[posicion];
-		if(aux){
-			return aux["t"+numero];
-		} else {
-			return undefined;
+	DiagramaRobot.prototype.prepararAnimacion = function(data, thetas){
+		this.resultados.animacion.tiempoMuestreo = data.tiempoMuestreo;
+
+		for(var i = 0, theta; theta = thetas[i]; i++){
+			this.resultados.animacion.theta1.push(theta[0]);
+			this.resultados.animacion.theta2.push(theta[1]);
 		}
 	};
 
@@ -344,6 +332,7 @@
 		this.parseoTrayectoria(resultado);
 		this.ordernarFuerzas(fuerzas, data.control, data.motor);
 		this.ordernarThetas(thetas, data.control, data.motor);
+		this.prepararAnimacion(data, thetas);
 
 	};
 

@@ -238,56 +238,35 @@
 			</table>
 		</div>
 	</textarea>
+
+	<textarea id="vistas" style="display:none;visibility:hidden;">
+		<div style="display:inline-block;width:45%;height:200%;">
+			<div class="graficos" style="width:100%;height:30%"></div>
+			<div class="graficos" style="width:100%;height:30%;"></div>
+			<div class="graficos" style="width:100%;height:30%;"></div>
+			<div class="graficos" style="width:100%;height:30%"></div>
+			<div class="graficos" style="width:100%;height:30%"></div>
+			<div class="graficos" style="width:100%;height:30%"></div>
+		</div>
+		<div style="display:inline-block;width:45%;height:200%;">
+			<div class="graficos" style="width:100%;height:30%"></div>
+			<div class="graficos" style="width:100%;height:30%;"></div>
+			<div class="graficos" style="width:100%;height:30%;"></div>
+			<div class="graficos" style="width:100%;height:30%;"></div>
+			<div class="graficos" style="width:100%;height:30%"></div>
+			<div class="graficos" style="width:100%;height:30%"></div>
+		</div>
+	</textarea>
+
 	<textarea id="mainPage" style="display:none;visibility:hidden;">
-	<div style="display:inline;width:100%;">
-		<div class="parametros" style="width:90%;height:35%;min-height:200px;"></div>
-		<!--div class="resultados" style="width:100%;height:69%;"></div-->
-	</div>
-	<div style="display:inline;">
-		<div style="display:inline-block;width:45%;height:200%;">
-			<div class="graficos" style="width:100%;height:30%"></div>
-			<div class="graficos" style="width:100%;height:30%;"></div>
-			<div class="graficos" style="width:100%;height:30%;"></div>
-			<div class="graficos" style="width:100%;height:30%"></div>
-			<div class="graficos" style="width:100%;height:30%"></div>
-			<div class="graficos" style="width:100%;height:30%"></div>
+		<div style="display:inline;width:100%;">
+			<div class="parametros" style="width:90%;height:35%;min-height:200px;"></div>
 		</div>
-		<div style="display:inline-block;width:45%;height:200%;">
-			<div class="graficos" style="width:100%;height:30%"></div>
-			<div class="graficos" style="width:100%;height:30%;"></div>
-			<div class="graficos" style="width:100%;height:30%;"></div>
-			<div class="graficos" style="width:100%;height:30%;"></div>
-			<div class="graficos" style="width:100%;height:30%"></div>
-			<div class="graficos" style="width:100%;height:30%"></div>
-		</div>
-		<div class="graficos" style="width:100%;height:40%;"></div>
-	</div>
+		<div style="display:inline;width:100%;" class="vistas"></div>
 
 	</textarea>
 
-	<textarea id="paginado" style="display:none;visibility:hidden;">
-		<table align='center'>
-			<tr>
-				<td align="center">
-					<input style="width:20px;" type='button' value='|<' data-evt="primero" >
-					<input style="width:20px;" type='button' value='<' data-evt="anterior" >
-					<span>
-						Pagina ${pag}
-					</span>
-					<input style="width:45px;" type='button' value='1' data-evt="modificar" >
-					<input style="width:45px;" type='button' value='5' data-evt="modificar" >
-					<input style="width:45px;" type='button' value='10' data-evt="modificar" >
-					<input style="width:45px;" type='button' value='20' data-evt="modificar" >
-					<input style="width:45px;" type='button' value='50' data-evt="modificar" >
-					<input style="width:45px;" type='button' value='100' data-evt="modificar" >
-					<input style="width:20px;" type='button' value='>' data-evt="siguiente">
-					<input style="width:20px;" type='button' value='>|' data-evt="ultimo">
-				</td>
-			</tr>
-		</table>
-	</textarea>
-
-	<div id="container3D"></div>
+	<div class="container3D"></div>
 	</body>
 
 <style type="text/css">
@@ -298,10 +277,9 @@ body {
 <script src="math.js"></script>
 <script src="HtmlWidget.js"></script>
 <script src="main.js"></script>
+<script src="vista.js"></script>
 <script src="scara.js"></script>
 <script src="parametro.js"></script>
-<script src="paginado.js"></script>
-<script src="resultado.js"></script>
 <script src="grafico.js"></script>
 <script src="trayectoria.js"></script>
 <script src="trayectoriaReal.js"></script>

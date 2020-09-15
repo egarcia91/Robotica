@@ -1,7 +1,8 @@
 (function(){
-	function Animacion(data){
+	function Animacion(div, config){
+		HtmlWidget.call(this,div,config);
 
-		this.container = document.getElementById("container3D");
+		this.container = this.getElementsByClassName("container3D")[0];
 		this.renderer;
 		this.camera;
 		this.scene;
@@ -16,15 +17,17 @@
 		this.i = 0;
 		this.largo = 0;
 
-		this.theta1 = data.theta1 || [];
-		this.theta2 = data.theta2 || [];
+		this.theta1 = config.theta1 || [];
+		this.theta2 = config.theta2 || [];
 		this.largo = this.theta1.length;
-		this.comienzo();
-		this.armarEscena();
-		this.dibujado();
+		console.log(this.theta1);
+//		this.comienzo();
+//		this.armarEscena();
+//		this.dibujado();
 
 	}
 
+	Animacion.prototype = Object.create(HtmlWidget.prototype);
 	Animacion.prototype.constructor = "Animacion";
 
 
