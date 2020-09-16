@@ -12,6 +12,9 @@
 		var divVista = this.getElementsByClassName('vistas')[0];
 		this.vista = new Vista(divVista,{});
 
+		var divAnimacion = this.getElementsByClassName('animacion')[0];
+		this.animacion = new Animacion(divAnimacion, {});
+
 		this.diagramaRobot = new DiagramaRobot(undefined,{});
 
 		this.graficos = [];
@@ -29,7 +32,7 @@
 
 	Main.prototype.onAnimation = function(){
 
-		new Animacion(null, this.res.animacion);
+		this.animacion.correr(this.res.animacion);
 
 	};
 

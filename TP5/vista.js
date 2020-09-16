@@ -32,7 +32,12 @@
 	};
 
 	Vista.prototype.basicDraw = function(){
-		var template = TrimPath.processDOMTemplate('vistas',{});
+		var len = this.graficos.length;
+		var cantidad = [ ...Array(len/2).keys() ];
+
+		var template = TrimPath.processDOMTemplate('vistas',{
+			cantidad : cantidad
+		});
 		this.d.innerHTML = template;
 	};
 

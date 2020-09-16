@@ -2,6 +2,13 @@
 	function Animacion(div, config){
 		HtmlWidget.call(this,div,config);
 
+		this.basicDraw();
+	}
+
+	Animacion.prototype = Object.create(HtmlWidget.prototype);
+	Animacion.prototype.constructor = "Animacion";
+
+	Animacion.prototype.correr = function(data){
 		this.container = this.getElementsByClassName("container3D")[0];
 		this.renderer;
 		this.camera;
@@ -17,19 +24,39 @@
 		this.i = 0;
 		this.largo = 0;
 
-		this.theta1 = config.theta1 || [];
-		this.theta2 = config.theta2 || [];
+		this.theta1Aux = JSON.parse(JSON.stringify(data.theta1)) || [];
+		this.theta2Aux = JSON.parse(JSON.stringify(data.theta2)) || [];
+		this.theta1 = [];
+		this.theta2 = [];
+		this.normalizarTiempo(data.tiempoMuestreo);
+		this.comienzo();
+		this.armarEscena();
+		this.dibujado();
+
+	};
+
+	Animacion.prototype.normalizarTiempo = function(tiempoMuestreo){
+		var frecuenciaRefresco = 60; //Hz
+		var cantidad = math.ceil(1/(frecuenciaRefresco*tiempoMuestreo));
+
+		var valor1 = 0;
+		var valor2 = 0;
+		var j = 0;
+
+		for(var i = 0, theta1, theta2; ((theta1 = this.theta1Aux[i])!= undefined) && ((theta2 = this.theta2Aux[i])!= undefined); i++){
+			valor1 += theta1;
+			valor2 += theta2;
+			j++;
+			if(j == cantidad-1){
+				j = 0;
+				this.theta1.push(valor1/cantidad);
+				this.theta2.push(valor2/cantidad);
+				valor1 = 0;
+				valor2 = 0;
+		}
+		}
 		this.largo = this.theta1.length;
-		console.log(this.theta1);
-//		this.comienzo();
-//		this.armarEscena();
-//		this.dibujado();
-
-	}
-
-	Animacion.prototype = Object.create(HtmlWidget.prototype);
-	Animacion.prototype.constructor = "Animacion";
-
+	};
 
 	Animacion.prototype.comienzo = function(){
 
@@ -118,8 +145,8 @@
 	Animacion.prototype.dibujado = function() {
 
 		if(this.i > this.largo - 1){
-			requestAnimationFrame(function(){});
-//			requestAnimationFrame(this.dibujado.bind(this));
+//			requestAnimationFrame(function(){});
+			requestAnimationFrame(this.dibujado.bind(this));
 
 			this.renderer.render(this.scene, this.camera,false,false);
 
@@ -137,6 +164,13 @@
 
 		}
 	}
+
+	Animacion.prototype.basicDraw = function(){
+		var template = TrimPath.processDOMTemplate('animacion',{});
+
+		this.d.innerHTML = template;
+	};
+
 
 	window.Animacion = Animacion;
 })();

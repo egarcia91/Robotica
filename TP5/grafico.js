@@ -192,37 +192,6 @@
 				default :
 					break;
 			}
-//			if(key == 'trayectorias'){
-//				for(var j = 0, nKey; nKey = Object.keys(data[key])[j]; j++){
-//					if(nKey == 'posicion'){
-//						this.configPlot.options.scales.yAxes[0].scaleLabel.labelString = nKey;
-//						//console.log(data[key][nKey]);
-//						for(var k = 0, nnKey; nnKey = Object.keys(data[key][nKey])[k]; k++){
-//							var datoAgregar = this.datosDinamico(nnKey);
-//							for(var h = 0, pos; pos = data[key][nKey][nnKey][h]; h++){
-//								datoAgregar.data.push({
-//									y : pos.x,
-//									x : data.tiempo[h]
-//								});
-//							}
-//							this.configPlot.data.datasets.push(datoAgregar);
-//						}
-//					}
-//				}
-//			} else if(key == 'distanciaTrayectorias'){
-//				for(var j = 0, nKey; nKey = Object.keys(data[key])[j]; j++){
-//					var datoAgregar = this.datosDinamico(nKey);
-//					for(var h = 0, pos; pos = data[key][nKey][h]; h++){
-//						datoAgregar.data.push({
-//							y : pos.xr*1000,
-//							x : data.tiempo[h]
-//						});
-//					}
-//					this.configPlot.data.datasets.push(datoAgregar);
-//				}
-//			}
-//		}
-
 	};
 
 	Grafico.prototype.pushData = function(lista, funcion, listaSecundaria){

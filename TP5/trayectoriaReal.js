@@ -61,10 +61,6 @@
 		var dfuncionCuadraticaIni = math.derivative(funcionCuadraticaIni,"t");
 		var ddfuncionCuadraticaIni = math.derivative(dfuncionCuadraticaIni,"t");
 
-//		console.log("esta es el Tiempo    en este segmento :"+datos.t);
-//		console.log("esta es la Velocidad en este segmento :"+datos.vel);
-//		console.log("esta es la PosFin    en este segmento :"+datos.posFin);
-//		console.log("esta es la PosIni    en este segmento :"+datos.posIni);
 		var funcionLineal = math.parse(this.lineal(datos.vel, funcionCuadraticaIni.evaluate({ t : (tiempoAcumulado + this.tiempoAceleracion)}), (tiempoAcumulado + this.tiempoAceleracion)), {t : 0});
 		var dfuncionLineal = math.derivative(funcionLineal,"t");
 		var ddfuncionLineal = math.derivative(dfuncionLineal,"t");

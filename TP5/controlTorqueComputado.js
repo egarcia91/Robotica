@@ -30,8 +30,6 @@
 
 
 		var u1 = kp1*(thetaD1-theta1)+kd1*(thetaD1p - thetap1) + thetaD1pp;
-//		console.log(u1);
-//		confirm("aa");
 		var u2 = kp2*(thetaD2-theta2)+kd2*(thetaD2p - thetap2) + thetaD2pp;
 
 		var toleranciaMotor1 = km*u1;

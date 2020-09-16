@@ -241,32 +241,30 @@
 
 	<textarea id="vistas" style="display:none;visibility:hidden;">
 		<div style="display:inline-block;width:45%;height:200%;">
-			<div class="graficos" style="width:100%;height:30%"></div>
-			<div class="graficos" style="width:100%;height:30%;"></div>
-			<div class="graficos" style="width:100%;height:30%;"></div>
-			<div class="graficos" style="width:100%;height:30%"></div>
-			<div class="graficos" style="width:100%;height:30%"></div>
-			<div class="graficos" style="width:100%;height:30%"></div>
+			{for a in cantidad}
+				<div class="graficos" style="width:100%;height:30%"></div>
+			{/for}
 		</div>
 		<div style="display:inline-block;width:45%;height:200%;">
-			<div class="graficos" style="width:100%;height:30%"></div>
-			<div class="graficos" style="width:100%;height:30%;"></div>
-			<div class="graficos" style="width:100%;height:30%;"></div>
-			<div class="graficos" style="width:100%;height:30%;"></div>
-			<div class="graficos" style="width:100%;height:30%"></div>
-			<div class="graficos" style="width:100%;height:30%"></div>
+			{for a in cantidad}
+				<div class="graficos" style="width:100%;height:30%"></div>
+			{/for}
 		</div>
 	</textarea>
 
 	<textarea id="mainPage" style="display:none;visibility:hidden;">
+		<div style="display:inline;width:100%;" class="animacion"></div>
 		<div style="display:inline;width:100%;">
 			<div class="parametros" style="width:90%;height:35%;min-height:200px;"></div>
 		</div>
 		<div style="display:inline;width:100%;" class="vistas"></div>
 
+
 	</textarea>
 
-	<div class="container3D"></div>
+	<textarea id="animacion" style="display:none;visibility:hidden;">
+		<div class="container3D"></div>
+	</textarea>
 	</body>
 
 <style type="text/css">
